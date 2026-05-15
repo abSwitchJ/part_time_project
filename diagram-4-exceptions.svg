@@ -1,0 +1,107 @@
+﻿<svg width="680" viewBox="0 0 680 765" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<title>主流程之外的异常路径(UML alt 分支) v3</title>
+<desc>展示 4 个异常场景:招募令审核驳回(含 v3 放弃分支)、中介方筛选超时、招聘方对名单异议(含 T2 超时)、应聘方放弃录用(v3 改:自动递补,不回中介方)</desc>
+
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- Participants -->
+<g font-size="14">
+  <rect x="55" y="40" width="90" height="36" rx="6" fill="#e6f1fb" stroke="#185fa5" stroke-width="0.5"/>
+  <text x="100" y="58" text-anchor="middle" dominant-baseline="central" font-weight="500" fill="#0c447c">应聘方</text>
+
+  <rect x="210" y="40" width="90" height="36" rx="6" fill="#eeedfe" stroke="#534ab7" stroke-width="0.5"/>
+  <text x="255" y="58" text-anchor="middle" dominant-baseline="central" font-weight="500" fill="#3c3489">兼职小程序</text>
+
+  <rect x="370" y="40" width="90" height="36" rx="6" fill="#e1f5ee" stroke="#0f6e56" stroke-width="0.5"/>
+  <text x="415" y="58" text-anchor="middle" dominant-baseline="central" font-weight="500" fill="#085041">招聘方</text>
+
+  <rect x="535" y="40" width="90" height="36" rx="6" fill="#faece7" stroke="#993c1d" stroke-width="0.5"/>
+  <text x="580" y="58" text-anchor="middle" dominant-baseline="central" font-weight="500" fill="#712b13">中介方</text>
+</g>
+
+<!-- Lifelines -->
+<g stroke="#888780" stroke-width="0.5" stroke-dasharray="3 3">
+  <line x1="100" y1="76" x2="100" y2="745"/>
+  <line x1="255" y1="76" x2="255" y2="745"/>
+  <line x1="415" y1="76" x2="415" y2="745"/>
+  <line x1="580" y1="76" x2="580" y2="745"/>
+</g>
+
+<!-- ============ alt 1: 招募令审核驳回 (含 v3 新增放弃分支) ============ -->
+<rect x="70" y="100" width="560" height="165" rx="4" fill="none" stroke="#888780" stroke-width="0.5"/>
+<rect x="70" y="100" width="40" height="20" fill="#faeeda" stroke="#854f0b" stroke-width="0.5"/>
+<text x="90" y="110" text-anchor="middle" dominant-baseline="central" font-weight="500" font-size="12" fill="#854f0b">alt</text>
+<text x="118" y="110" dominant-baseline="central" font-size="12" fill="#3d3d3a">[招募令审核驳回]</text>
+<text x="118" y="132" dominant-baseline="central" font-size="12" fill="#3d3d3a">↳ 入口:主流程 #9 之后,平台审核未通过</text>
+
+<text x="335" y="153" text-anchor="middle" font-size="12" fill="#3d3d3a">1: 发布招募令(命中违规词)</text>
+<line x1="413" y1="160" x2="257" y2="160" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="335" y="183" text-anchor="middle" font-size="12" fill="#3d3d3a">2: 驳回 + 违规原因</text>
+<line x1="257" y1="190" x2="413" y2="190" stroke-dasharray="6 4" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="335" y="213" text-anchor="middle" font-size="12" fill="#3d3d3a">3: 修改后重新提交(loop 回主流程)</text>
+<line x1="413" y1="220" x2="257" y2="220" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<!-- v3 NEW: 招聘方放弃修改 -->
+<line x1="80" y1="232" x2="620" y2="232" stroke="#bfae8c" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="623" y="232" text-anchor="end" dominant-baseline="central" font-size="10" fill="#854f0b" font-weight="500" font-style="italic">— 或 (v3 新增) —</text>
+<text x="335" y="251" text-anchor="middle" font-size="12" fill="#9a6b0e">4: 招聘方放弃修改 → 招募令置为「已取消」</text>
+<line x1="413" y1="258" x2="257" y2="258" marker-end="url(#arrow)" stroke="#9a6b0e" stroke-width="1.5"/>
+
+<!-- ============ alt 2: 中介方 24h 未提交筛选 ============ -->
+<rect x="70" y="280" width="560" height="135" rx="4" fill="none" stroke="#888780" stroke-width="0.5"/>
+<rect x="70" y="280" width="40" height="20" fill="#faeeda" stroke="#854f0b" stroke-width="0.5"/>
+<text x="90" y="290" text-anchor="middle" dominant-baseline="central" font-weight="500" font-size="12" fill="#854f0b">alt</text>
+<text x="118" y="290" dominant-baseline="central" font-size="12" fill="#3d3d3a">[中介方 24h 未提交筛选]</text>
+<text x="118" y="312" dominant-baseline="central" font-size="12" fill="#3d3d3a">↳ 入口:主流程 #17 之后,中介方超时无响应</text>
+
+<text x="418" y="333" text-anchor="middle" font-size="12" fill="#3d3d3a">1: 系统催办通知</text>
+<line x1="257" y1="340" x2="578" y2="340" stroke-dasharray="6 4" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="305" y="373" text-anchor="start" dominant-baseline="central" font-size="12" fill="#3d3d3a">2: 触发系统自动初筛</text>
+<path d="M 257 367 L 295 367 L 295 380 L 259 380" fill="none" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="335" y="393" text-anchor="middle" font-size="12" fill="#3d3d3a">3: 系统初筛结果(需人工复核)</text>
+<line x1="257" y1="400" x2="413" y2="400" stroke-dasharray="6 4" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<!-- ============ alt 3: 招聘方对入选名单有异议 (含 T2 48h 超时) ============ -->
+<rect x="70" y="430" width="560" height="135" rx="4" fill="none" stroke="#888780" stroke-width="0.5"/>
+<rect x="70" y="430" width="40" height="20" fill="#faeeda" stroke="#854f0b" stroke-width="0.5"/>
+<text x="90" y="440" text-anchor="middle" dominant-baseline="central" font-weight="500" font-size="12" fill="#854f0b">alt</text>
+<text x="118" y="440" dominant-baseline="central" font-size="12" fill="#3d3d3a">[招聘方对入选名单有异议]</text>
+<text x="118" y="462" dominant-baseline="central" font-size="12" fill="#3d3d3a">↳ 入口:主流程 #18 通知名单后,招聘方退回 <tspan font-weight="500" fill="#854f0b">或 T2 48h 未确认 (v3 新增)</tspan></text>
+
+<text x="335" y="483" text-anchor="middle" font-size="12" fill="#3d3d3a">1: 退回 + 异议原因 / T2 超时</text>
+<line x1="413" y1="490" x2="257" y2="490" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="418" y="513" text-anchor="middle" font-size="12" fill="#3d3d3a">2: 转达异议,要求重筛</text>
+<line x1="257" y1="520" x2="578" y2="520" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="418" y="543" text-anchor="middle" font-size="12" fill="#3d3d3a">3: 重新提交筛选结果</text>
+<line x1="578" y1="550" x2="257" y2="550" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<!-- ============ alt 4: 应聘方放弃录用 (v3 重画:自动递补,不回中介方) ============ -->
+<rect x="70" y="580" width="560" height="155" rx="4" fill="none" stroke="#888780" stroke-width="0.5"/>
+<rect x="70" y="580" width="40" height="20" fill="#faeeda" stroke="#854f0b" stroke-width="0.5"/>
+<text x="90" y="590" text-anchor="middle" dominant-baseline="central" font-weight="500" font-size="12" fill="#854f0b">alt</text>
+<text x="118" y="590" dominant-baseline="central" font-size="12" fill="#3d3d3a">[应聘方放弃录用 / T3 24h 应答超时] <tspan font-weight="500" fill="#854f0b">(v3 改)</tspan></text>
+<text x="118" y="612" dominant-baseline="central" font-size="12" fill="#3d3d3a">↳ 入口:主流程 #19 通知入选后,应聘方拒绝或不响应</text>
+
+<text x="178" y="633" text-anchor="middle" font-size="12" fill="#3d3d3a">1: 放弃录用 / T3 超时</text>
+<line x1="102" y1="640" x2="253" y2="640" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="305" y="666" text-anchor="start" dominant-baseline="central" font-size="12" fill="#3d3d3a">2: 按 rank 自动激活下一备选 (无需中介方/招聘方介入)</text>
+<path d="M 257 660 L 295 660 L 295 673 L 259 673" fill="none" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="178" y="693" text-anchor="middle" font-size="12" fill="#3d3d3a">3: 通知入选 (下一备选)</text>
+<line x1="253" y1="700" x2="102" y2="700" stroke-dasharray="6 4" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="350" y="722" text-anchor="middle" font-size="11" fill="#6b6a64" font-style="italic">备选池耗尽时才退回:平台 → 中介方,要求补充候选(回到 alt 2/3 形态)</text>
+
+</svg>

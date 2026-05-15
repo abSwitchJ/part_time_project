@@ -1,0 +1,4480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>米色卷宗 · CREAM DOSSIER · 灵活用工</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Serif+Text:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  html, body, #root { margin: 0; padding: 0; min-height: 100%; }
+  html, body { background: #f3ead8; color: #2a1f12; font-family: 'Inter', 'PingFang SC', system-ui, -apple-system, sans-serif; }
+  html { scrollbar-width: none; -ms-overflow-style: none; }
+  *::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+
+  .page-head { padding: 56px 36px 28px; text-align: center; }
+  .page-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 4px;
+    color: rgba(42,31,18,0.55); text-transform: uppercase;
+  }
+  .page-title {
+    font-family: 'Playfair Display', 'DM Serif Display', 'Noto Serif SC', serif;
+    font-size: 44px; line-height: 1.05; letter-spacing: -0.5px;
+    margin-top: 12px; color: #2a1f12;
+  }
+  .page-sub {
+    font-family: 'EB Garamond', 'Noto Serif SC', serif;
+    font-style: italic; font-size: 18px; color: rgba(42,31,18,0.55);
+    margin-top: 8px;
+  }
+  .rule { width: 60px; height: 1px; background: #7a4a28; margin: 22px auto 0; }
+
+  #root {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 64px; padding: 0 12px 96px;
+  }
+  .phone-block {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+  .phone-label {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .phone-label span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 3px; color: #2a1f12;
+    text-transform: uppercase;
+  }
+  .phone-label em {
+    font-family: 'EB Garamond', 'Playfair Display', serif;
+    font-style: italic; font-size: 13px; color: rgba(42,31,18,0.55);
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="page-eyebrow">VARIATION C · CREAM PAPER</div>
+  <div class="page-title">米色卷宗 · CREAM DOSSIER</div>
+  <div class="page-sub">灵活用工 · 中介选模原型 · 三屏垂直浏览</div>
+  <div class="rule"></div>
+</div>
+
+<div id="root"></div>
+
+<script>
+// === iOS frame ===
+// ===== ios-frame.jsx =====
+
+// iOS.jsx — Simplified iOS 26 (Liquid Glass) device frame
+// Based on the iOS 26 UI Kit + Figma status bar spec. No assets, no deps.
+// Exports: IOSDevice, IOSStatusBar, IOSNavBar, IOSGlassPill, IOSList, IOSListRow, IOSKeyboard
+
+// ─────────────────────────────────────────────────────────────
+// Status bar
+// ─────────────────────────────────────────────────────────────
+function IOSStatusBar({
+  dark = false,
+  time = '9:41'
+}) {
+  const c = dark ? '#fff' : '#000';
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 154,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '26px 24px 8px',
+      height: 56,
+      boxSizing: 'border-box',
+      position: 'relative',
+      zIndex: 20,
+      width: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      height: 22,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: '-apple-system, "SF Pro", system-ui',
+      fontWeight: 590,
+      fontSize: 17,
+      lineHeight: '22px',
+      color: c
+    }
+  }, time)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      height: 22,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 7,
+      paddingRight: 1
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "19",
+    height: "12",
+    viewBox: "0 0 19 12"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "0",
+    y: "7.5",
+    width: "3.2",
+    height: "4.5",
+    rx: "0.7",
+    fill: c
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "4.8",
+    y: "5",
+    width: "3.2",
+    height: "7",
+    rx: "0.7",
+    fill: c
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "9.6",
+    y: "2.5",
+    width: "3.2",
+    height: "9.5",
+    rx: "0.7",
+    fill: c
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14.4",
+    y: "0",
+    width: "3.2",
+    height: "12",
+    rx: "0.7",
+    fill: c
+  })), /*#__PURE__*/React.createElement("svg", {
+    width: "17",
+    height: "12",
+    viewBox: "0 0 17 12"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z",
+    fill: c
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z",
+    fill: c
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "8.5",
+    cy: "10.5",
+    r: "1.5",
+    fill: c
+  })), /*#__PURE__*/React.createElement("svg", {
+    width: "27",
+    height: "14",
+    viewBox: "0 0 27 13"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "0.5",
+    y: "0.5",
+    width: "23",
+    height: "12",
+    rx: "3.5",
+    stroke: c,
+    strokeOpacity: "0.35",
+    fill: "none"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "2",
+    y: "2",
+    width: "20",
+    height: "9",
+    rx: "2",
+    fill: c
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z",
+    fill: c,
+    fillOpacity: "0.4"
+  }))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Liquid glass pill — blur + tint + shine
+// ─────────────────────────────────────────────────────────────
+function IOSGlassPill({
+  children,
+  dark = false,
+  style = {}
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 44,
+      minWidth: 44,
+      borderRadius: 9999,
+      position: 'relative',
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxShadow: dark ? '0 2px 6px rgba(0,0,0,0.35), 0 6px 16px rgba(0,0,0,0.2)' : '0 1px 3px rgba(0,0,0,0.07), 0 3px 10px rgba(0,0,0,0.06)',
+      ...style
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 9999,
+      backdropFilter: 'blur(12px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+      background: dark ? 'rgba(120,120,128,0.28)' : 'rgba(255,255,255,0.5)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 9999,
+      boxShadow: dark ? 'inset 1.5px 1.5px 1px rgba(255,255,255,0.15), inset -1px -1px 1px rgba(255,255,255,0.08)' : 'inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4)',
+      border: dark ? '0.5px solid rgba(255,255,255,0.15)' : '0.5px solid rgba(0,0,0,0.06)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      zIndex: 1,
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0 4px'
+    }
+  }, children));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Navigation bar — glass pills + large title
+// ─────────────────────────────────────────────────────────────
+function IOSNavBar({
+  title = 'Title',
+  dark = false,
+  trailingIcon = true
+}) {
+  const muted = dark ? 'rgba(255,255,255,0.6)' : '#404040';
+  const text = dark ? '#fff' : '#000';
+  const pillIcon = content => /*#__PURE__*/React.createElement(IOSGlassPill, {
+    dark: dark
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 36,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  }, content));
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10,
+      paddingTop: 62,
+      paddingBottom: 10,
+      position: 'relative',
+      zIndex: 5
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '0 16px'
+    }
+  }, pillIcon(/*#__PURE__*/React.createElement("svg", {
+    width: "12",
+    height: "20",
+    viewBox: "0 0 12 20",
+    fill: "none",
+    style: {
+      marginLeft: -1
+    }
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M10 2L2 10l8 8",
+    stroke: muted,
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }))), trailingIcon && pillIcon(/*#__PURE__*/React.createElement("svg", {
+    width: "22",
+    height: "6",
+    viewBox: "0 0 22 6"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "3",
+    cy: "3",
+    r: "2.5",
+    fill: muted
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "3",
+    r: "2.5",
+    fill: muted
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "19",
+    cy: "3",
+    r: "2.5",
+    fill: muted
+  })))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '0 16px',
+      fontFamily: '-apple-system, system-ui',
+      fontSize: 34,
+      fontWeight: 700,
+      lineHeight: '41px',
+      color: text,
+      letterSpacing: 0.4
+    }
+  }, title));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Grouped list (inset card, r:26) + row (52px)
+// ─────────────────────────────────────────────────────────────
+function IOSListRow({
+  title,
+  detail,
+  icon,
+  chevron = true,
+  isLast = false,
+  dark = false
+}) {
+  const text = dark ? '#fff' : '#000';
+  const sec = dark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+  const ter = dark ? 'rgba(235,235,245,0.3)' : 'rgba(60,60,67,0.3)';
+  const sep = dark ? 'rgba(84,84,88,0.65)' : 'rgba(60,60,67,0.12)';
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      minHeight: 52,
+      padding: '0 16px',
+      position: 'relative',
+      fontFamily: '-apple-system, system-ui',
+      fontSize: 17,
+      letterSpacing: -0.43
+    }
+  }, icon && /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 30,
+      height: 30,
+      borderRadius: 7,
+      background: icon,
+      marginRight: 12,
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      color: text
+    }
+  }, title), detail && /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: sec,
+      marginRight: 6
+    }
+  }, detail), chevron && /*#__PURE__*/React.createElement("svg", {
+    width: "8",
+    height: "14",
+    viewBox: "0 0 8 14",
+    style: {
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M1 1l6 6-6 6",
+    stroke: ter,
+    strokeWidth: "2",
+    fill: "none",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  })), !isLast && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+      left: icon ? 58 : 16,
+      height: 0.5,
+      background: sep
+    }
+  }));
+}
+function IOSList({
+  header,
+  children,
+  dark = false
+}) {
+  const hc = dark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+  const bg = dark ? '#1C1C1E' : '#fff';
+  return /*#__PURE__*/React.createElement("div", null, header && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '-apple-system, system-ui',
+      fontSize: 13,
+      color: hc,
+      textTransform: 'uppercase',
+      padding: '8px 36px 6px',
+      letterSpacing: -0.08
+    }
+  }, header), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: bg,
+      borderRadius: 26,
+      margin: '0 16px',
+      overflow: 'hidden'
+    }
+  }, children));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Device frame
+// ─────────────────────────────────────────────────────────────
+function IOSDevice({
+  children,
+  width = 402,
+  height = 874,
+  dark = false,
+  title,
+  keyboard = false
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      width,
+      height,
+      borderRadius: 48,
+      overflow: 'hidden',
+      position: 'relative',
+      background: dark ? '#000' : '#F2F2F7',
+      boxShadow: '0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)',
+      fontFamily: '-apple-system, system-ui, sans-serif',
+      WebkitFontSmoothing: 'antialiased'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 11,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      width: 126,
+      height: 37,
+      borderRadius: 24,
+      background: '#000',
+      zIndex: 50
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 10
+    }
+  }, /*#__PURE__*/React.createElement(IOSStatusBar, {
+    dark: dark
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column'
+    }
+  }, title !== undefined && /*#__PURE__*/React.createElement(IOSNavBar, {
+    title: title,
+    dark: dark
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflow: 'auto'
+    }
+  }, children), keyboard && /*#__PURE__*/React.createElement(IOSKeyboard, {
+    dark: dark
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      zIndex: 60,
+      height: 34,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+      paddingBottom: 8,
+      pointerEvents: 'none'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 139,
+      height: 5,
+      borderRadius: 100,
+      background: dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.25)'
+    }
+  })));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Keyboard — iOS 26 liquid glass
+// ─────────────────────────────────────────────────────────────
+function IOSKeyboard({
+  dark = false
+}) {
+  const glyph = dark ? 'rgba(255,255,255,0.7)' : '#595959';
+  const sugg = dark ? 'rgba(255,255,255,0.6)' : '#333';
+  const keyBg = dark ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.85)';
+
+  // special-key icons
+  const icons = {
+    shift: /*#__PURE__*/React.createElement("svg", {
+      width: "19",
+      height: "17",
+      viewBox: "0 0 19 17"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M9.5 1L1 9.5h4.5V16h8V9.5H18L9.5 1z",
+      fill: glyph
+    })),
+    del: /*#__PURE__*/React.createElement("svg", {
+      width: "23",
+      height: "17",
+      viewBox: "0 0 23 17"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M7 1h13a2 2 0 012 2v11a2 2 0 01-2 2H7l-6-7.5L7 1z",
+      fill: "none",
+      stroke: glyph,
+      strokeWidth: "1.6",
+      strokeLinejoin: "round"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M10 5l7 7M17 5l-7 7",
+      stroke: glyph,
+      strokeWidth: "1.6",
+      strokeLinecap: "round"
+    })),
+    ret: /*#__PURE__*/React.createElement("svg", {
+      width: "20",
+      height: "14",
+      viewBox: "0 0 20 14"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M18 1v6H4m0 0l4-4M4 7l4 4",
+      fill: "none",
+      stroke: "#fff",
+      strokeWidth: "1.8",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }))
+  };
+  const key = (content, {
+    w,
+    flex,
+    ret,
+    fs = 25,
+    k
+  } = {}) => /*#__PURE__*/React.createElement("div", {
+    key: k,
+    style: {
+      height: 42,
+      borderRadius: 8.5,
+      flex: flex ? 1 : undefined,
+      width: w,
+      minWidth: 0,
+      background: ret ? '#08f' : keyBg,
+      boxShadow: '0 1px 0 rgba(0,0,0,0.075)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: '-apple-system, "SF Compact", system-ui',
+      fontSize: fs,
+      fontWeight: 458,
+      color: ret ? '#fff' : glyph
+    }
+  }, content);
+  const row = (keys, pad = 0) => /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6.5,
+      justifyContent: 'center',
+      padding: `0 ${pad}px`
+    }
+  }, keys.map(l => key(l, {
+    flex: true,
+    k: l
+  })));
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      zIndex: 15,
+      borderRadius: 27,
+      overflow: 'hidden',
+      padding: '11px 0 2px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      boxShadow: dark ? '0 -2px 20px rgba(0,0,0,0.09)' : '0 -1px 6px rgba(0,0,0,0.018), 0 -3px 20px rgba(0,0,0,0.012)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 27,
+      backdropFilter: 'blur(12px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+      background: dark ? 'rgba(120,120,128,0.14)' : 'rgba(255,255,255,0.25)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 27,
+      boxShadow: dark ? 'inset 1.5px 1.5px 1px rgba(255,255,255,0.15)' : 'inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4)',
+      border: dark ? '0.5px solid rgba(255,255,255,0.15)' : '0.5px solid rgba(0,0,0,0.06)',
+      pointerEvents: 'none'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 20,
+      alignItems: 'center',
+      padding: '8px 22px 13px',
+      width: '100%',
+      boxSizing: 'border-box',
+      position: 'relative'
+    }
+  }, ['"The"', 'the', 'to'].map((w, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: i
+  }, i > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 1,
+      height: 25,
+      background: '#ccc',
+      opacity: 0.3
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      textAlign: 'center',
+      fontFamily: '-apple-system, system-ui',
+      fontSize: 17,
+      color: sugg,
+      letterSpacing: -0.43,
+      lineHeight: '22px'
+    }
+  }, w)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 13,
+      padding: '0 6.5px',
+      width: '100%',
+      boxSizing: 'border-box',
+      position: 'relative'
+    }
+  }, row(['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p']), row(['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], 20), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 14.25,
+      alignItems: 'center'
+    }
+  }, key(icons.shift, {
+    w: 45,
+    k: 'shift'
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6.5,
+      flex: 1
+    }
+  }, ['z', 'x', 'c', 'v', 'b', 'n', 'm'].map(l => key(l, {
+    flex: true,
+    k: l
+  }))), key(icons.del, {
+    w: 45,
+    k: 'del'
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6,
+      alignItems: 'center'
+    }
+  }, key('ABC', {
+    w: 92.25,
+    fs: 18,
+    k: 'abc'
+  }), key('', {
+    flex: true,
+    k: 'space'
+  }), key(icons.ret, {
+    w: 92.25,
+    ret: true,
+    k: 'ret'
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 56,
+      width: '100%',
+      position: 'relative'
+    }
+  }));
+}
+Object.assign(window, {
+  IOSDevice,
+  IOSStatusBar,
+  IOSNavBar,
+  IOSGlassPill,
+  IOSList,
+  IOSListRow,
+  IOSKeyboard
+});
+
+// === Tweaks panel ===
+// ===== tweaks-panel.jsx =====
+
+// tweaks-panel.jsx
+// Reusable Tweaks shell + form-control helpers.
+//
+// Owns the host protocol (listens for __activate_edit_mode / __deactivate_edit_mode,
+// posts __edit_mode_available / __edit_mode_set_keys / __edit_mode_dismissed) so
+// individual prototypes don't re-roll it. Ships a consistent set of controls so you
+// don't hand-draw <input type="range">, segmented radios, steppers, etc.
+//
+// Usage (in an HTML file that loads React + Babel):
+//
+//   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+//     "primaryColor": "#D97757",
+//     "palette": ["#D97757", "#29261b", "#f6f4ef"],
+//     "fontSize": 16,
+//     "density": "regular",
+//     "dark": false
+//   }/*EDITMODE-END*/;
+//
+//   function App() {
+//     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+//     return (
+//       <div style={{ fontSize: t.fontSize, color: t.primaryColor }}>
+//         Hello
+//         <TweaksPanel>
+//           <TweakSection label="Typography" />
+//           <TweakSlider label="Font size" value={t.fontSize} min={10} max={32} unit="px"
+//                        onChange={(v) => setTweak('fontSize', v)} />
+//           <TweakRadio  label="Density" value={t.density}
+//                        options={['compact', 'regular', 'comfy']}
+//                        onChange={(v) => setTweak('density', v)} />
+//           <TweakSection label="Theme" />
+//           <TweakColor  label="Primary" value={t.primaryColor}
+//                        options={['#D97757', '#2A6FDB', '#1F8A5B', '#7A5AE0']}
+//                        onChange={(v) => setTweak('primaryColor', v)} />
+//           <TweakColor  label="Palette" value={t.palette}
+//                        options={[['#D97757', '#29261b', '#f6f4ef'],
+//                                  ['#475569', '#0f172a', '#f1f5f9']]}
+//                        onChange={(v) => setTweak('palette', v)} />
+//           <TweakToggle label="Dark mode" value={t.dark}
+//                        onChange={(v) => setTweak('dark', v)} />
+//         </TweaksPanel>
+//       </div>
+//     );
+//   }
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-body::-webkit-scrollbar{width:8px}
+  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
+  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
+    border:2px solid transparent;background-clip:content-box}
+  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
+    border:2px solid transparent;background-clip:content-box}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
+    color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+
+  .twk-field{appearance:none;box-sizing:border-box;width:100%;min-width:0;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
+    overflow-wrap:anywhere}
+
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+
+  .twk-num{display:flex;align-items:center;box-sizing:border-box;min-width:0;height:26px;padding:0 0 0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
+  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
+    user-select:none;padding-right:8px}
+  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
+    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
+    outline:none;color:inherit;-moz-appearance:textfield}
+  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0}
+  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
+
+  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
+    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
+  .twk-btn:hover{background:rgba(0,0,0,.88)}
+  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
+  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
+
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
+    background:transparent;flex-shrink:0}
+  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
+  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
+
+  .twk-chips{display:flex;gap:6px}
+  .twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:46px;
+    padding:0;border:0;border-radius:6px;overflow:hidden;cursor:default;
+    box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.06);
+    transition:transform .12s cubic-bezier(.3,.7,.4,1),box-shadow .12s}
+  .twk-chip:hover{transform:translateY(-1px);
+    box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12)}
+  .twk-chip[data-on="1"]{box-shadow:0 0 0 1.5px rgba(0,0,0,.85),
+    0 2px 6px rgba(0,0,0,.15)}
+  .twk-chip>span{position:absolute;top:0;bottom:0;right:0;width:34%;
+    display:flex;flex-direction:column;box-shadow:-1px 0 0 rgba(0,0,0,.1)}
+  .twk-chip>span>i{flex:1;box-shadow:0 -1px 0 rgba(0,0,0,.1)}
+  .twk-chip>span>i:first-child{box-shadow:none}
+  .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;
+    filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
+`;
+
+// ── useTweaks ───────────────────────────────────────────────────────────────
+// Single source of truth for tweak values. setTweak persists via the host
+// (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  // Accepts either setTweak('key', value) or setTweak({ key: value, ... }) so a
+  // useState-style call doesn't write a "[object Object]" key into the persisted
+  // JSON block.
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null ? keyOrEdits : {
+      [keyOrEdits]: val
+    };
+    setValues(prev => ({
+      ...prev,
+      ...edits
+    }));
+    window.parent.postMessage({
+      type: '__edit_mode_set_keys',
+      edits
+    }, '*');
+    // Same-window signal so in-page listeners (deck-stage rail thumbnails)
+    // can react — the parent message only reaches the host, not peers.
+    window.dispatchEvent(new CustomEvent('tweakchange', {
+      detail: edits
+    }));
+  }, []);
+  return [values, setTweak];
+}
+
+// ── TweaksPanel ─────────────────────────────────────────────────────────────
+// Floating shell. Registers the protocol listener BEFORE announcing
+// availability — if the announce ran first, the host's activate could land
+// before our handler exists and the toolbar toggle would silently no-op.
+// The close button posts __edit_mode_dismissed so the host's toolbar toggle
+// flips off in lockstep; the host echoes __deactivate_edit_mode back which
+// is what actually hides the panel.
+function TweaksPanel({
+  title = 'Tweaks',
+  noDeckControls = false,
+  children
+}) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  // Auto-inject a rail toggle when a <deck-stage> is on the page. The
+  // toggle drives the deck's per-viewer _railVisible via window message;
+  // state is mirrored from the same localStorage key the deck reads so
+  // the control reflects reality across reloads. The mechanism is the
+  // message — authors who want custom placement can post it directly
+  // and pass noDeckControls to suppress this one.
+  const hasDeckStage = React.useMemo(() => typeof document !== 'undefined' && !!document.querySelector('deck-stage'), []);
+  // Hide the toggle until the host has actually enabled the rail (the
+  // __omelette_rail_enabled window message, posted only when the
+  // omelette_deck_rail_enabled flag is on for this user). The initial read
+  // covers TweaksPanel mounting after the message already arrived; the
+  // listener covers the common case of mounting first.
+  const [railEnabled, setRailEnabled] = React.useState(() => hasDeckStage && !!document.querySelector('deck-stage')?._railEnabled);
+  React.useEffect(() => {
+    if (!hasDeckStage || railEnabled) return undefined;
+    const onMsg = e => {
+      if (e.data && e.data.type === '__omelette_rail_enabled') setRailEnabled(true);
+    };
+    window.addEventListener('message', onMsg);
+    return () => window.removeEventListener('message', onMsg);
+  }, [hasDeckStage, railEnabled]);
+  const [railVisible, setRailVisible] = React.useState(() => {
+    try {
+      return localStorage.getItem('deck-stage.railVisible') !== '0';
+    } catch (e) {
+      return true;
+    }
+  });
+  const toggleRail = on => {
+    setRailVisible(on);
+    window.postMessage({
+      type: '__deck_rail_visible',
+      on
+    }, '*');
+  };
+  const offsetRef = React.useRef({
+    x: 16,
+    y: 16
+  });
+  const PAD = 16;
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth,
+      h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y))
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', clampToViewport);
+      return () => window.removeEventListener('resize', clampToViewport);
+    }
+    const ro = new ResizeObserver(clampToViewport);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [open, clampToViewport]);
+  React.useEffect(() => {
+    const onMsg = e => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({
+      type: '__edit_mode_available'
+    }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({
+      type: '__edit_mode_dismissed'
+    }, '*');
+  };
+  const onDragStart = e => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX,
+      sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = ev => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy)
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+  if (!open) return null;
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("style", null, __TWEAKS_STYLE), /*#__PURE__*/React.createElement("div", {
+    ref: dragRef,
+    className: "twk-panel",
+    "data-noncommentable": "",
+    style: {
+      right: offsetRef.current.x,
+      bottom: offsetRef.current.y
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "twk-hd",
+    onMouseDown: onDragStart
+  }, /*#__PURE__*/React.createElement("b", null, title), /*#__PURE__*/React.createElement("button", {
+    className: "twk-x",
+    "aria-label": "Close tweaks",
+    onMouseDown: e => e.stopPropagation(),
+    onClick: dismiss
+  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    className: "twk-body"
+  }, children, hasDeckStage && railEnabled && !noDeckControls && /*#__PURE__*/React.createElement(TweakSection, {
+    label: "Deck"
+  }, /*#__PURE__*/React.createElement(TweakToggle, {
+    label: "Thumbnail rail",
+    value: railVisible,
+    onChange: toggleRail
+  })))));
+}
+
+// ── Layout helpers ──────────────────────────────────────────────────────────
+
+function TweakSection({
+  label,
+  children
+}) {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "twk-sect"
+  }, label), children);
+}
+function TweakRow({
+  label,
+  value,
+  children,
+  inline = false
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: inline ? 'twk-row twk-row-h' : 'twk-row'
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "twk-lbl"
+  }, /*#__PURE__*/React.createElement("span", null, label), value != null && /*#__PURE__*/React.createElement("span", {
+    className: "twk-val"
+  }, value)), children);
+}
+
+// ── Controls ────────────────────────────────────────────────────────────────
+
+function TweakSlider({
+  label,
+  value,
+  min = 0,
+  max = 100,
+  step = 1,
+  unit = '',
+  onChange
+}) {
+  return /*#__PURE__*/React.createElement(TweakRow, {
+    label: label,
+    value: `${value}${unit}`
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "range",
+    className: "twk-slider",
+    min: min,
+    max: max,
+    step: step,
+    value: value,
+    onChange: e => onChange(Number(e.target.value))
+  }));
+}
+function TweakToggle({
+  label,
+  value,
+  onChange
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "twk-row twk-row-h"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "twk-lbl"
+  }, /*#__PURE__*/React.createElement("span", null, label)), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "twk-toggle",
+    "data-on": value ? '1' : '0',
+    role: "switch",
+    "aria-checked": !!value,
+    onClick: () => onChange(!value)
+  }, /*#__PURE__*/React.createElement("i", null)));
+}
+function TweakRadio({
+  label,
+  value,
+  options,
+  onChange
+}) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  // The active value is read by pointer-move handlers attached for the lifetime
+  // of a drag — ref it so a stale closure doesn't fire onChange for every move.
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  // Segments wrap mid-word once per-segment width runs out. The track is
+  // ~248px (280 panel − 28 body pad − 4 seg pad), each button loses 12px
+  // to its own padding, and 11.5px system-ui averages ~6.3px/char — so 2
+  // options fit ~16 chars each, 3 fit ~10. Past that (or >3 options), fall
+  // back to a dropdown rather than wrap.
+  const labelLen = o => String(typeof o === 'object' ? o.label : o).length;
+  const maxLen = options.reduce((m, o) => Math.max(m, labelLen(o)), 0);
+  const fitsAsSegments = maxLen <= ({
+    2: 16,
+    3: 10
+  }[options.length] ?? 0);
+  if (!fitsAsSegments) {
+    // <select> emits strings — map back to the original option value so the
+    // fallback stays type-preserving (numbers, booleans) like the segment path.
+    const resolve = s => {
+      const m = options.find(o => String(typeof o === 'object' ? o.value : o) === s);
+      return m === undefined ? s : typeof m === 'object' ? m.value : m;
+    };
+    return /*#__PURE__*/React.createElement(TweakSelect, {
+      label: label,
+      value: value,
+      options: options,
+      onChange: s => onChange(resolve(s))
+    });
+  }
+  const opts = options.map(o => typeof o === 'object' ? o : {
+    value: o,
+    label: o
+  });
+  const idx = Math.max(0, opts.findIndex(o => o.value === value));
+  const n = opts.length;
+  const segAt = clientX => {
+    const r = trackRef.current.getBoundingClientRect();
+    const inner = r.width - 4;
+    const i = Math.floor((clientX - r.left - 2) / inner * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+  const onPointerDown = e => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = ev => {
+      if (!trackRef.current) return;
+      const v = segAt(ev.clientX);
+      if (v !== valueRef.current) onChange(v);
+    };
+    const up = () => {
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+  return /*#__PURE__*/React.createElement(TweakRow, {
+    label: label
+  }, /*#__PURE__*/React.createElement("div", {
+    ref: trackRef,
+    role: "radiogroup",
+    onPointerDown: onPointerDown,
+    className: dragging ? 'twk-seg dragging' : 'twk-seg'
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "twk-seg-thumb",
+    style: {
+      left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
+      width: `calc((100% - 4px) / ${n})`
+    }
+  }), opts.map(o => /*#__PURE__*/React.createElement("button", {
+    key: o.value,
+    type: "button",
+    role: "radio",
+    "aria-checked": o.value === value
+  }, o.label))));
+}
+function TweakSelect({
+  label,
+  value,
+  options,
+  onChange
+}) {
+  return /*#__PURE__*/React.createElement(TweakRow, {
+    label: label
+  }, /*#__PURE__*/React.createElement("select", {
+    className: "twk-field",
+    value: value,
+    onChange: e => onChange(e.target.value)
+  }, options.map(o => {
+    const v = typeof o === 'object' ? o.value : o;
+    const l = typeof o === 'object' ? o.label : o;
+    return /*#__PURE__*/React.createElement("option", {
+      key: v,
+      value: v
+    }, l);
+  })));
+}
+function TweakText({
+  label,
+  value,
+  placeholder,
+  onChange
+}) {
+  return /*#__PURE__*/React.createElement(TweakRow, {
+    label: label
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "twk-field",
+    type: "text",
+    value: value,
+    placeholder: placeholder,
+    onChange: e => onChange(e.target.value)
+  }));
+}
+function TweakNumber({
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  unit = '',
+  onChange
+}) {
+  const clamp = n => {
+    if (min != null && n < min) return min;
+    if (max != null && n > max) return max;
+    return n;
+  };
+  const startRef = React.useRef({
+    x: 0,
+    val: 0
+  });
+  const onScrubStart = e => {
+    e.preventDefault();
+    startRef.current = {
+      x: e.clientX,
+      val: value
+    };
+    const decimals = (String(step).split('.')[1] || '').length;
+    const move = ev => {
+      const dx = ev.clientX - startRef.current.x;
+      const raw = startRef.current.val + dx * step;
+      const snapped = Math.round(raw / step) * step;
+      onChange(clamp(Number(snapped.toFixed(decimals))));
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "twk-num"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "twk-num-lbl",
+    onPointerDown: onScrubStart
+  }, label), /*#__PURE__*/React.createElement("input", {
+    type: "number",
+    value: value,
+    min: min,
+    max: max,
+    step: step,
+    onChange: e => onChange(clamp(Number(e.target.value)))
+  }), unit && /*#__PURE__*/React.createElement("span", {
+    className: "twk-num-unit"
+  }, unit));
+}
+
+// Relative-luminance contrast pick — checkmarks drawn over a swatch need to
+// read on both #111 and #fafafa without per-option configuration. Hex input
+// only (#rgb / #rrggbb); named or rgb()/hsl() colors fall through to "light".
+function __twkIsLight(hex) {
+  const h = String(hex).replace('#', '');
+  const x = h.length === 3 ? h.replace(/./g, c => c + c) : h.padEnd(6, '0');
+  const n = parseInt(x.slice(0, 6), 16);
+  if (Number.isNaN(n)) return true;
+  const r = n >> 16 & 255,
+    g = n >> 8 & 255,
+    b = n & 255;
+  return r * 299 + g * 587 + b * 114 > 148000;
+}
+const __TwkCheck = ({
+  light
+}) => /*#__PURE__*/React.createElement("svg", {
+  viewBox: "0 0 14 14",
+  "aria-hidden": "true"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M3 7.2 5.8 10 11 4.2",
+  fill: "none",
+  strokeWidth: "2.2",
+  strokeLinecap: "round",
+  strokeLinejoin: "round",
+  stroke: light ? 'rgba(0,0,0,.78)' : '#fff'
+}));
+
+// TweakColor — curated color/palette picker. Each option is either a single
+// hex string or an array of 1-5 hex strings; the card adapts — a lone color
+// renders solid, a palette renders colors[0] as the hero (left ~2/3) with the
+// rest stacked in a sharp column on the right. onChange emits the
+// option in the shape it was passed (string stays string, array stays array).
+// Without options it falls back to the native color input for back-compat.
+function TweakColor({
+  label,
+  value,
+  options,
+  onChange
+}) {
+  if (!options || !options.length) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "twk-row twk-row-h"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "twk-lbl"
+    }, /*#__PURE__*/React.createElement("span", null, label)), /*#__PURE__*/React.createElement("input", {
+      type: "color",
+      className: "twk-swatch",
+      value: value,
+      onChange: e => onChange(e.target.value)
+    }));
+  }
+  // Native <input type=color> emits lowercase hex per the HTML spec, so
+  // compare case-insensitively. String() guards JSON.stringify(undefined),
+  // which returns the primitive undefined (no .toLowerCase).
+  const key = o => String(JSON.stringify(o)).toLowerCase();
+  const cur = key(value);
+  return /*#__PURE__*/React.createElement(TweakRow, {
+    label: label
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "twk-chips",
+    role: "radiogroup"
+  }, options.map((o, i) => {
+    const colors = Array.isArray(o) ? o : [o];
+    const [hero, ...rest] = colors;
+    const sup = rest.slice(0, 4);
+    const on = key(o) === cur;
+    return /*#__PURE__*/React.createElement("button", {
+      key: i,
+      type: "button",
+      className: "twk-chip",
+      role: "radio",
+      "aria-checked": on,
+      "data-on": on ? '1' : '0',
+      "aria-label": colors.join(', '),
+      title: colors.join(' · '),
+      style: {
+        background: hero
+      },
+      onClick: () => onChange(o)
+    }, sup.length > 0 && /*#__PURE__*/React.createElement("span", null, sup.map((c, j) => /*#__PURE__*/React.createElement("i", {
+      key: j,
+      style: {
+        background: c
+      }
+    }))), on && /*#__PURE__*/React.createElement(__TwkCheck, {
+      light: __twkIsLight(hero)
+    }));
+  })));
+}
+function TweakButton({
+  label,
+  onClick,
+  secondary = false
+}) {
+  return /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: secondary ? 'twk-btn secondary' : 'twk-btn',
+    onClick: onClick
+  }, label);
+}
+Object.assign(window, {
+  useTweaks,
+  TweaksPanel,
+  TweakSection,
+  TweakRow,
+  TweakSlider,
+  TweakToggle,
+  TweakRadio,
+  TweakSelect,
+  TweakText,
+  TweakNumber,
+  TweakColor,
+  TweakButton
+});
+
+// === Data ===
+// ===== data.jsx =====
+// Sample data for the 灵活用工 prototype.
+// Shared across all three variations.
+
+window.RECRUITS = [{
+  id: 'r1',
+  brand: 'LANEIGE 兰芝',
+  initials: 'LN',
+  title: '春季新品视觉大片',
+  type: '平面',
+  city: '北京',
+  venue: '751 D·Park · 棚 03',
+  dateRange: '2026.03.15 — 03.17',
+  deadline: '03.10 24:00 截止报名',
+  needCount: 2,
+  appliedCount: 18,
+  budget: '¥3,500 / 天',
+  requirements: ['165–172cm', '24–28岁', '气质清冷 / 古典'],
+  description: '春季限定系列主视觉，需配合化妆师试妆 1 次，正片当日交付授权 1 年。',
+  issueNo: 'NO. 042'
+}, {
+  id: 'r2',
+  brand: 'MAISON KITSUNÉ',
+  initials: 'MK',
+  title: 'SS26 直播间主秀',
+  type: '直播',
+  city: '上海',
+  venue: '安福路旗舰店',
+  dateRange: '2026.03.20  19:30 — 23:30',
+  deadline: '03.18 18:00 截止报名',
+  needCount: 4,
+  appliedCount: 31,
+  budget: '¥1,800 / 场',
+  requirements: ['168–176cm', '22–30岁', '法式 / 街头'],
+  description: '4 小时连播，提供 8 套换装，要求镜头表现自然、能即兴互动。',
+  issueNo: 'NO. 041'
+}, {
+  id: 'r3',
+  brand: '网易严选',
+  initials: 'YX',
+  title: '春日家居场景电商',
+  type: '电商',
+  city: '杭州',
+  venue: '余杭仓 · 直拍棚',
+  dateRange: '2026.03.22 — 03.24',
+  deadline: '03.19 截止报名',
+  needCount: 3,
+  appliedCount: 47,
+  budget: '¥1,200 / 天',
+  requirements: ['158–170cm', '不限', '邻家 / 通告脸'],
+  description: '床品、家居服、餐厨三组，每日 80–120 件。可包食宿。',
+  issueNo: 'NO. 040'
+}, {
+  id: 'r4',
+  brand: 'HOMME PLISSÉ',
+  initials: 'HP',
+  title: '北京时装周 · 即看即买',
+  type: '走秀',
+  city: '北京',
+  venue: '今日美术馆',
+  dateRange: '2026.03.28  20:00',
+  deadline: '03.20 截止报名',
+  needCount: 6,
+  appliedCount: 22,
+  budget: '面议',
+  requirements: ['178cm+', '22–30岁', '高级 / 冷感'],
+  description: '需出席 03.26 走台彩排一次。提供造型与差旅。',
+  issueNo: 'NO. 039'
+}, {
+  id: 'r5',
+  brand: '小红书 × 茶颜',
+  initials: 'RT',
+  title: '春日穿搭 KOL 合作',
+  type: '平面',
+  city: '成都',
+  venue: '玉林西路 · 实景',
+  dateRange: '2026.03.25  全天',
+  deadline: '03.22 截止报名',
+  needCount: 1,
+  appliedCount: 9,
+  budget: '¥5,000 包干',
+  requirements: ['160–170cm', '20–26岁', '通告 / 元气'],
+  description: '需自带小红书账号 ≥ 5k 粉丝；配合 1 条短视频 + 9 图笔记。',
+  issueNo: 'NO. 038'
+}];
+
+// Applicants per recruit — first recruit gets a curated list; others share.
+window.APPLICANTS = {
+  r1: ['m1', 'm4', 'm2', 'm6', 'm3', 'm5'],
+  r2: ['m2', 'm6', 'm1', 'm5', 'm4', 'm3'],
+  r3: ['m3', 'm4', 'm5', 'm1'],
+  r4: ['m6', 'm2', 'm1'],
+  r5: ['m4', 'm5', 'm3']
+};
+window.MODELS = {
+  m1: {
+    id: 'm1',
+    name: '林  夕',
+    pinyin: 'LIN XI',
+    age: 24,
+    height: 172,
+    weight: 50,
+    bust: 84,
+    waist: 62,
+    hip: 90,
+    city: '北京',
+    tags: ['古风', '平面', '杂志'],
+    rate: '¥1,500 / 天',
+    rating: 4.9,
+    jobs: 42,
+    verified: true,
+    status: '可约',
+    bio: '中传播音系，签约模特两年。镜头偏冷，擅长古典造型与黑白胶片质感。',
+    measure: 'B84 / W62 / H90'
+  },
+  m2: {
+    id: 'm2',
+    name: '苏  野',
+    pinyin: 'SU YE',
+    age: 26,
+    height: 178,
+    weight: 55,
+    bust: 86,
+    waist: 64,
+    hip: 92,
+    city: '上海',
+    tags: ['时尚', '直播', '走秀'],
+    rate: '¥1,800 / 天',
+    rating: 4.8,
+    jobs: 56,
+    verified: true,
+    status: '可约',
+    bio: '法语系毕业，常驻沪杭。直播镜头表现自然，可英法双语沟通。',
+    measure: 'B86 / W64 / H92'
+  },
+  m3: {
+    id: 'm3',
+    name: '顾  绾',
+    pinyin: 'GU WAN',
+    age: 22,
+    height: 168,
+    weight: 48,
+    bust: 82,
+    waist: 60,
+    hip: 88,
+    city: '杭州',
+    tags: ['电商', '通告', '邻家'],
+    rate: '¥1,200 / 天',
+    rating: 4.7,
+    jobs: 89,
+    verified: true,
+    status: '已约 · 03.18 释放',
+    bio: '电商棚拍熟手,日均换装 100+,试装、走位、表情都不用磨。',
+    measure: 'B82 / W60 / H88'
+  },
+  m4: {
+    id: 'm4',
+    name: '安  然',
+    pinyin: 'AN RAN',
+    age: 25,
+    height: 170,
+    weight: 52,
+    bust: 84,
+    waist: 62,
+    hip: 90,
+    city: '北京',
+    tags: ['平面', '杂志', '高级'],
+    rate: '¥2,200 / 天',
+    rating: 5.0,
+    jobs: 28,
+    verified: true,
+    status: '可约',
+    bio: '《时尚芭莎》《嘉人》内页常客。冷调骨相,擅长大片调度。',
+    measure: 'B84 / W62 / H90'
+  },
+  m5: {
+    id: 'm5',
+    name: '江  婧',
+    pinyin: 'JIANG JING',
+    age: 23,
+    height: 170,
+    weight: 50,
+    bust: 83,
+    waist: 61,
+    hip: 89,
+    city: '成都',
+    tags: ['通告', '直播', '元气'],
+    rate: '¥1,300 / 天',
+    rating: 4.6,
+    jobs: 67,
+    verified: false,
+    status: '可约',
+    bio: '川渝主场,小红书 1.2w 粉。镜头活泼,直播稳如老练主播。',
+    measure: 'B83 / W61 / H89'
+  },
+  m6: {
+    id: 'm6',
+    name: '程  曦',
+    pinyin: 'CHENG XI',
+    age: 27,
+    height: 180,
+    weight: 53,
+    bust: 85,
+    waist: 63,
+    hip: 91,
+    city: '北京',
+    tags: ['走秀', '高定', '冷感'],
+    rate: '¥2,500 / 天',
+    rating: 4.9,
+    jobs: 35,
+    verified: true,
+    status: '可约',
+    bio: '上海时装周开/闭场常驻。台步训练 6 年,擅长高定与男装秀场。',
+    measure: 'B85 / W63 / H91'
+  }
+};
+
+// Photo "kinds" — three columns per model: bare-face / styled / full-body.
+window.PHOTO_KINDS = [{
+  key: 'bare',
+  cn: '素颜图',
+  en: 'BARE',
+  fig: 'FIG. 01'
+}, {
+  key: 'glam',
+  cn: '带妆图',
+  en: 'GLAM',
+  fig: 'FIG. 02'
+}, {
+  key: 'full',
+  cn: '全身照',
+  en: 'FULL',
+  fig: 'FIG. 03'
+}];
+window.PHOTO_KINDS_MORE = [{
+  key: 'bare',
+  cn: '素颜图',
+  en: 'BARE',
+  fig: 'FIG. 01'
+}, {
+  key: 'glam',
+  cn: '带妆图',
+  en: 'GLAM',
+  fig: 'FIG. 02'
+}, {
+  key: 'full',
+  cn: '全身照',
+  en: 'FULL',
+  fig: 'FIG. 03'
+}, {
+  key: 'side',
+  cn: '侧颜图',
+  en: 'PROFILE',
+  fig: 'FIG. 04'
+}, {
+  key: 'street',
+  cn: '街拍图',
+  en: 'STREET',
+  fig: 'FIG. 05'
+}, {
+  key: 'studio',
+  cn: '棚拍图',
+  en: 'STUDIO',
+  fig: 'FIG. 06'
+}];
+
+// === Variation A ===
+// ===== variation-a.jsx =====
+// Variation A — VOGUE: Didone serif drama, B&W high-contrast, oversized
+// headlines, ultra-thin rules, page-number indices.
+
+const VA_BG_LIGHT = '#fafaf8';
+const VA_BG_DARK = '#0c0c0c';
+const VA_FG_LIGHT = '#0a0a0a';
+const VA_FG_DARK = '#f1eee8';
+const VA_RULE_L = 'rgba(10,10,10,0.18)';
+const VA_RULE_D = 'rgba(241,238,232,0.22)';
+const VA_MUTED_L = 'rgba(10,10,10,0.5)';
+const VA_MUTED_D = 'rgba(241,238,232,0.55)';
+const vaTheme = dark => ({
+  bg: dark ? VA_BG_DARK : VA_BG_LIGHT,
+  fg: dark ? VA_FG_DARK : VA_FG_LIGHT,
+  rule: dark ? VA_RULE_D : VA_RULE_L,
+  muted: dark ? VA_MUTED_D : VA_MUTED_L,
+  inv: dark ? VA_FG_LIGHT : VA_BG_LIGHT,
+  ink: dark ? VA_FG_DARK : VA_FG_LIGHT
+});
+
+// Striped image placeholder — soft horizontal lines + a mono caption.
+function VAImg({
+  kind,
+  ratio = '3 / 4',
+  dark,
+  label,
+  big = false
+}) {
+  const t = vaTheme(dark);
+  // Subtle horizontal stripe — different "tones" per kind so they look distinct.
+  const toneMap = {
+    bare: dark ? ['#1a1a1a', '#222'] : ['#e8e6e0', '#f1efea'],
+    glam: dark ? ['#262321', '#312c29'] : ['#dcd5cd', '#e8e1d7'],
+    full: dark ? ['#1d1d20', '#27272b'] : ['#d8d8d4', '#e6e6e0'],
+    side: dark ? ['#1c1a1d', '#262428'] : ['#e2dfdb', '#ece9e4'],
+    street: dark ? ['#1f1c1a', '#2a2622'] : ['#dad5cd', '#e6e0d6'],
+    studio: dark ? ['#181a1c', '#22252a'] : ['#dcdcd8', '#e8e8e4']
+  };
+  const tones = toneMap[kind] || toneMap.bare;
+  const figLabel = label || (window.PHOTO_KINDS.find(k => k.key === kind) || {}).fig || '';
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      width: '100%',
+      aspectRatio: ratio,
+      background: `repeating-linear-gradient(0deg, ${tones[0]} 0, ${tones[0]} 6px, ${tones[1]} 6px, ${tones[1]} 12px)`,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      background: `radial-gradient(ellipse 55% 70% at 50% 55%, ${dark ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0.06)'} 0%, transparent 70%)`
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 8,
+      top: 8,
+      right: 8,
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+      fontSize: big ? 10 : 8.5,
+      letterSpacing: 1.2,
+      color: t.muted
+    }
+  }, /*#__PURE__*/React.createElement("span", null, figLabel), /*#__PURE__*/React.createElement("span", {
+    style: {
+      writingMode: 'vertical-rl'
+    }
+  }, "\u2014")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 8,
+      bottom: 8,
+      right: 8,
+      display: 'flex',
+      justifyContent: 'space-between',
+      fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+      fontSize: big ? 10 : 8.5,
+      letterSpacing: 1.2,
+      color: t.muted
+    }
+  }, /*#__PURE__*/React.createElement("span", null, (kind || '').toUpperCase()), /*#__PURE__*/React.createElement("span", null, big ? '1 / 1' : '3 / 4')));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 1 — Recruit list (the magazine "issue cover" feed)
+// ─────────────────────────────────────────────────────────────
+function VARecruitList({
+  dark,
+  dense,
+  onOpen
+}) {
+  const t = vaTheme(dark);
+  const recruits = window.RECRUITS;
+  const padY = dense ? 14 : 22;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: '"Inter", "PingFang SC", system-ui, sans-serif'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 24px 14px',
+      display: 'flex',
+      alignItems: 'baseline',
+      justifyContent: 'space-between'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", "Times New Roman", serif',
+      fontSize: 13,
+      letterSpacing: 6,
+      fontWeight: 500
+    }
+  }, "ATELIER"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 1.5,
+      color: t.muted
+    }
+  }, "ISSUE 042 / MAR 2026")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.fg,
+      margin: '0 24px'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px 24px 18px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 2,
+      color: t.muted,
+      marginBottom: 8
+    }
+  }, "\u62DB  \u52DF  \u4EE4  \xB7  \u672C  \u671F  \u5171  ", recruits.length, "  \u6761"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", "Didot", "Times New Roman", serif',
+      fontSize: 56,
+      lineHeight: 0.95,
+      fontWeight: 400,
+      letterSpacing: -1.5,
+      fontStyle: 'italic',
+      marginTop: 4
+    }
+  }, "The", /*#__PURE__*/React.createElement("br", null), "Casting"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 14,
+      fontSize: 12.5,
+      lineHeight: 1.55,
+      color: t.muted,
+      maxWidth: 280
+    }
+  }, "\u4E2D\u4ECB\u89C6\u89D2 \xB7 \u4E3A\u4E94\u4E2A\u54C1\u724C\u65B9\u5339\u914D\u672C\u6708\u7684\u6A21\u7279\u6863\u671F\u3002\u70B9\u51FB\u8FDB\u5165\u9009\u6A21\u5361\u3002")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.rule,
+      margin: '0 24px 8px'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '4px 24px 100px'
+    }
+  }, recruits.map((r, i) => /*#__PURE__*/React.createElement("button", {
+    key: r.id,
+    onClick: () => onOpen(r.id),
+    style: {
+      all: 'unset',
+      cursor: 'pointer',
+      display: 'block',
+      width: '100%',
+      padding: `${padY}px 0`,
+      borderBottom: `0.5px solid ${t.rule}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 16,
+      alignItems: 'flex-start'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 38,
+      lineHeight: 0.9,
+      fontWeight: 400,
+      color: t.fg,
+      width: 56,
+      flexShrink: 0
+    }
+  }, String(i + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 9.5,
+      letterSpacing: 1.8,
+      color: t.muted,
+      display: 'flex',
+      gap: 10,
+      marginBottom: 4,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement("span", null, r.type.toUpperCase()), /*#__PURE__*/React.createElement("span", null, "\xB7"), /*#__PURE__*/React.createElement("span", null, r.city), /*#__PURE__*/React.createElement("span", null, "\xB7"), /*#__PURE__*/React.createElement("span", null, r.needCount, " POS.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", "Didot", serif',
+      fontSize: 22,
+      lineHeight: 1.15,
+      fontWeight: 400,
+      letterSpacing: -0.3,
+      marginBottom: 6
+    }
+  }, r.brand, /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontStyle: 'italic',
+      fontSize: 19,
+      color: t.muted
+    }
+  }, r.title)), !dense && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11.5,
+      lineHeight: 1.5,
+      color: t.muted,
+      marginTop: 6
+    }
+  }, r.dateRange, "\u3000\xB7\u3000", r.budget), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline',
+      marginTop: dense ? 6 : 10,
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 1.2,
+      color: t.muted
+    }
+  }, /*#__PURE__*/React.createElement("span", null, r.appliedCount, " \u4EBA\u5DF2\u62A5\u540D"), /*#__PURE__*/React.createElement("span", null, r.deadline.split(' ')[0], "\u622A\u6B62 \u2192"))))))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 2 — Applicants for one recruit (matches user wireframe)
+// ─────────────────────────────────────────────────────────────
+function VAApplicants({
+  dark,
+  dense,
+  recruitId,
+  onOpenModel,
+  onBack
+}) {
+  const t = vaTheme(dark);
+  const r = window.RECRUITS.find(x => x.id === recruitId) || window.RECRUITS[0];
+  const ids = window.APPLICANTS[r.id] || [];
+  const padY = dense ? 14 : 20;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: '"Inter", "PingFang SC", system-ui, sans-serif'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 24px 12px',
+      display: 'flex',
+      alignItems: 'baseline',
+      justifyContent: 'space-between'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: onBack,
+    style: {
+      all: 'unset',
+      cursor: 'pointer',
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 16,
+      fontWeight: 400
+    }
+  }, "\u2190 Back"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 1.5,
+      color: t.muted
+    }
+  }, r.issueNo)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.fg,
+      margin: '0 24px'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '18px 24px 14px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 2,
+      color: t.muted,
+      marginBottom: 6
+    }
+  }, r.type.toUpperCase(), "  \xB7  ", r.city, "  \xB7  ", r.dateRange), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", "Didot", serif',
+      fontSize: 30,
+      lineHeight: 1.05,
+      letterSpacing: -0.5,
+      fontWeight: 400
+    }
+  }, r.brand), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 22,
+      color: t.muted,
+      lineHeight: 1.15,
+      marginTop: 2
+    }
+  }, r.title), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 14,
+      display: 'flex',
+      gap: 18,
+      flexWrap: 'wrap',
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 1.4,
+      color: t.muted
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "\u9700 ", r.needCount, " \u4F4D"), /*#__PURE__*/React.createElement("span", null, "\u5DF2\u62A5 ", ids.length), /*#__PURE__*/React.createElement("span", null, r.budget))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.rule,
+      margin: '0 24px'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '14px 24px 8px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 19,
+      fontWeight: 400
+    }
+  }, "The Applicants"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 1.4,
+      color: t.muted
+    }
+  }, "\u4E2D\u4ECB \xB7 \u5F85\u7B5B\u9009")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '0 24px 120px'
+    }
+  }, ids.map((mid, i) => {
+    const m = window.MODELS[mid];
+    if (!m) return null;
+    return /*#__PURE__*/React.createElement("div", {
+      key: mid,
+      style: {
+        padding: `${padY}px 0`,
+        borderTop: `0.5px solid ${t.rule}`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        marginBottom: 12
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 44,
+        height: 44,
+        borderRadius: '50%',
+        background: `repeating-linear-gradient(45deg, ${dark ? '#222' : '#e8e6e0'} 0 4px, ${dark ? '#2c2c2c' : '#f1efea'} 4px 8px)`,
+        border: `0.5px solid ${t.rule}`,
+        flexShrink: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: '"Playfair Display", serif',
+        fontStyle: 'italic',
+        fontSize: 16,
+        color: t.muted
+      }
+    }, m.name[0]), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: '"Playfair Display", serif',
+        fontSize: 19,
+        lineHeight: 1.1,
+        fontWeight: 400
+      }
+    }, m.name, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 10,
+        color: t.muted,
+        letterSpacing: 1.5,
+        marginLeft: 10
+      }
+    }, String(i + 1).padStart(2, '0'))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 9.5,
+        letterSpacing: 1.4,
+        color: t.muted,
+        marginTop: 3
+      }
+    }, m.height, "cm \xB7 ", m.measure, " \xB7 ", m.city)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: 'right'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: '"Playfair Display", serif',
+        fontStyle: 'italic',
+        fontSize: 16
+      }
+    }, "\u2605 ", m.rating), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 9,
+        color: t.muted,
+        letterSpacing: 1.2
+      }
+    }, m.jobs, " JOBS"))), /*#__PURE__*/React.createElement("button", {
+      onClick: () => onOpenModel(m.id),
+      style: {
+        all: 'unset',
+        cursor: 'pointer',
+        display: 'block',
+        width: '100%'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "model-swiper",
+      style: {
+        display: 'flex',
+        gap: 6,
+        overflowX: 'auto',
+        scrollSnapType: 'x mandatory',
+        scrollbarWidth: 'none',
+        paddingBottom: 2
+      }
+    }, window.PHOTO_KINDS_MORE.map((k, j) => /*#__PURE__*/React.createElement("div", {
+      key: k.key,
+      style: {
+        width: 'calc((100% - 12px) / 3)',
+        flexShrink: 0,
+        scrollSnapAlign: 'start',
+        position: 'relative'
+      }
+    }, /*#__PURE__*/React.createElement(VAImg, {
+      kind: k.key,
+      dark: dark
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 9,
+        letterSpacing: 1.4,
+        color: t.muted,
+        marginTop: 4,
+        textAlign: 'center'
+      }
+    }, k.cn))))), !dense && /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 6
+      }
+    }, m.tags.slice(0, 3).map(tg => /*#__PURE__*/React.createElement("span", {
+      key: tg,
+      style: {
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 9,
+        letterSpacing: 1.4,
+        color: t.fg,
+        padding: '3px 8px',
+        border: `0.5px solid ${t.fg}`
+      }
+    }, tg))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: '"Playfair Display", serif',
+        fontStyle: 'italic',
+        fontSize: 14,
+        color: t.muted
+      }
+    }, m.rate)));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      padding: '14px 24px 30px',
+      background: `linear-gradient(180deg, transparent, ${t.bg} 30%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      background: t.fg,
+      color: t.bg,
+      padding: '14px 18px'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 1.8
+    }
+  }, "\u4E2D\u4ECB \xB7 \u63A8\u8350 0/", r.needCount), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 16
+    }
+  }, "Submit \u2192"))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 3 — Model detail
+// ─────────────────────────────────────────────────────────────
+function VADetail({
+  dark,
+  dense,
+  modelId,
+  onBack
+}) {
+  const t = vaTheme(dark);
+  const m = window.MODELS[modelId] || window.MODELS.m1;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: '"Inter", "PingFang SC", system-ui, sans-serif'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 24px 12px',
+      display: 'flex',
+      alignItems: 'baseline',
+      justifyContent: 'space-between'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: onBack,
+    style: {
+      all: 'unset',
+      cursor: 'pointer',
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 16
+    }
+  }, "\u2190 Back"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 1.5,
+      color: t.muted
+    }
+  }, "PROFILE \xB7 ", m.pinyin)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.fg,
+      margin: '0 24px'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '14px 0 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '0 24px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 1.8,
+      color: t.muted,
+      marginBottom: 4
+    }
+  }, "COVER STORY \xB7 ", String(Object.keys(window.MODELS).indexOf(m.id) + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", "Didot", serif',
+      fontSize: 72,
+      lineHeight: 0.92,
+      letterSpacing: -2,
+      fontWeight: 400
+    }
+  }, m.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 22,
+      color: t.muted,
+      marginTop: 2
+    }
+  }, m.pinyin.toLowerCase(), ".")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 18,
+      padding: '0 24px'
+    }
+  }, /*#__PURE__*/React.createElement(VAImg, {
+    kind: "full",
+    ratio: "3 / 4.2",
+    dark: dark,
+    big: true,
+    label: "FIG. 03  \xB7  FULL BODY"
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '20px 24px 6px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.rule,
+      marginBottom: 14
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      columnGap: 18,
+      rowGap: 12
+    }
+  }, [['HEIGHT', `${m.height} cm`], ['WEIGHT', `${m.weight} kg`], ['MEASURE', m.measure], ['AGE', `${m.age}`], ['CITY', m.city], ['RATE', m.rate], ['JOBS', `${m.jobs}`], ['SCORE', `★ ${m.rating}`]].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
+    key: k
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 9,
+      letterSpacing: 1.6,
+      color: t.muted
+    }
+  }, k), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", serif',
+      fontSize: 18,
+      fontWeight: 400,
+      marginTop: 2
+    }
+  }, v)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.rule,
+      marginTop: 18
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '14px 24px 22px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'inline-block',
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 10,
+      letterSpacing: 1.8,
+      padding: '5px 10px',
+      color: t.bg,
+      background: t.fg,
+      marginBottom: 12
+    }
+  }, m.status, " ", m.verified ? '· 认证' : ''), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      lineHeight: 1.6,
+      color: t.fg,
+      maxWidth: 320
+    }
+  }, m.bio), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 14,
+      display: 'flex',
+      gap: 6,
+      flexWrap: 'wrap'
+    }
+  }, m.tags.map(tg => /*#__PURE__*/React.createElement("span", {
+    key: tg,
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 9.5,
+      letterSpacing: 1.4,
+      color: t.fg,
+      padding: '4px 9px',
+      border: `0.5px solid ${t.fg}`
+    }
+  }, tg)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 24px 14px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.rule,
+      marginBottom: 16
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline',
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 22
+    }
+  }, "The Book"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 9.5,
+      letterSpacing: 1.5,
+      color: t.muted
+    }
+  }, "3  CHAPTERS")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr 1fr',
+      gap: 6
+    }
+  }, window.PHOTO_KINDS.map(k => /*#__PURE__*/React.createElement("div", {
+    key: k.key
+  }, /*#__PURE__*/React.createElement(VAImg, {
+    kind: k.key,
+    dark: dark
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 9,
+      letterSpacing: 1.4,
+      color: t.muted,
+      marginTop: 5,
+      textAlign: 'center'
+    }
+  }, k.fig, " \xB7 ", k.cn))))), !dense && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '12px 24px 28px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.rule,
+      marginBottom: 14
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 20,
+      marginBottom: 12
+    }
+  }, "Recent"), [['JAN 2026', '《嘉人》二月刊内页 · 北京'], ['DEC 2025', 'SHANG XIA 秋冬 lookbook'], ['NOV 2025', 'LANEIGE 雪润系列电商']].map(([d, j]) => /*#__PURE__*/React.createElement("div", {
+    key: d,
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '10px 0',
+      borderBottom: `0.5px solid ${t.rule}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '"JetBrains Mono", monospace',
+      fontSize: 9.5,
+      color: t.muted,
+      letterSpacing: 1.5
+    }
+  }, d), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      textAlign: 'right',
+      flex: 1,
+      paddingLeft: 14
+    }
+  }, j)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 90
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      padding: '14px 24px 30px',
+      background: `linear-gradient(180deg, transparent, ${t.bg} 30%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      padding: '14px 18px',
+      border: `0.5px solid ${t.fg}`,
+      textAlign: 'center',
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 15
+    }
+  }, "\u6536\u85CF"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 2,
+      padding: '14px 18px',
+      background: t.fg,
+      color: t.bg,
+      textAlign: 'center',
+      fontFamily: '"Playfair Display", serif',
+      fontStyle: 'italic',
+      fontSize: 16
+    }
+  }, "\u63A8\u8350\u7ED9\u62DB\u8058\u65B9 \u2192"))));
+}
+Object.assign(window, {
+  VARecruitList,
+  VAApplicants,
+  VADetail
+});
+
+// === Variation B ===
+// ===== variation-b.jsx =====
+// Variation B — EDITORIAL GRID: Helvetica Neue, dense info grid, hard tabular
+// numbers, magazine column rules. More information per inch than A.
+
+const VB_BG_LIGHT = '#ffffff';
+const VB_BG_DARK = '#101012';
+const VB_FG_LIGHT = '#0a0a0c';
+const VB_FG_DARK = '#f3f3f0';
+const VB_ACCENT = '#FF2D2D'; // ink-red editorial mark
+
+const vbTheme = dark => ({
+  bg: dark ? VB_BG_DARK : VB_BG_LIGHT,
+  fg: dark ? VB_FG_DARK : VB_FG_LIGHT,
+  rule: dark ? 'rgba(243,243,240,0.18)' : 'rgba(10,10,12,0.12)',
+  muted: dark ? 'rgba(243,243,240,0.55)' : 'rgba(10,10,12,0.48)',
+  faint: dark ? 'rgba(243,243,240,0.08)' : 'rgba(10,10,12,0.04)',
+  accent: VB_ACCENT
+});
+const VB_DISPLAY = '"Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif';
+const VB_MONO = '"JetBrains Mono", ui-monospace, monospace';
+const VB_SANS = '"Inter", "Helvetica Neue", "PingFang SC", system-ui, sans-serif';
+function VBImg({
+  kind,
+  ratio = '3 / 4',
+  dark
+}) {
+  const toneMap = {
+    bare: dark ? ['#1a1a1c', '#222226'] : ['#e5e5e3', '#efefec'],
+    glam: dark ? ['#24201f', '#2c2725'] : ['#dcd5cf', '#e6dfd8'],
+    full: dark ? ['#1c1c1f', '#26262a'] : ['#dcdcd9', '#e8e8e3'],
+    side: dark ? ['#1b1a1d', '#252428'] : ['#e1ded9', '#ebe8e3'],
+    street: dark ? ['#1e1c1a', '#28251f'] : ['#dad5cb', '#e6e0d4'],
+    studio: dark ? ['#181a1c', '#22252a'] : ['#dcdcd6', '#e8e8e2']
+  };
+  const tones = toneMap[kind] || toneMap.bare;
+  const figLabel = (window.PHOTO_KINDS.find(k => k.key === kind) || {}).fig || '';
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      width: '100%',
+      aspectRatio: ratio,
+      background: `repeating-linear-gradient(90deg, ${tones[0]} 0, ${tones[0]} 4px, ${tones[1]} 4px, ${tones[1]} 8px)`,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      background: `radial-gradient(ellipse 50% 65% at 50% 58%, ${dark ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.07)'} 0%, transparent 72%)`
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 6,
+      top: 6,
+      fontFamily: VB_MONO,
+      fontSize: 8.5,
+      letterSpacing: 1,
+      color: dark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.45)'
+    }
+  }, figLabel));
+}
+function VBPill({
+  children,
+  dark,
+  accent
+}) {
+  const t = vbTheme(dark);
+  return /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 9.5,
+      letterSpacing: 0.6,
+      padding: '3px 7px',
+      background: accent ? t.accent : t.fg,
+      color: t.bg,
+      textTransform: 'uppercase'
+    }
+  }, children);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 1 — Recruit list (column grid)
+// ─────────────────────────────────────────────────────────────
+function VBRecruitList({
+  dark,
+  dense,
+  onOpen
+}) {
+  const t = vbTheme(dark);
+  const recruits = window.RECRUITS;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: VB_SANS
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 20px 10px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'baseline',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: t.accent,
+      color: '#fff',
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      padding: '2px 6px',
+      letterSpacing: 1
+    }
+  }, "CAST."), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      letterSpacing: 1.4,
+      color: t.muted
+    }
+  }, "VOL. 042  \xB7  W11 2026")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      letterSpacing: 1.2,
+      color: t.muted
+    }
+  }, "\u2315  \u641C\u7D22"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 20px 16px',
+      borderTop: `1px solid ${t.fg}`,
+      borderBottom: `1px solid ${t.fg}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr auto',
+      alignItems: 'end'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      letterSpacing: 1.4,
+      color: t.muted,
+      marginBottom: 4
+    }
+  }, "\u672C\u671F\u62DB\u52DF\u4EE4"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 46,
+      lineHeight: 0.92,
+      letterSpacing: -2
+    }
+  }, "CASTING", /*#__PURE__*/React.createElement("br", null), "BOARD/26")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      color: t.muted,
+      textAlign: 'right',
+      lineHeight: 1.5
+    }
+  }, recruits.length, /*#__PURE__*/React.createElement("br", null), "OPEN", /*#__PURE__*/React.createElement("br", null), "ROLES"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6,
+      padding: '12px 20px 8px',
+      overflowX: 'auto',
+      scrollbarWidth: 'none'
+    }
+  }, ['全部', '平面', '直播', '电商', '走秀', '同城'].map((f, i) => /*#__PURE__*/React.createElement("span", {
+    key: f,
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      letterSpacing: 1,
+      padding: '5px 10px',
+      background: i === 0 ? t.fg : 'transparent',
+      color: i === 0 ? t.bg : t.fg,
+      border: `1px solid ${t.fg}`,
+      flexShrink: 0
+    }
+  }, f))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '4px 20px 100px'
+    }
+  }, recruits.map((r, i) => /*#__PURE__*/React.createElement("button", {
+    key: r.id,
+    onClick: () => onOpen(r.id),
+    style: {
+      all: 'unset',
+      cursor: 'pointer',
+      display: 'block',
+      width: '100%',
+      padding: `${dense ? 12 : 16}px 0`,
+      borderTop: `1px solid ${t.rule}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '34px 1fr auto',
+      columnGap: 12,
+      alignItems: 'start'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 11,
+      color: t.muted,
+      paddingTop: 4
+    }
+  }, String(i + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 5,
+      marginBottom: 6,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(VBPill, {
+    dark: dark,
+    accent: true
+  }, r.type), /*#__PURE__*/React.createElement(VBPill, {
+    dark: dark
+  }, r.city), /*#__PURE__*/React.createElement(VBPill, {
+    dark: dark
+  }, "\u9700 ", r.needCount, " \u4F4D")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 700,
+      fontSize: 19,
+      lineHeight: 1.15,
+      letterSpacing: -0.4
+    }
+  }, r.brand), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13.5,
+      color: t.fg,
+      marginTop: 2,
+      lineHeight: 1.3
+    }
+  }, r.title), !dense && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 4,
+      marginTop: 10,
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      letterSpacing: 0.5,
+      color: t.muted
+    }
+  }, /*#__PURE__*/React.createElement("div", null, "\u25A2 ", r.dateRange), /*#__PURE__*/React.createElement("div", null, "\xA5 ", r.budget.replace(/¥/g, '').trim()), /*#__PURE__*/React.createElement("div", null, "\u23F1 ", r.deadline.split(' ')[0], "\u622A\u6B62"), /*#__PURE__*/React.createElement("div", null, "\u25CF ", r.appliedCount, " \u5DF2\u62A5\u540D"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'right'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 22,
+      fontVariantNumeric: 'tabular-nums',
+      letterSpacing: -0.5
+    }
+  }, r.appliedCount), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 9,
+      color: t.muted,
+      letterSpacing: 1
+    }
+  }, "APPLIED")))))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 2 — Applicants
+// ─────────────────────────────────────────────────────────────
+function VBApplicants({
+  dark,
+  dense,
+  recruitId,
+  onOpenModel,
+  onBack
+}) {
+  const t = vbTheme(dark);
+  const r = window.RECRUITS.find(x => x.id === recruitId) || window.RECRUITS[0];
+  const ids = window.APPLICANTS[r.id] || [];
+  const [selected, setSelected] = React.useState(new Set());
+  const toggle = id => setSelected(prev => {
+    const n = new Set(prev);
+    if (n.has(id)) n.delete(id);else n.add(id);
+    return n;
+  });
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: VB_SANS
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 20px 8px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: onBack,
+    style: {
+      all: 'unset',
+      cursor: 'pointer',
+      fontFamily: VB_MONO,
+      fontSize: 11,
+      letterSpacing: 1.4
+    }
+  }, "\u2190 BACK"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      letterSpacing: 1.4,
+      color: t.muted
+    }
+  }, r.issueNo)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '10px 20px 12px',
+      borderTop: `1px solid ${t.fg}`,
+      borderBottom: `1px solid ${t.fg}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 5,
+      marginBottom: 6,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(VBPill, {
+    dark: dark,
+    accent: true
+  }, r.type), /*#__PURE__*/React.createElement(VBPill, {
+    dark: dark
+  }, r.city)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 26,
+      lineHeight: 1.0,
+      letterSpacing: -0.8
+    }
+  }, r.brand, " / ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 400
+    }
+  }, r.title)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: 8,
+      marginTop: 12,
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      letterSpacing: 0.8,
+      color: t.muted
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: t.muted
+    }
+  }, "DATE"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: t.fg,
+      fontSize: 11.5
+    }
+  }, r.dateRange.split('—')[0].trim())), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", null, "NEED"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: t.fg,
+      fontSize: 11.5
+    }
+  }, r.needCount, " \u4F4D")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", null, "BUDGET"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: t.fg,
+      fontSize: 11.5
+    }
+  }, r.budget)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '12px 20px 8px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 18,
+      letterSpacing: -0.4
+    }
+  }, "APPLICANTS ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: t.accent
+    }
+  }, "\xB7"), " ", ids.length), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      color: t.muted,
+      letterSpacing: 1
+    }
+  }, "\u6309\u62A5\u540D\u65F6\u95F4\u5012\u5E8F")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '0 20px 120px'
+    }
+  }, ids.map((mid, i) => {
+    const m = window.MODELS[mid];
+    if (!m) return null;
+    const isSel = selected.has(mid);
+    return /*#__PURE__*/React.createElement("div", {
+      key: mid,
+      style: {
+        padding: `${dense ? 12 : 16}px 0`,
+        borderTop: `1px solid ${t.rule}`,
+        position: 'relative'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: '40px 1fr',
+        columnGap: 12,
+        alignItems: 'start'
+      }
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 40,
+        height: 40,
+        background: `repeating-linear-gradient(90deg, ${dark ? '#2a2a2c' : '#ddd'} 0 3px, ${dark ? '#222' : '#e8e8e6'} 3px 6px)`,
+        border: `1px solid ${t.fg}`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: VB_DISPLAY,
+        fontWeight: 800,
+        fontSize: 16
+      }
+    }, m.name[0]), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VB_MONO,
+        fontSize: 9,
+        color: t.muted,
+        marginTop: 4,
+        textAlign: 'center',
+        letterSpacing: 0.8
+      }
+    }, "#", String(i + 1).padStart(2, '0'))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VB_DISPLAY,
+        fontWeight: 800,
+        fontSize: 18,
+        letterSpacing: -0.4
+      }
+    }, m.name.replace(/\s+/g, ''), " ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: VB_MONO,
+        fontSize: 10,
+        color: t.muted,
+        fontWeight: 400,
+        letterSpacing: 1
+      }
+    }, m.pinyin)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VB_MONO,
+        fontSize: 10,
+        color: t.muted,
+        letterSpacing: 0.8,
+        marginTop: 2
+      }
+    }, m.height, "/", m.weight, "\u3000\xB7\u3000", m.measure, "\u3000\xB7\u3000", m.city, "\u3000\xB7\u3000\u2605 ", m.rating)), /*#__PURE__*/React.createElement("button", {
+      onClick: e => {
+        e.stopPropagation();
+        toggle(mid);
+      },
+      style: {
+        all: 'unset',
+        cursor: 'pointer',
+        width: 22,
+        height: 22,
+        border: `1.5px solid ${t.fg}`,
+        background: isSel ? t.accent : 'transparent',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#fff',
+        fontFamily: VB_MONO,
+        fontSize: 14,
+        fontWeight: 700,
+        flexShrink: 0
+      }
+    }, isSel ? '✓' : '')), /*#__PURE__*/React.createElement("button", {
+      onClick: () => onOpenModel(m.id),
+      style: {
+        all: 'unset',
+        cursor: 'pointer',
+        display: 'block',
+        width: '100%',
+        marginTop: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "model-swiper",
+      style: {
+        display: 'flex',
+        gap: 4,
+        overflowX: 'auto',
+        scrollSnapType: 'x mandatory',
+        scrollbarWidth: 'none'
+      }
+    }, window.PHOTO_KINDS_MORE.map((k, j) => /*#__PURE__*/React.createElement("div", {
+      key: k.key,
+      style: {
+        width: 'calc((100% - 8px) / 3)',
+        flexShrink: 0,
+        scrollSnapAlign: 'start',
+        position: 'relative'
+      }
+    }, /*#__PURE__*/React.createElement(VBImg, {
+      kind: k.key,
+      dark: dark
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: '4px 6px',
+        background: t.fg,
+        color: t.bg,
+        fontFamily: VB_MONO,
+        fontSize: 9,
+        letterSpacing: 0.6,
+        display: 'flex',
+        justifyContent: 'space-between'
+      }
+    }, /*#__PURE__*/React.createElement("span", null, k.en), /*#__PURE__*/React.createElement("span", null, k.cn)))))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 4,
+        flexWrap: 'wrap'
+      }
+    }, m.tags.slice(0, 3).map(tg => /*#__PURE__*/React.createElement("span", {
+      key: tg,
+      style: {
+        fontFamily: VB_MONO,
+        fontSize: 9,
+        letterSpacing: 0.8,
+        padding: '2px 6px',
+        border: `1px solid ${t.rule}`,
+        color: t.fg
+      }
+    }, tg))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VB_DISPLAY,
+        fontWeight: 700,
+        fontSize: 14,
+        letterSpacing: -0.3
+      }
+    }, m.rate)))));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      padding: '12px 20px 28px',
+      background: `linear-gradient(180deg, transparent, ${t.bg} 30%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'stretch',
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      padding: '12px 14px',
+      background: t.bg,
+      border: `1.5px solid ${t.fg}`,
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      letterSpacing: 1.2,
+      color: t.muted
+    }
+  }, "\u5DF2\u9009"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 18,
+      letterSpacing: -0.4
+    }
+  }, selected.size, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: t.muted
+    }
+  }, "/", r.needCount))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 2,
+      padding: '12px 14px',
+      background: t.accent,
+      color: '#fff',
+      textAlign: 'center',
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 14,
+      letterSpacing: 1
+    }
+  }, "\u63D0\u4EA4\u7ED9\u62DB\u8058\u65B9  \u2192"))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 3 — Model detail (dossier)
+// ─────────────────────────────────────────────────────────────
+function VBDetail({
+  dark,
+  dense,
+  modelId,
+  onBack
+}) {
+  const t = vbTheme(dark);
+  const m = window.MODELS[modelId] || window.MODELS.m1;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: VB_SANS
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 20px 8px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: onBack,
+    style: {
+      all: 'unset',
+      cursor: 'pointer',
+      fontFamily: VB_MONO,
+      fontSize: 11,
+      letterSpacing: 1.4
+    }
+  }, "\u2190 BACK"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      color: t.muted,
+      letterSpacing: 1.4
+    }
+  }, "DOSSIER / ", m.pinyin)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '10px 20px 14px',
+      borderTop: `1px solid ${t.fg}`,
+      borderBottom: `1px solid ${t.fg}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 5,
+      marginBottom: 6,
+      flexWrap: 'wrap'
+    }
+  }, m.verified && /*#__PURE__*/React.createElement(VBPill, {
+    dark: dark,
+    accent: true
+  }, "VERIFIED"), /*#__PURE__*/React.createElement(VBPill, {
+    dark: dark
+  }, m.status.split('·')[0].trim()), m.tags.slice(0, 2).map(tg => /*#__PURE__*/React.createElement(VBPill, {
+    key: tg,
+    dark: dark
+  }, tg))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr auto',
+      alignItems: 'end'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 44,
+      lineHeight: 0.92,
+      letterSpacing: -2
+    }
+  }, m.name.replace(/\s+/g, '')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 11,
+      color: t.muted,
+      letterSpacing: 1.4,
+      marginTop: 2
+    }
+  }, m.pinyin, "  \xB7  ", m.city, "  \xB7  ", m.age, "Y")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'right'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 22,
+      letterSpacing: -0.4
+    }
+  }, "\u2605 ", m.rating), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 9,
+      color: t.muted,
+      letterSpacing: 1
+    }
+  }, m.jobs, " JOBS")))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '14px 20px 8px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      letterSpacing: 1.2,
+      color: t.muted,
+      marginBottom: 8,
+      display: 'flex',
+      justifyContent: 'space-between'
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "3 PHOTOS"), /*#__PURE__*/React.createElement("span", null, "FIG. 01 \u2014 03")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr 1fr',
+      gap: 4
+    }
+  }, window.PHOTO_KINDS.map(k => /*#__PURE__*/React.createElement("div", {
+    key: k.key,
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement(VBImg, {
+    kind: k.key,
+    dark: dark
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      padding: '4px 6px',
+      background: t.fg,
+      color: t.bg,
+      fontFamily: VB_MONO,
+      fontSize: 9,
+      letterSpacing: 0.6,
+      display: 'flex',
+      justifyContent: 'space-between'
+    }
+  }, /*#__PURE__*/React.createElement("span", null, k.en), /*#__PURE__*/React.createElement("span", null, k.cn)))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '14px 20px 6px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 14,
+      letterSpacing: 1,
+      marginBottom: 8
+    }
+  }, "SPEC. SHEET"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderTop: `1px solid ${t.fg}`
+    }
+  }, [['HEIGHT / 身高', `${m.height} cm`], ['WEIGHT / 体重', `${m.weight} kg`], ['MEASURE / 三围', m.measure], ['AGE / 年龄', `${m.age}`], ['CITY / 城市', m.city], ['RATE / 日薪', m.rate], ['SCHEDULE / 档期', m.status]].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
+    key: k,
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1.1fr 1fr',
+      padding: '9px 0',
+      borderBottom: `1px solid ${t.rule}`,
+      fontVariantNumeric: 'tabular-nums'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_MONO,
+      fontSize: 10,
+      color: t.muted,
+      letterSpacing: 1
+    }
+  }, k), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 700,
+      fontSize: 13,
+      textAlign: 'right'
+    }
+  }, v))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '14px 20px 6px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 14,
+      letterSpacing: 1,
+      marginBottom: 8
+    }
+  }, "BIO"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13.5,
+      lineHeight: 1.55
+    }
+  }, m.bio)), !dense && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '14px 20px 16px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 14,
+      letterSpacing: 1,
+      marginBottom: 8
+    }
+  }, "RECENT JOBS"), [['2026 / 01', '《嘉人》二月刊 · 北京', '¥ 6,400'], ['2025 / 12', 'SHANG XIA F/W lookbook', '¥ 4,800'], ['2025 / 11', 'LANEIGE 雪润电商', '¥ 3,600']].map(([d, j, p]) => /*#__PURE__*/React.createElement("div", {
+    key: d,
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '70px 1fr auto',
+      padding: '8px 0',
+      borderTop: `1px solid ${t.rule}`,
+      fontFamily: VB_MONO,
+      fontSize: 10.5,
+      letterSpacing: 0.5
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: t.muted
+    }
+  }, d), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: t.fg,
+      fontSize: 12,
+      paddingRight: 8
+    }
+  }, j), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: t.fg,
+      fontVariantNumeric: 'tabular-nums'
+    }
+  }, p)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 80
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      padding: '12px 20px 28px',
+      background: `linear-gradient(180deg, transparent, ${t.bg} 30%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      padding: '13px 14px',
+      border: `1.5px solid ${t.fg}`,
+      textAlign: 'center',
+      fontFamily: VB_DISPLAY,
+      fontWeight: 700,
+      fontSize: 13,
+      letterSpacing: 1
+    }
+  }, "\u2661 \u6536\u85CF"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 2,
+      padding: '13px 14px',
+      background: t.accent,
+      color: '#fff',
+      textAlign: 'center',
+      fontFamily: VB_DISPLAY,
+      fontWeight: 800,
+      fontSize: 14,
+      letterSpacing: 1
+    }
+  }, "\u63A8\u8350\u7ED9\u62DB\u8058\u65B9  \u2192"))));
+}
+Object.assign(window, {
+  VBRecruitList,
+  VBApplicants,
+  VBDetail
+});
+
+// === Variation C ===
+// ===== variation-c.jsx =====
+// Variation C — 米色卷宗 / CREAM DOSSIER: warm paper, deep coffee accent,
+// avant-garde rotated tabs, asymmetric placements. Most experimental of the three.
+
+const VC_PAPER = '#f0e8db';
+const VC_PAPER_DK = '#1d1814';
+const VC_INK = '#1f1a14';
+const VC_INK_DK = '#f0e8db';
+const VC_COFFEE = '#7a4a28'; // accent
+const VC_RED = '#c63a1f'; // editorial mark
+
+const vcTheme = dark => ({
+  bg: dark ? VC_PAPER_DK : VC_PAPER,
+  card: dark ? '#262019' : '#f7f1e6',
+  fg: dark ? VC_INK_DK : VC_INK,
+  rule: dark ? 'rgba(240,232,219,0.22)' : 'rgba(31,26,20,0.2)',
+  muted: dark ? 'rgba(240,232,219,0.55)' : 'rgba(31,26,20,0.5)',
+  coffee: VC_COFFEE,
+  stamp: VC_RED
+});
+const VC_DISPLAY = '"DM Serif Display", "Playfair Display", "Songti SC", serif';
+const VC_SERIF = '"DM Serif Text", "EB Garamond", "Songti SC", serif';
+const VC_MONO = '"JetBrains Mono", ui-monospace, monospace';
+const VC_SANS = '"Inter", "PingFang SC", system-ui, sans-serif';
+function VCImg({
+  kind,
+  ratio = '3 / 4',
+  dark
+}) {
+  const t = vcTheme(dark);
+  const toneMap = {
+    bare: dark ? ['#2a2118', '#322820'] : ['#ddd0b9', '#e8dcc6'],
+    glam: dark ? ['#2e1f15', '#382820'] : ['#d6c4a8', '#e2d2b7'],
+    full: dark ? ['#241e16', '#2c241c'] : ['#d4c8b0', '#e0d4bb'],
+    side: dark ? ['#2a1f17', '#34281f'] : ['#d8caaf', '#e4d6ba'],
+    street: dark ? ['#2c2016', '#36281d'] : ['#d4c4a4', '#e0d2b0'],
+    studio: dark ? ['#241d16', '#2e261c'] : ['#d0c4ac', '#dcd0b6']
+  };
+  const tones = toneMap[kind] || toneMap.bare;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      width: '100%',
+      aspectRatio: ratio,
+      background: `repeating-linear-gradient(7deg, ${tones[0]} 0, ${tones[0]} 3px, ${tones[1]} 3px, ${tones[1]} 9px)`,
+      overflow: 'hidden',
+      boxShadow: dark ? 'inset 0 0 24px rgba(0,0,0,0.4)' : 'inset 0 0 36px rgba(120,80,30,0.18)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      background: `radial-gradient(ellipse 55% 65% at 50% 55%, ${dark ? 'rgba(0,0,0,0.35)' : 'rgba(80,55,25,0.14)'} 0%, transparent 75%)`
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 6,
+      right: 6,
+      fontFamily: VC_MONO,
+      fontSize: 8,
+      letterSpacing: 1,
+      color: t.coffee,
+      border: `0.5px solid ${t.coffee}`,
+      padding: '2px 5px',
+      opacity: 0.7
+    }
+  }, (kind || '').toUpperCase()));
+}
+function VCTab({
+  children,
+  rotate = -4,
+  dark,
+  color
+}) {
+  const t = vcTheme(dark);
+  return /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'inline-block',
+      transform: `rotate(${rotate}deg)`,
+      background: color || t.coffee,
+      color: '#f5ecd9',
+      fontFamily: VC_MONO,
+      fontSize: 9,
+      letterSpacing: 1.5,
+      padding: '3px 8px',
+      textTransform: 'uppercase'
+    }
+  }, children);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 1 — Recruit list
+// ─────────────────────────────────────────────────────────────
+function VCRecruitList({
+  dark,
+  dense,
+  onOpen
+}) {
+  const t = vcTheme(dark);
+  const recruits = window.RECRUITS;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: VC_SANS,
+      backgroundImage: dark ? `radial-gradient(circle at 20% 10%, rgba(122,74,40,0.12), transparent 50%)` : `radial-gradient(circle at 20% 10%, rgba(122,74,40,0.10), transparent 50%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 22px 8px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 28,
+      height: 28,
+      borderRadius: '50%',
+      background: t.coffee,
+      color: '#f5ecd9',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: VC_DISPLAY,
+      fontSize: 16,
+      fontStyle: 'italic'
+    }
+  }, "\u67D2"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 15,
+      lineHeight: 1
+    }
+  }, "\u67D2  \u6808"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 8.5,
+      letterSpacing: 1.5,
+      color: t.muted,
+      marginTop: 1
+    }
+  }, "CASTING \xB7 QIZHAN"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 9,
+      letterSpacing: 1.4,
+      color: t.muted,
+      border: `0.5px solid ${t.rule}`,
+      padding: '4px 8px'
+    }
+  }, "\u58EC\u5BC5 \xB7 \u4E09\u6708")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '14px 22px 18px',
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.stamp,
+    rotate: -3
+  }, "\u4ECA\u65E5\u62DB\u52DF \xB7 ISSUE 042"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 64,
+      lineHeight: 0.9,
+      letterSpacing: -1,
+      marginTop: 10
+    }
+  }, "\u62DB  \u52DF", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontStyle: 'italic',
+      fontFamily: VC_SERIF,
+      fontWeight: 400,
+      fontSize: 56,
+      color: t.coffee
+    }
+  }, "The Casting.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 13.5,
+      lineHeight: 1.55,
+      marginTop: 12,
+      color: t.muted,
+      maxWidth: 280
+    }
+  }, "\u672C\u671F\u5171 ", recruits.length, " \u6761 \u2014 \u4E2D\u4ECB\u6309\u57CE\u5E02\u4E0E\u6863\u671F\u4E3A\u4E94\u4E2A\u54C1\u724C\u65B9\u5339\u914D\u6A21\u7279\u3002")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '0 22px 100px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: dense ? 12 : 16
+    }
+  }, recruits.map((r, i) => /*#__PURE__*/React.createElement("button", {
+    key: r.id,
+    onClick: () => onOpen(r.id),
+    style: {
+      all: 'unset',
+      cursor: 'pointer',
+      display: 'block',
+      background: t.card,
+      padding: `${dense ? 14 : 18}px 16px`,
+      position: 'relative',
+      boxShadow: dark ? '0 1px 0 rgba(255,255,255,0.04), 0 12px 24px -16px rgba(0,0,0,0.6)' : '0 1px 0 rgba(255,255,255,0.6), 0 12px 24px -14px rgba(80,50,20,0.25)',
+      border: `0.5px solid ${t.rule}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: -7,
+      left: 14
+    }
+  }, /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    rotate: i % 2 === 0 ? -4 : 3
+  }, r.type, " \xB7 ", r.city)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 12,
+      right: 18,
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 44,
+      lineHeight: 0.9,
+      color: t.coffee,
+      opacity: 0.4
+    }
+  }, ".", String(i + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 10,
+      paddingRight: 56
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 22,
+      lineHeight: 1.1,
+      letterSpacing: -0.4
+    }
+  }, r.brand), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 17,
+      color: t.coffee,
+      marginTop: 2,
+      lineHeight: 1.2
+    }
+  }, r.title), !dense && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      lineHeight: 1.55,
+      color: t.fg,
+      marginTop: 10,
+      opacity: 0.85
+    }
+  }, r.description), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.rule,
+      margin: '12px 0 10px'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 4,
+      fontFamily: VC_MONO,
+      fontSize: 10,
+      letterSpacing: 0.8,
+      color: t.muted
+    }
+  }, /*#__PURE__*/React.createElement("div", null, "\u65E5 \u671F \xB7 ", r.dateRange.split('—')[0].trim()), /*#__PURE__*/React.createElement("div", null, "\u9700 ", r.needCount, " \u4F4D \xB7 \u62A5 ", r.appliedCount), /*#__PURE__*/React.createElement("div", null, "\u62A5 \u4EF7 \xB7 ", r.budget), /*#__PURE__*/React.createElement("div", null, "\u622A \u6B62 \xB7 ", r.deadline.split(' ')[0])))))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 2 — Applicants
+// ─────────────────────────────────────────────────────────────
+function VCApplicants({
+  dark,
+  dense,
+  recruitId,
+  onOpenModel,
+  onBack
+}) {
+  const t = vcTheme(dark);
+  const r = window.RECRUITS.find(x => x.id === recruitId) || window.RECRUITS[0];
+  const ids = window.APPLICANTS[r.id] || [];
+  const [selected, setSelected] = React.useState(new Set());
+  const toggleSel = id => setSelected(prev => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n; });
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: VC_SANS
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 22px 10px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: onBack,
+    style: {
+      all: 'unset',
+      cursor: 'pointer',
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 17
+    }
+  }, "\u2190 \u8FD4 \u56DE"), /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.coffee,
+    rotate: 2
+  }, r.issueNo)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      margin: '0 22px',
+      background: t.card,
+      boxShadow: dark ? '0 1px 0 rgba(255,255,255,0.04), 0 12px 24px -16px rgba(0,0,0,0.6)' : '0 1px 0 rgba(255,255,255,0.6), 0 12px 24px -14px rgba(80,50,20,0.25)',
+      border: `0.5px solid ${t.rule}`,
+      padding: '16px 16px 14px',
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: -7,
+      left: 12
+    }
+  }, /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.stamp,
+    rotate: -3
+  }, "\u62DB\u52DF\u4EE4")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 26,
+      lineHeight: 1.05,
+      letterSpacing: -0.4,
+      marginTop: 6
+    }
+  }, r.brand), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 18,
+      color: t.coffee,
+      marginTop: 2
+    }
+  }, r.title), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.rule,
+      margin: '12px 0 10px'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 6,
+      fontFamily: VC_MONO,
+      fontSize: 10,
+      letterSpacing: 0.8,
+      color: t.muted
+    }
+  }, /*#__PURE__*/React.createElement("div", null, "\u65E5\u671F \xB7 ", r.dateRange.split('—')[0].trim()), /*#__PURE__*/React.createElement("div", null, r.city, " \xB7 ", r.type), /*#__PURE__*/React.createElement("div", null, "\u9700 ", r.needCount, " \u4F4D"), /*#__PURE__*/React.createElement("div", null, "\u5DF2\u62A5 ", ids.length))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '20px 22px 8px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 9.5,
+      letterSpacing: 1.5,
+      color: t.muted,
+      marginBottom: 2
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 26,
+      color: t.coffee,
+      lineHeight: 1
+    }
+  }, "\u62A5 \u540D \u540D \u5F55")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 30,
+      color: t.fg,
+      fontVariantNumeric: 'tabular-nums',
+      lineHeight: 1
+    }
+  }, String(ids.length).padStart(2, '0'))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '4px 22px 130px'
+    }
+  }, ids.map((mid, i) => {
+    const m = window.MODELS[mid];
+    if (!m) return null;
+    const rotate = i % 2 === 0 ? -0.4 : 0.5;
+    return /*#__PURE__*/React.createElement("div", {
+      key: mid,
+      style: {
+        background: t.card,
+        marginTop: 14,
+        border: `0.5px solid ${t.rule}`,
+        padding: `${dense ? 12 : 14}px 14px`,
+        transform: `rotate(${rotate}deg)`,
+        boxShadow: dark ? '0 12px 24px -16px rgba(0,0,0,0.6)' : '0 12px 24px -14px rgba(80,50,20,0.22)',
+        position: 'relative'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: 'absolute',
+        top: -10,
+        left: 14,
+        fontFamily: VC_DISPLAY,
+        fontStyle: 'italic',
+        fontSize: 28,
+        color: t.coffee,
+        background: t.bg,
+        padding: '0 8px',
+        lineHeight: 1
+      }
+    }, ".", String(i + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("button", {
+      onClick: (ev) => { ev.stopPropagation(); toggleSel(mid); },
+      'aria-label': selected.has(mid) ? '取消选择' : '选择',
+      style: {
+        all: 'unset',
+        cursor: 'pointer',
+        position: 'absolute',
+        top: -10,
+        right: 14,
+        width: 22,
+        height: 22,
+        background: selected.has(mid) ? t.coffee : t.bg,
+        border: `1px solid ${t.coffee}`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: VC_MONO,
+        fontSize: 14,
+        lineHeight: 1,
+        color: selected.has(mid) ? '#f5ecd9' : 'transparent',
+        boxSizing: 'border-box'
+      }
+    }, "\u2713"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        marginBottom: 12,
+        marginTop: 6
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 46,
+        height: 46,
+        borderRadius: '50%',
+        background: `repeating-linear-gradient(45deg, ${dark ? '#3a2c20' : '#d9c7aa'} 0 3px, ${dark ? '#2a2018' : '#e3d4ba'} 3px 7px)`,
+        border: `0.5px solid ${t.coffee}`,
+        flexShrink: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: VC_DISPLAY,
+        fontStyle: 'italic',
+        fontSize: 18,
+        color: t.coffee
+      }
+    }, m.name[0]), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_DISPLAY,
+        fontSize: 19,
+        lineHeight: 1.1
+      }
+    }, m.name, m.verified && /*#__PURE__*/React.createElement("span", {
+      style: {
+        marginLeft: 8,
+        fontFamily: VC_MONO,
+        fontSize: 9,
+        color: t.coffee,
+        border: `0.5px solid ${t.coffee}`,
+        padding: '1px 5px',
+        verticalAlign: 2
+      }
+    }, "\u8BA4\u8BC1")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_MONO,
+        fontSize: 9.5,
+        letterSpacing: 1,
+        color: t.muted,
+        marginTop: 2
+      }
+    }, m.height, "cm \xB7 ", m.measure, " \xB7 ", m.city)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: 'right'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_DISPLAY,
+        fontSize: 18,
+        color: t.coffee
+      }
+    }, "\u2605", m.rating), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_MONO,
+        fontSize: 9,
+        color: t.muted,
+        letterSpacing: 0.8
+      }
+    }, m.jobs, " \u5355"))), /*#__PURE__*/React.createElement("button", {
+      onClick: () => onOpenModel(m.id),
+      style: {
+        all: 'unset',
+        cursor: 'pointer',
+        display: 'block',
+        width: '100%'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "model-swiper",
+      style: {
+        display: 'flex',
+        gap: 6,
+        overflowX: 'auto',
+        scrollSnapType: 'x mandatory',
+        scrollbarWidth: 'none'
+      }
+    }, window.PHOTO_KINDS_MORE.map((k, j) => /*#__PURE__*/React.createElement("div", {
+      key: k.key,
+      style: {
+        width: 'calc((100% - 12px) / 3)',
+        flexShrink: 0,
+        scrollSnapAlign: 'start'
+      }
+    }, /*#__PURE__*/React.createElement(VCImg, {
+      kind: k.key,
+      dark: dark
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_SERIF,
+        fontStyle: 'italic',
+        fontSize: 12,
+        color: t.coffee,
+        marginTop: 4,
+        textAlign: 'center'
+      }
+    }, k.cn))))), !dense && /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 5,
+        flexWrap: 'wrap'
+      }
+    }, m.tags.slice(0, 3).map((tg, k) => /*#__PURE__*/React.createElement("span", {
+      key: tg,
+      style: {
+        fontFamily: VC_MONO,
+        fontSize: 9,
+        letterSpacing: 0.8,
+        color: t.coffee,
+        padding: '2px 6px',
+        background: dark ? 'rgba(122,74,40,0.18)' : 'rgba(122,74,40,0.08)'
+      }
+    }, tg))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_DISPLAY,
+        fontSize: 15,
+        color: t.fg
+      }
+    }, m.rate)));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      padding: '14px 22px 28px',
+      background: `linear-gradient(180deg, transparent, ${t.bg} 30%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.coffee,
+      color: '#f5ecd9',
+      padding: '14px 18px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      boxShadow: '0 6px 16px -8px rgba(120,60,20,0.4)'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 10,
+      letterSpacing: 1.5
+    }
+  }, "\u4E2D\u4ECB \xB7 \u63A8\u8350 ", selected.size, " / ", r.needCount), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 17
+    }
+  }, "\u63D0 \u4EA4\xA0 \u2192"))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 3 — Detail
+// ─────────────────────────────────────────────────────────────
+function VCDetail({
+  dark,
+  dense,
+  modelId,
+  onBack
+}) {
+  const t = vcTheme(dark);
+  const m = window.MODELS[modelId] || window.MODELS.m1;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: VC_SANS
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 22px 8px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: onBack,
+    style: {
+      all: 'unset',
+      cursor: 'pointer',
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 17
+    }
+  }, "\u2190 \u8FD4 \u56DE"), /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.coffee,
+    rotate: 3
+  }, m.pinyin, " \xB7 \u5377\u5B97")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 22px 0',
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 56,
+      lineHeight: 0.95,
+      letterSpacing: -1,
+      marginTop: 4
+    }
+  }, m.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 18,
+      color: t.coffee,
+      marginTop: 4
+    }
+  }, m.pinyin.toLowerCase(), " \xB7 ", m.city, " \xB7 ", m.age, " \u5C81"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16,
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      background: t.card,
+      transform: 'rotate(-1.5deg)',
+      boxShadow: dark ? '0 12px 24px -14px rgba(0,0,0,0.6)' : '0 12px 24px -14px rgba(80,50,20,0.3)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      transform: 'rotate(1deg)'
+    }
+  }, /*#__PURE__*/React.createElement(VCImg, {
+    kind: "full",
+    ratio: "3 / 4.2",
+    dark: dark
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      bottom: -12,
+      right: -4
+    }
+  }, /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.stamp,
+    rotate: 6
+  }, "\u2605 ", m.rating, "  \xB7  ", m.jobs, " \u5355")))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '28px 22px 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.card,
+      padding: '16px 16px',
+      border: `0.5px solid ${t.rule}`,
+      boxShadow: dark ? '0 12px 24px -16px rgba(0,0,0,0.6)' : '0 12px 24px -14px rgba(80,50,20,0.2)',
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: -8,
+      left: 14
+    }
+  }, /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.coffee,
+    rotate: -3
+  }, "SPEC \xB7 \u4F53\u5F81")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      columnGap: 16,
+      rowGap: 10,
+      marginTop: 6
+    }
+  }, [['身  高', `${m.height} cm`], ['体  重', `${m.weight} kg`], ['三  围', m.measure], ['日  薪', m.rate], ['档  期', m.status.split('·')[0].trim()], ['标  签', m.tags.join(' / ')]].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
+    key: k
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 9,
+      letterSpacing: 1.4,
+      color: t.muted
+    }
+  }, k), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 16,
+      marginTop: 2
+    }
+  }, v)))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px 22px 8px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 22,
+      color: t.coffee,
+      marginBottom: 8
+    }
+  }, "\u5173\u4E8E\u5979"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontSize: 14,
+      lineHeight: 1.7,
+      color: t.fg
+    }
+  }, m.bio)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 22px 16px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline',
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 22,
+      color: t.coffee
+    }
+  }, "\u4F5C \u54C1 \u96C6"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 9.5,
+      letterSpacing: 1.2,
+      color: t.muted
+    }
+  }, "3 / 3")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      gridColumn: '1 / 3'
+    }
+  }, /*#__PURE__*/React.createElement(VCImg, {
+    kind: "glam",
+    ratio: "16 / 9",
+    dark: dark
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 13,
+      color: t.coffee,
+      marginTop: 4,
+      textAlign: 'right'
+    }
+  }, "FIG. 02 \xB7 \u5E26\u5986\u56FE")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(VCImg, {
+    kind: "bare",
+    dark: dark
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 13,
+      color: t.coffee,
+      marginTop: 4,
+      textAlign: 'right'
+    }
+  }, "FIG. 01 \xB7 \u7D20\u989C")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(VCImg, {
+    kind: "full",
+    dark: dark
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 13,
+      color: t.coffee,
+      marginTop: 4,
+      textAlign: 'right'
+    }
+  }, "FIG. 03 \xB7 \u5168\u8EAB")))), !dense && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 22px 12px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 22,
+      color: t.coffee,
+      marginBottom: 8
+    }
+  }, "\u8FD1 \u671F \u901A \u544A"), [['壬寅 · 正月', '《嘉人》二月刊内页 · 北京'], ['辛丑 · 腊月', 'SHANG XIA 秋冬 lookbook'], ['辛丑 · 冬月', 'LANEIGE 雪润电商']].map(([d, j]) => /*#__PURE__*/React.createElement("div", {
+    key: d,
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '100px 1fr',
+      padding: '9px 0',
+      borderBottom: `0.5px solid ${t.rule}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 10,
+      color: t.muted,
+      letterSpacing: 1
+    }
+  }, d), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontSize: 13
+    }
+  }, j)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 90
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      padding: '14px 22px 28px',
+      background: `linear-gradient(180deg, transparent, ${t.bg} 30%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 56,
+      padding: '14px 0',
+      textAlign: 'center',
+      background: t.card,
+      border: `0.5px solid ${t.coffee}`,
+      color: t.coffee,
+      fontFamily: VC_DISPLAY,
+      fontSize: 16
+    }
+  }, "\u2661"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      padding: '14px 0',
+      textAlign: 'center',
+      background: t.coffee,
+      color: '#f5ecd9',
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 17,
+      boxShadow: '0 6px 16px -8px rgba(120,60,20,0.4)'
+    }
+  }, "\u63A8 \u8350 \u7ED9 \u62DB \u8058 \u65B9   \u2192"))));
+}
+Object.assign(window, {
+  VCRecruitList,
+  VCApplicants,
+  VCDetail
+});
+</script>
+
+<script>
+(function(){
+  const e = React.createElement;
+  function Phone({label, sub, children}) {
+    return e('div', {className:'phone-block'},
+      e('div', {className:'phone-label'},
+        e('span', null, label),
+        e('em', null, sub)
+      ),
+      e(window.IOSDevice, {width:390, height:844}, e('div', {style:{height:'100%'}}, e('div', {style:{height:56}}), children))
+    );
+  }
+  function InteractivePhone({label, sub, initial}) {
+    const dark = false, dense = false;
+    const [stack, setStack] = React.useState(initial);
+    const top = stack[stack.length - 1];
+    const pop = () => stack.length > 1 && setStack(stack.slice(0, -1));
+    const push = (s) => setStack([...stack, s]);
+    let screen;
+    if (top.view === 'list') {
+      screen = e(window.VCRecruitList, {dark, dense, onOpen:(rid)=>push({view:'applicants', recruitId:rid})});
+    } else if (top.view === 'applicants') {
+      screen = e(window.VCApplicants, {dark, dense, recruitId:top.recruitId,
+        onBack: pop,
+        onOpenModel:(mid)=>push({view:'detail', recruitId:top.recruitId, modelId:mid})
+      });
+    } else {
+      screen = e(window.VCDetail, {dark, dense, modelId:top.modelId, onBack: pop});
+    }
+    return e(Phone, {label, sub}, screen);
+  }
+  function App() {
+    return e('div', {style:{display:'flex',flexDirection:'column',alignItems:'center',gap:64}},
+      e(InteractivePhone, {key:'p1', label:'01 RECRUIT LIST', sub:'招募令 · 点击招募进入报名者', initial:[{view:'list'}]}),
+      e(InteractivePhone, {key:'p2', label:'02 APPLICANTS', sub:'报名者 · 点击模特进入档案', initial:[{view:'list'}, {view:'applicants', recruitId:'r1'}]}),
+      e(InteractivePhone, {key:'p3', label:'03 MODEL DOSSIER', sub:'模特档案 · 返回到报名者', initial:[{view:'list'}, {view:'applicants', recruitId:'r1'}, {view:'detail', recruitId:'r1', modelId:'m1'}]})
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(e(App));
+})();
+</script>
+
+</body>
+</html>
+
+<style id="__om-edit-overrides">
+#root > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) { height: 2px !important }
+#root > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) { height: 5px !important }
+#root > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) { height: 5px !important }
+#root > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) { height: 56px !important }
+#root > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) { height: 5px !important }
+#root > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) { height: 1px !important }
+#root > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) { height: 5px !important }
+#root > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) { height: 45px !important }
+</style>

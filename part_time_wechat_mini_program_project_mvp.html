@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>兼职小程序 MVP 产品规格 v3</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    margin: 0 auto;
+    padding: 32px 48px 80px;
+    max-width: 1180px;
+    color: #1f2937;
+    background: #fff;
+    line-height: 1.65;
+  }
+  h1 { font-size: 26px; border-bottom: 2px solid #1f2937; padding-bottom: 12px; margin: 0 0 4px; }
+  h2 { font-size: 20px; margin: 48px 0 8px; padding-top: 12px; border-top: 1px solid #e5e7eb; color: #111827; }
+  h2:first-of-type { border-top: none; }
+  h3 { font-size: 15px; margin: 24px 0 8px; color: #374151; }
+  h4 { font-size: 13px; margin: 16px 0 6px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.5px; }
+  p { margin: 8px 0; }
+
+  .meta { color: #6b7280; font-size: 13px; margin-bottom: 8px; }
+  .doc-status {
+    display: inline-block;
+    padding: 3px 10px;
+    background: #d1fae5;
+    color: #065f46;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+
+  .summary {
+    background: #f9fafb;
+    border-left: 3px solid #2563eb;
+    padding: 16px 20px;
+    margin: 20px 0 32px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  .summary p { margin: 6px 0; }
+
+  .toc {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px 24px;
+    margin: 24px 0 32px;
+    font-size: 13px;
+    column-count: 2;
+    column-gap: 32px;
+  }
+  .toc h4 { margin: 0 0 8px; column-span: all; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin: 3px 0; break-inside: avoid; }
+  .toc a { color: #374151; text-decoration: none; }
+  .toc a:hover { color: #2563eb; text-decoration: underline; }
+
+  .callout {
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13.5px;
+  }
+  .callout-info { background: #eff6ff; border-left: 3px solid #2563eb; color: #1e3a8a; }
+  .callout-warn { background: #fef9c3; border-left: 3px solid #ca8a04; color: #713f12; }
+  .callout-decision { background: #fef3c7; border-left: 3px solid #d97706; color: #7c2d12; }
+  .callout-scope { background: #ecfeff; border-left: 3px solid #0891b2; color: #155e75; }
+  .callout strong { font-weight: 600; }
+  .callout ul { margin: 6px 0 0; padding-left: 22px; }
+  .callout li { margin: 3px 0; }
+
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .role-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+  .role-card .name {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .role-card .swatch { width: 14px; height: 14px; border-radius: 3px; }
+  .role-card .desc { color: #4b5563; }
+  .role-card .desc strong { color: #1f2937; }
+
+  .diagram-wrap {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    background: #fafafa;
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+  .diagram-wrap svg { display: block; margin: 0 auto; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th, td { border: 1px solid #e5e7eb; padding: 10px 12px; text-align: left; vertical-align: top; }
+  th { background: #f3f4f6; font-weight: 600; font-size: 12px; letter-spacing: 0.3px; color: #374151; }
+  tbody tr:nth-child(even) { background: #fafafa; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+  .tag-active { background: #dbeafe; color: #1e40af; }
+  .tag-final-ok { background: #bbf7d0; color: #065f46; }
+  .tag-final-bad { background: #e5e7eb; color: #374151; }
+  .tag-star { background: #fed7aa; color: #7c2d12; font-weight: 600; }
+  .tag-mvp { background: #fde68a; color: #78350f; font-weight: 600; }
+  .tag-p0 { background: #fcebeb; color: #a32d2d; }
+  .tag-p1 { background: #faeeda; color: #ba7517; }
+  .tag-p2 { background: #eaf3de; color: #3b6d11; }
+
+  code { font-size: 12px; background: #f3f4f6; padding: 1px 5px; border-radius: 3px; }
+
+  .legend-footnote {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #5f5e5a;
+    line-height: 1.8;
+  }
+
+  .x-ref {
+    font-size: 12px;
+    color: #6b7280;
+    font-style: italic;
+  }
+  .x-ref::before { content: "→ "; }
+
+  @media print {
+    body { padding: 20px; max-width: 100%; }
+    .diagram-wrap { border: none; padding: 0; background: white; }
+    tbody tr:nth-child(even) { background: white; }
+    h2 { page-break-before: auto; page-break-after: avoid; }
+    .diagram-wrap, .role-grid, table { page-break-inside: avoid; }
+    .toc { column-count: 1; }
+  }
+</style>
+</head>
+<body>
+
+<h1>兼职小程序 MVP 产品规格 <span class="doc-status">v3 · MVP 闭环对齐</span></h1>
+<div class="meta">Product Requirements Document · 适用对象:产品 / 工程 / 设计 / QA / 客服 / 运营 · 最后更新 2026 Q2</div>
+
+<div class="summary">
+<p><strong>这份文档是什么:</strong> 兼职小程序 MVP 版本的完整产品规格,作为四方协作模式("应聘方 — 平台 — 招聘方 — 中介方")下"招募令"业务闭环的唯一真理来源。工程师依据本文档建数据库 schema 与状态机;设计师依据本文档定义交互细节;QA 依据本文档编写测试用例;客服依据本文档判断用户问的是哪个阶段的问题。</p>
+<p><strong>这份文档怎么读:</strong> 推荐顺序——先看 §1 角色和 §2 MVP 范围(5 分钟看懂业务),再看 §3 关键设计决策(理解为什么这么设计),然后按需查阅 §4 主流程 / §5 状态机 / §6 异常路径。<a href="#appendix-a">附录 A</a> 提供"消息编号 ↔ 状态迁移 ↔ 异常路径"三向索引,排查问题时用得到。</p>
+</div>
+
+<div class="toc">
+<h4>目录</h4>
+<ol>
+  <li><a href="#sec-1">角色与核心术语</a></li>
+  <li><a href="#sec-2">MVP 范围声明</a></li>
+  <li><a href="#sec-3">关键设计决策(本版闭环要点)</a></li>
+  <li><a href="#sec-4">主流程时序图(Happy Path)</a></li>
+  <li><a href="#sec-5">招募令状态机
+    <ul style="margin: 2px 0;">
+      <li><a href="#sec-5-1">招募令(主)状态机</a></li>
+      <li><a href="#sec-5-2">候选人(子)状态机</a></li>
+      <li><a href="#sec-5-3">状态定义表</a></li>
+    </ul>
+  </a></li>
+  <li><a href="#sec-6">异常路径
+    <ul style="margin: 2px 0;">
+      <li><a href="#sec-6-1">异常分支时序图(alt 1–4)</a></li>
+      <li><a href="#sec-6-2">异常处理规范表</a></li>
+    </ul>
+  </a></li>
+  <li><a href="#sec-7">超时清单(Scheduled Tasks)</a></li>
+  <li><a href="#sec-8">v2 延期事项</a></li>
+  <li><a href="#appendix-a">附录 A:三向索引(消息 ↔ 状态 ↔ 异常)</a></li>
+  <li><a href="#appendix-b">附录 B:v3 修订要点(从 v2)</a></li>
+</ol>
+</div>
+
+<h2 id="sec-1">一、角色与核心术语</h2>
+
+<p>本产品有 <strong>4 个参与方</strong>。所有图表、消息编号、状态迁移都围绕这 4 个角色展开。读图时如果忘了谁是谁,翻回这一节。</p>
+
+<div class="role-grid">
+  <div class="role-card">
+    <div class="name"><span class="swatch" style="background:#dbeafe;border:1px solid #185fa5;"></span>应聘方(C端用户)</div>
+    <div class="desc">浏览招募令、报名、应答入选通知。MVP 期间以学生为主。<strong>关键动作</strong>:#14 报名、#19a 确认接受(v3 新增显式确认)。</div>
+  </div>
+  <div class="role-card">
+    <div class="name"><span class="swatch" style="background:#eeedfe;border:1px solid #534ab7;"></span>兼职小程序(平台)</div>
+    <div class="desc">业务编排中枢——状态机、超时调度、消息推送、群聊建立都由平台承担。<strong>关键动作</strong>:所有 T1–T5/T11 超时触发、状态迁移、自动递补激活。</div>
+  </div>
+  <div class="role-card">
+    <div class="name"><span class="swatch" style="background:#d1fae5;border:1px solid #0f6e56;"></span>招聘方(B端商户)</div>
+    <div class="desc">发布招募令、确认入选名单、确认完工。<strong>关键动作</strong>:#9 发布、#18 后确认名单(v3 拆出来的双重确认上半段)。</div>
+  </div>
+  <div class="role-card">
+    <div class="name"><span class="swatch" style="background:#fed7aa;border:1px solid #993c1d;"></span>中介方(平台预入驻方)</div>
+    <div class="desc">代招聘方做候选人初筛 + 维护备选池排序。MVP 期间为平台预先签约方,不开放第三方入驻。<strong>关键动作</strong>:#17 提交筛选结果(同时给出 rank 1~N 入选 + N+1~M 备选)。</div>
+  </div>
+</div>
+
+<h3>核心实体:招募令(Recruitment Order)</h3>
+<p>产品的核心业务实体。从招聘方点击"新建"开始,到"已关闭/已过期/已取消"结束,生命周期会经历约 <strong>10 个状态</strong>(见 §5)。一条招募令绑定:1 个招聘方、1 个中介方、N 个入选应聘方、M 个备选应聘方、1 个沟通群聊。<br>
+工程视角:对应数据库 <code>recruitment</code> 表,<code>status</code> 字段枚举值见 §5.3。</p>
+
+<h3>核心机制:双重确认闭环 ★</h3>
+<p>v3 的核心交付物。一笔订单要成立,需要<strong>招聘方确认名单</strong>(#18)和<strong>应聘方确认接受</strong>(#19a)两步显式确认,任一阶段中断都进入对应的恢复流程(异议重筛 / 自动递补)。详见 §3.1。</p>
+
+<h2 id="sec-2">二、MVP 范围声明</h2>
+
+<div class="callout callout-scope">
+<strong>MVP 的目标:</strong>跑通一条完整的"发布 → 报名 → 筛选 → 双方确认 → 成单 → 完工"主流程,并能稳定处理 4 类规则化异常(审核驳回 / 中介超时 / 招聘方异议 / 应聘方放弃)。其他诉求一律走 v2。
+</div>
+
+<table>
+<thead>
+<tr><th style="width: 42%">MVP 范围内</th><th style="width: 58%">延期到 v2</th></tr>
+</thead>
+<tbody>
+<tr>
+  <td>四方完整主流程(#1–#22)</td>
+  <td>多招募令并发管理工作台</td>
+</tr>
+<tr>
+  <td>招募令 10 个状态 + 3 个终态</td>
+  <td>履约期违约的分级补偿策略</td>
+</tr>
+<tr>
+  <td>候选人子状态机(SELECTED/BACKUP → PENDING → CONFIRMED/DECLINED/ABORTED/SKIPPED)</td>
+  <td>按取消时点分级处理退款(发布后取消 vs 成单后取消)</td>
+</tr>
+<tr>
+  <td>双重确认闭环(招聘方 #18 + 应聘方 #19a)</td>
+  <td>第三方中介开放入驻(MVP 期间中介方为平台预先签约方)</td>
+</tr>
+<tr>
+  <td>自动递补(按中介方提交的 rank 顺序激活备选)</td>
+  <td>多维匹配算法(MVP 期间使用单维类别 + 时段匹配)</td>
+</tr>
+<tr>
+  <td>4 类异常路径(见 §6)</td>
+  <td>群聊解散后历史消息归档</td>
+</tr>
+<tr>
+  <td>T1(中介筛选 24h)/ T2(招聘方确认 48h)/ T3(应聘方应答 24h)/ T4(变更应答 24h)/ T5(截止日期)/ T11(完工确认 7d)</td>
+  <td>异常自愈机制(系统检测到状态异常自动修复)</td>
+</tr>
+<tr>
+  <td>统一取消处理:直接置 <code>CANCELLED</code> + 通知所有相关方 + 解散群</td>
+  <td>取消时差异化补偿、财务对账接口、客服申诉工单</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="sec-3">三、关键设计决策(本版闭环要点)</h2>
+<p>这一节回答"为什么这么设计"。每条决策都有一个明确的取舍——读完这一节,看后面的图表就不会有"为什么不这样"的疑问。</p>
+
+<h3>3.1 双重确认闭环:为什么把"成单"拆成两段?</h3>
+<div class="callout callout-decision">
+<strong>决策:</strong>在"待招聘方确认"和"已成单"之间新增 <strong>待应聘方确认</strong> 状态,应聘方走 24h 显式确认窗口,默认放弃。<br>
+<strong>取舍:</strong>v2 版本里招聘方点完确认就直接拉群、置已成单,事实上把应聘方"被通知"等同于"已同意"。这会导致两类失败被压到拉群之后才暴露:① 应聘方默认拒绝;② 应聘方根本没看到通知。这些失败到了"已成单"再处理,无论是数据账、群聊状态、还是招聘方信任度都会出问题。<br>
+<strong>实现位置:</strong>主流程 #19a(<a href="#sec-4">§4</a>)、状态机 PENDING_APPLICANT(<a href="#sec-5-3">§5.3</a>)、候选人子状态机 PENDING(<a href="#sec-5-2">§5.2</a>)、T3 超时(<a href="#sec-7">§7</a>)。
+</div>
+
+<h3>3.2 自动递补:为什么递补不再回中介方?</h3>
+<div class="callout callout-decision">
+<strong>决策:</strong>应聘方放弃/超时后,平台<strong>按中介方提交的 rank 顺序自动激活下一备选</strong>,不重新走"通知中介 → 中介筛选 → 招聘方审批"。只有备选池耗尽才退回中介方。<br>
+<strong>取舍:</strong>v2 版本里每次有人放弃,都要走一遍"通知中介 → 中介在 24h 内补人 → 招聘方审批",一笔订单可能要 3-4 天才能成单。本版让中介方在 #17 提交筛选结果时<strong>一次性</strong>给出 rank 1~N 入选 + rank N+1~ 备选的有序列表,递补完全在平台内闭环。这把递补路径从"3 方协作"压成了"平台内自动",平均成单时长可压到 1 天以内。代价是中介方在 #17 时要多干一点活——但这一点反过来也提高了中介筛选的质量(因为他必须排出至少 N+M 个有序候选)。<br>
+<strong>实现位置:</strong>状态机递补中→待应聘方确认迁移(<a href="#sec-5-1">§5.1</a>)、异常路径 alt 4(<a href="#sec-6-1">§6.1</a>)、候选人子状态机 BACKUP → PENDING(<a href="#sec-5-2">§5.2</a>)。
+</div>
+
+<h3>3.3 统一取消:为什么 MVP 不分级处理退款?</h3>
+<div class="callout callout-decision">
+<strong>决策:</strong>招聘方在所有非终态(发布后到已成单前)主动取消,统一直接进入"已取消"——通知所有相关方 + 取消该单全部待办(含已建群聊解散),<strong>不处理退款 / 不区分补偿等级</strong>。<br>
+<strong>取舍:</strong>"按取消时点差异化补偿"是个看起来很合理的诉求(刚发布就取消 vs 应聘方已确认后取消,显然责任不同),但实现上要打通支付 / 财务对账 / 客服申诉三条链路,工程量 ≥ 主流程一半。MVP 阶段我们容忍"招聘方滥取消"的可能性,用统一通知 + 数据埋点先观察实际发生率;v2 再引入分级补偿。<br>
+<strong>实现位置:</strong>状态机多状态 → CANCELLED 迁移(<a href="#sec-5-1">§5.1</a>)、异常处理表"招聘方主动取消"行(<a href="#sec-6-2">§6.2</a>)。
+</div>
+
+<h3>3.4 三段关键超时:T1 / T2 / T3 各自防什么?</h3>
+<div class="callout callout-decision">
+<strong>决策:</strong>主流程"筛选 → 双重确认"段引入三段超时,任何一段卡住都不会让招募令悬挂。<br>
+<ul>
+  <li><strong>T1(24h,筛选中):</strong>防中介方在 #17 不响应——超时后系统自动初筛(按报名时间 + 简历匹配度),让招聘方仍能拿到候选名单。</li>
+  <li><strong>T2(48h,待招聘方确认):</strong>防招聘方在 #18 后不响应——24h 提醒 + 48h 强制视为退回,触发异议重筛。<strong>不</strong>替招聘方做"默认通过"的决策。</li>
+  <li><strong>T3(24h,待应聘方确认):</strong>防应聘方默认拒绝——视为放弃,触发递补(走 §3.2)。</li>
+</ul>
+<strong>原则:</strong>T1/T3 系统替用户做决策(自动初筛/默认放弃)是因为这两侧的"无响应"事实上等价于"放弃"或"无能力提供";T2 系统<strong>不</strong>替招聘方决策,因为招聘方对名单的判断不可由系统替代。这条不一致是有意的。<br>
+<strong>实现位置:</strong><a href="#sec-7">§7 超时清单</a>。
+</div>
+
+
+<h2 id="sec-4">四、主流程时序图(Happy Path)</h2>
+<p>22 条消息 + 1 条 v3 新增(<code>#19a</code>)展示了一笔订单从发布到拉群的完整路径。<strong>★ 红橙色标注的两条(#18 + #19a)是 v3 双重确认闭环</strong>。其他消息和 v2 保持兼容。</p>
+
+<div class="diagram-wrap">
+<svg width="940" height="830" viewBox="0 0 940 830" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#374151"/>
+    </marker>
+    <marker id="arrd" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#6b7280"/>
+    </marker>
+    <marker id="arro" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#c2410c"/>
+    </marker>
+  </defs>
+
+  <!-- Participants -->
+  <g font-family="inherit" font-size="13">
+    <rect x="70"  y="20" width="120" height="36" rx="6" fill="#dbeafe" stroke="#3b82f6"/>
+    <text x="130" y="42" text-anchor="middle" font-weight="600">应聘方</text>
+    <rect x="310" y="20" width="120" height="36" rx="6" fill="#ede9fe" stroke="#7c3aed"/>
+    <text x="370" y="42" text-anchor="middle" font-weight="600">兼职小程序</text>
+    <rect x="550" y="20" width="120" height="36" rx="6" fill="#d1fae5" stroke="#059669"/>
+    <text x="610" y="42" text-anchor="middle" font-weight="600">招聘方</text>
+    <rect x="770" y="20" width="120" height="36" rx="6" fill="#fed7aa" stroke="#ea580c"/>
+    <text x="830" y="42" text-anchor="middle" font-weight="600">中介方</text>
+  </g>
+
+  <!-- Pre-condition note -->
+  <g>
+    <rect x="755" y="66" width="150" height="40" fill="#fef3c7" stroke="#f59e0b" stroke-dasharray="4,2"/>
+    <text x="830" y="82" text-anchor="middle" font-size="11" fill="#92400e">前置:中介方为</text>
+    <text x="830" y="98" text-anchor="middle" font-size="11" fill="#92400e">平台预先入驻方</text>
+  </g>
+
+  <!-- Lifelines -->
+  <g stroke="#9ca3af" stroke-dasharray="3,3" stroke-width="1">
+    <line x1="130" y1="56"  x2="130" y2="775"/>
+    <line x1="370" y1="56"  x2="370" y2="775"/>
+    <line x1="610" y1="56"  x2="610" y2="775"/>
+    <line x1="830" y1="106" x2="830" y2="775"/>
+  </g>
+
+  <!-- 小程序 activation (central hub, near-continuous) -->
+  <g fill="#e0e7ff" stroke="#7c3aed" stroke-width="0.8">
+    <rect x="366" y="132" width="8" height="250"/>
+    <rect x="366" y="398" width="8" height="180"/>
+    <rect x="366" y="590" width="8" height="165"/>
+  </g>
+
+  <!-- 应聘方 activations -->
+  <g fill="#dbeafe" stroke="#3b82f6" stroke-width="0.8">
+    <rect x="126" y="133" width="8" height="38"/>
+    <rect x="126" y="238" width="8" height="38"/>
+    <rect x="126" y="400" width="8" height="20"/>
+    <rect x="126" y="458" width="8" height="62"/>
+    <rect x="126" y="618" width="8" height="80"/>
+  </g>
+
+  <!-- 招聘方 activations -->
+  <g fill="#d1fae5" stroke="#059669" stroke-width="0.8">
+    <rect x="606" y="186" width="8" height="38"/>
+    <rect x="606" y="290" width="8" height="38"/>
+    <rect x="606" y="343" width="8" height="38"/>
+    <rect x="606" y="588" width="8" height="22"/>
+    <rect x="606" y="710" width="8" height="18"/>
+  </g>
+
+  <!-- 中介方 activations -->
+  <g fill="#fed7aa" stroke="#ea580c" stroke-width="0.8">
+    <rect x="826" y="429" width="8" height="18"/>
+    <rect x="826" y="532" width="8" height="48"/>
+    <rect x="826" y="738" width="8" height="18"/>
+  </g>
+
+  <!-- Messages -->
+  <g font-family="inherit" font-size="12">
+    <!-- 1 -->
+    <line x1="135" y1="140" x2="365" y2="140" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="250" y="135" text-anchor="middle">1: 打开, 注册登录</text>
+    <!-- 2 -->
+    <line x1="365" y1="163" x2="135" y2="163" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="250" y="158" text-anchor="middle" fill="#4b5563">2: 登录成功</text>
+    <!-- 3 -->
+    <line x1="605" y1="193" x2="375" y2="193" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="490" y="188" text-anchor="middle">3: 打开, 注册登录</text>
+    <!-- 4 -->
+    <line x1="375" y1="216" x2="605" y2="216" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="490" y="211" text-anchor="middle" fill="#4b5563">4: 登录成功</text>
+    <!-- 5 -->
+    <line x1="135" y1="245" x2="365" y2="245" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="250" y="240" text-anchor="middle">5: 填资料 + 期望类别/时段</text>
+    <!-- 6 -->
+    <line x1="365" y1="268" x2="135" y2="268" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="250" y="263" text-anchor="middle" fill="#4b5563">6: 保存成功</text>
+    <!-- 7 -->
+    <line x1="605" y1="297" x2="375" y2="297" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="490" y="292" text-anchor="middle">7: 填写基本信息</text>
+    <!-- 8 -->
+    <line x1="375" y1="320" x2="605" y2="320" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="490" y="315" text-anchor="middle" fill="#4b5563">8: 保存成功</text>
+    <!-- 9 -->
+    <line x1="605" y1="350" x2="375" y2="350" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="490" y="345" text-anchor="middle">9: 发布招募令 (选类别)</text>
+    <!-- 10 -->
+    <line x1="375" y1="373" x2="605" y2="373" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="490" y="368" text-anchor="middle" fill="#4b5563">10: 发布成功</text>
+    <!-- 11 (async push, dashed) -->
+    <line x1="365" y1="408" x2="135" y2="408" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="250" y="403" text-anchor="middle" fill="#4b5563">11: 推送匹配兼职</text>
+    <!-- 12 (async push, dashed) -->
+    <line x1="375" y1="437" x2="825" y2="437" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="600" y="432" text-anchor="middle" fill="#4b5563">12: 推送新招聘信息</text>
+    <!-- 13 -->
+    <line x1="135" y1="465" x2="365" y2="465" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="250" y="460" text-anchor="middle">13: 查看招募令</text>
+    <!-- 14 -->
+    <line x1="135" y1="490" x2="365" y2="490" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="250" y="485" text-anchor="middle">14: 报名意向兼职</text>
+    <!-- 15 -->
+    <line x1="365" y1="515" x2="135" y2="515" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="250" y="510" text-anchor="middle" fill="#4b5563">15: 报名成功</text>
+    <!-- 16 -->
+    <line x1="825" y1="540" x2="375" y2="540" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="600" y="535" text-anchor="middle">16: 查看报名人员</text>
+    <!-- 17 -->
+    <line x1="825" y1="572" x2="375" y2="572" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="600" y="567" text-anchor="middle">17: 提交筛选结果</text>
+    <!-- 18 ★ -->
+    <line x1="375" y1="600" x2="605" y2="600" stroke="#c2410c" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arro)"/>
+    <text x="490" y="595" text-anchor="middle" fill="#c2410c" font-weight="600">★ 18: 通知入选名单 (闭环新增)</text>
+    <!-- 19 -->
+    <line x1="365" y1="628" x2="135" y2="628" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="250" y="623" text-anchor="middle" fill="#4b5563">19: 通知入选</text>
+    <!-- 19a ★ NEW v3 (应聘方显式确认接受) -->
+    <line x1="135" y1="650" x2="365" y2="650" stroke="#c2410c" stroke-width="1.8" marker-end="url(#arro)"/>
+    <text x="250" y="645" text-anchor="middle" fill="#c2410c" font-weight="600">★ 19a: 应聘方确认接受 (T3 24h 应答窗口)</text>
+    <!-- 20 unified label -->
+    <line x1="365" y1="690" x2="135" y2="690" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="250" y="685" text-anchor="middle">20: 拉入沟通群聊</text>
+    <!-- 21 -->
+    <line x1="375" y1="718" x2="605" y2="718" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="490" y="713" text-anchor="middle">21: 拉入沟通群聊</text>
+    <!-- 22 -->
+    <line x1="375" y1="746" x2="825" y2="746" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="600" y="741" text-anchor="middle">22: 拉入沟通群聊</text>
+  </g>
+
+  <!-- Legend -->
+  <g font-family="inherit" font-size="11" transform="translate(50, 798)">
+    <line x1="0"   y1="6" x2="38"  y2="6" stroke="#374151" stroke-width="1.5"/>
+    <text x="46"  y="10" fill="#4b5563">同步调用</text>
+    <line x1="125" y1="6" x2="163" y2="6" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <text x="171" y="10" fill="#4b5563">异步通知 / 返回</text>
+    <text x="290" y="10" fill="#c2410c" font-weight="600">★</text>
+    <text x="304" y="10" fill="#4b5563">关键闭环 (本版新增/优化)</text>
+    <rect x="490" y="1" width="10" height="10" fill="#e0e7ff" stroke="#7c3aed" stroke-width="0.8"/>
+    <text x="506" y="10" fill="#4b5563">激活条 Execution Spec</text>
+  </g>
+</svg>
+</div>
+
+<h3>关键消息说明</h3>
+<table>
+<thead><tr><th style="width: 8%">编号</th><th style="width: 22%">消息</th><th>含义 / 对应状态迁移</th></tr></thead>
+<tbody>
+<tr><td>#9</td><td>发布招募令</td><td>触发"草稿 → 审核中"。携带类目、时段、薪酬等基础信息。</td></tr>
+<tr><td>#14</td><td>报名意向兼职</td><td>首位应聘方报名触发"已发布 → 筛选中"。后续报名继续接收,进入剩余报名池。</td></tr>
+<tr><td>#17</td><td>提交筛选结果</td><td>中介方一次性提交有序候选列表(rank 1~N 入选 + rank N+1~M 备选)。触发"筛选中 → 待招聘方确认"。</td></tr>
+<tr><td>★ #18</td><td>通知入选名单(v3)</td><td>双重确认上半段:招聘方对名单做决策(确认 / 退回)。触发"待招聘方确认 → 待应聘方确认"。</td></tr>
+<tr><td>#19</td><td>通知入选</td><td>异步推送(站内 + 短信 + 公众号)告知应聘方被入选。</td></tr>
+<tr><td>★ #19a</td><td>应聘方确认接受(v3)</td><td>双重确认下半段:应聘方显式应答,T3 24h 默认放弃。所有入选应聘方均确认后才进入"已成单"。</td></tr>
+<tr><td>#20–#22</td><td>拉入沟通群聊</td><td>三方/四方进群。群满 500 时自动建子群(见 §6.2)。</td></tr>
+</tbody>
+</table>
+
+<p class="x-ref">完整状态迁移见 <a href="#sec-5">§5</a>;异常分支见 <a href="#sec-6">§6</a>;消息编号 ↔ 状态迁移的完整映射见 <a href="#appendix-a">附录 A</a>。</p>
+
+<h2 id="sec-5">五、招募令状态机</h2>
+<p>时序图擅长表达"消息怎么流",但不擅长表达"业务实体怎么演化"。这一节用状态机图把招募令实体的演化路径一次性铺平——工程师拿去建数据库 <code>status</code> 字段,客服拿去判断"用户问的是哪个阶段的问题"。</p>
+
+<h3 id="sec-5-1">5.1 招募令(主)状态机</h3>
+<div class="diagram-wrap">
+<svg width="1000" height="900" viewBox="0 0 1000 900" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#374151"/>
+    </marker>
+    <marker id="arrdash" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#9ca3af"/>
+    </marker>
+    <marker id="arrred" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrorng" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#ea580c"/>
+    </marker>
+  </defs>
+
+  <!-- ===== Initial state ===== -->
+  <circle cx="240" cy="60" r="7" fill="#1f2937"/>
+
+  <!-- ===== States ===== -->
+  <!-- 草稿 -->
+  <rect x="190" y="90" width="100" height="40" rx="6" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+  <text x="240" y="115" text-anchor="middle" font-size="13" font-weight="500">草稿</text>
+
+  <!-- 审核中 -->
+  <rect x="190" y="175" width="100" height="40" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="240" y="200" text-anchor="middle" font-size="13" font-weight="500">审核中</text>
+
+  <!-- 驳回待修改 -->
+  <rect x="410" y="175" width="120" height="40" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="470" y="200" text-anchor="middle" font-size="13" font-weight="500">驳回待修改</text>
+
+  <!-- 已发布 -->
+  <rect x="190" y="265" width="100" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="240" y="290" text-anchor="middle" font-size="13" font-weight="500">已发布</text>
+
+  <!-- 已过期 (final) -->
+  <rect x="650" y="265" width="100" height="40" rx="6" fill="#e5e7eb" stroke="#4b5563" stroke-width="1.5"/>
+  <rect x="653" y="268" width="94" height="34" rx="4" fill="none" stroke="#4b5563" stroke-width="1"/>
+  <text x="700" y="290" text-anchor="middle" font-size="13" font-weight="500" fill="#1f2937">已过期</text>
+
+  <!-- 筛选中 -->
+  <rect x="190" y="355" width="100" height="40" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="240" y="380" text-anchor="middle" font-size="13" font-weight="500">筛选中</text>
+
+  <!-- 待招聘方确认 ★ -->
+  <rect x="170" y="445" width="140" height="40" rx="6" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
+  <text x="240" y="470" text-anchor="middle" font-size="13" font-weight="600" fill="#7c2d12">★ 待招聘方确认</text>
+
+  <!-- 异议重筛 -->
+  <rect x="410" y="445" width="120" height="40" rx="6" fill="#fce7f3" stroke="#be185d" stroke-width="1.5"/>
+  <text x="470" y="470" text-anchor="middle" font-size="13" font-weight="500">异议重筛</text>
+
+  <!-- 已取消 (final) -->
+  <rect x="650" y="445" width="100" height="40" rx="6" fill="#e5e7eb" stroke="#4b5563" stroke-width="1.5"/>
+  <rect x="653" y="448" width="94" height="34" rx="4" fill="none" stroke="#4b5563" stroke-width="1"/>
+  <text x="700" y="470" text-anchor="middle" font-size="13" font-weight="500" fill="#1f2937">已取消</text>
+
+  <!-- 待应聘方确认 ★ NEW -->
+  <rect x="170" y="535" width="140" height="40" rx="6" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
+  <text x="240" y="560" text-anchor="middle" font-size="13" font-weight="600" fill="#7c2d12">★ 待应聘方确认</text>
+
+  <!-- 递补中 (moved up to same row as 待应聘方确认) -->
+  <rect x="410" y="535" width="120" height="40" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="470" y="560" text-anchor="middle" font-size="13" font-weight="500">递补中</text>
+
+  <!-- 已成单 -->
+  <rect x="190" y="625" width="100" height="40" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1.5"/>
+  <text x="240" y="650" text-anchor="middle" font-size="13" font-weight="500">已成单</text>
+
+  <!-- 已关闭 (final) -->
+  <rect x="190" y="735" width="100" height="40" rx="6" fill="#bbf7d0" stroke="#047857" stroke-width="1.5"/>
+  <rect x="193" y="738" width="94" height="34" rx="4" fill="none" stroke="#047857" stroke-width="1"/>
+  <text x="240" y="760" text-anchor="middle" font-size="13" font-weight="600" fill="#064e3b">已关闭</text>
+
+  <!-- ===== Main path arrows (vertical, solid) ===== -->
+  <g font-size="11" fill="#374151">
+    <!-- ● → 草稿 -->
+    <line x1="240" y1="67" x2="240" y2="88" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+
+    <!-- 草稿 → 审核中 -->
+    <line x1="240" y1="130" x2="240" y2="173" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="248" y="156">提交审核 (#9)</text>
+
+    <!-- 审核中 → 已发布 -->
+    <line x1="240" y1="215" x2="240" y2="263" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="248" y="243">审核通过</text>
+
+    <!-- 已发布 → 筛选中 -->
+    <line x1="240" y1="305" x2="240" y2="353" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="248" y="333">有人报名 (#14)</text>
+
+    <!-- 筛选中 → 待招聘方确认 -->
+    <line x1="240" y1="395" x2="240" y2="443" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="248" y="415">中介方提交 (#17)</text>
+    <text x="248" y="430" fill="#6b7280" font-style="italic" font-size="10">或 T1 24h超时自动初筛</text>
+
+    <!-- 待招聘方确认 → 待应聘方确认 ★ NEW v3 -->
+    <line x1="240" y1="485" x2="240" y2="533" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="248" y="505" font-weight="600" fill="#7c2d12">招聘方确认名单 ★</text>
+    <text x="248" y="520" fill="#6b7280" font-style="italic" font-size="10">(#18 推送名单)</text>
+
+    <!-- 待应聘方确认 → 已成单 ★ NEW v3 -->
+    <line x1="240" y1="575" x2="240" y2="623" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="248" y="595" font-weight="600" fill="#7c2d12">应聘方确认 ★</text>
+    <text x="248" y="610" fill="#6b7280" font-style="italic" font-size="10">(#19 → 拉群 #20-22)</text>
+
+    <!-- 已成单 → 已关闭 -->
+    <line x1="240" y1="665" x2="240" y2="733" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="248" y="703">兼职完成确认</text>
+  </g>
+
+  <!-- ===== Right branches (alt paths) ===== -->
+  <g font-size="11" fill="#374151">
+    <!-- 审核中 → 驳回待修改 -->
+    <line x1="290" y1="195" x2="408" y2="195" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="349" y="189" text-anchor="middle">审核驳回 [alt 1]</text>
+
+    <!-- 驳回待修改 → 审核中 (curve back) -->
+    <path d="M 410 215 Q 350 248 292 215" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="349" y="252" text-anchor="middle">修改后重新提交</text>
+
+    <!-- 待招聘方确认 → 异议重筛 (含 T2 超时, NEW v3) -->
+    <line x1="310" y1="465" x2="408" y2="465" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="359" y="459" text-anchor="middle">退回 [alt 3] / T2 超时</text>
+
+    <!-- 异议重筛 → 待招聘方确认 (curve back below) -->
+    <path d="M 410 485 Q 360 518 312 485" fill="none" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="361" y="522" text-anchor="middle">中介方重新提交</text>
+
+    <!-- 待应聘方确认 → 递补中 (NEW v3, replaces v2's 已成单→递补中) -->
+    <line x1="310" y1="555" x2="408" y2="555" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="360" y="549" text-anchor="middle">应聘方放弃/超时 [alt 4]</text>
+
+    <!-- 递补中 → 待应聘方确认 (CHANGED v3: 直接激活下一备选, 不再回招聘方确认) -->
+    <path d="M 410 575 Q 360 605 312 575" fill="none" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrorng)"/>
+    <text x="360" y="612" text-anchor="middle" fill="#9a3412" font-weight="500">激活下一备选</text>
+
+    <!-- 递补中 → 筛选中 (备选池耗尽, 回流) -->
+    <path d="M 530 555 C 620 555 620 380 292 380" fill="none" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrorng)"/>
+    <text x="450" y="372" text-anchor="middle" fill="#9a3412" font-weight="500">备选池耗尽 → 重新筛选</text>
+  </g>
+
+  <!-- ===== Exception terminations (dashed gray) ===== -->
+  <g font-size="11">
+    <!-- 已发布 → 已过期 -->
+    <line x1="290" y1="285" x2="648" y2="285" stroke="#9ca3af" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arrdash)"/>
+    <text x="470" y="279" text-anchor="middle" fill="#6b7280">距截止24h策略后仍无人报名</text>
+  </g>
+
+  <!-- ===== Active cancellation (dashed red) ===== -->
+  <g font-size="11">
+    <!-- 待招聘方确认 → 已取消 (representative, curves high above 异议重筛 + T2 label) -->
+    <path d="M 310 450 C 380 385 600 385 650 455" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrred)"/>
+    <text x="490" y="385" text-anchor="middle" fill="#dc2626" font-weight="500">招聘方主动取消 (代表)</text>
+
+    <!-- 驳回待修改 → 已取消 (NEW v3) -->
+    <path d="M 530 200 Q 690 295 700 445" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrred)"/>
+    <text x="660" y="265" text-anchor="middle" fill="#dc2626" font-weight="500">招聘方放弃 (NEW)</text>
+  </g>
+
+  <!-- ===== Right-side annotations ===== -->
+  <!-- ★ 双重确认闭环 -->
+  <g>
+    <rect x="780" y="420" width="200" height="76" fill="#ffedd5" stroke="#ea580c" stroke-width="1" rx="4"/>
+    <text x="790" y="437" font-size="11" fill="#7c2d12" font-weight="600">★ 双重确认闭环 (v3 新增)</text>
+    <text x="790" y="454" font-size="10.5" fill="#7c2d12">招聘方确认 (#18) → 应聘方确认 (#19)</text>
+    <text x="790" y="468" font-size="10.5" fill="#7c2d12">两段串联,任一阶段中断均</text>
+    <text x="790" y="482" font-size="10.5" fill="#7c2d12">触发异议重筛/递补流程</text>
+  </g>
+
+  <!-- ⚠ 取消范围 + MVP note -->
+  <g>
+    <rect x="780" y="540" width="200" height="160" fill="#fef9c3" stroke="#ca8a04" stroke-width="1" rx="4"/>
+    <text x="790" y="557" font-size="11" fill="#713f12" font-weight="600">⚠ 取消可发生于多个状态</text>
+    <text x="790" y="574" font-size="10.5" fill="#713f12">来源状态(均允许招聘方取消):</text>
+    <text x="790" y="589" font-size="10.5" fill="#713f12">• 驳回待修改 (v3 新增)</text>
+    <text x="790" y="603" font-size="10.5" fill="#713f12">• 已发布 / 筛选中</text>
+    <text x="790" y="617" font-size="10.5" fill="#713f12">• 待招聘方确认 / 待应聘方确认</text>
+    <text x="790" y="631" font-size="10.5" fill="#713f12">• 已成单 / 递补中</text>
+    <text x="790" y="652" font-size="10.5" fill="#713f12" font-weight="600">MVP: 不分级,直接 → 已取消</text>
+    <text x="790" y="666" font-size="10.5" fill="#713f12">+ 通知所有相关方</text>
+    <text x="790" y="680" font-size="10.5" fill="#713f12">+ 取消该单全部待办任务</text>
+    <text x="790" y="694" font-size="10.5" fill="#713f12" font-style="italic">v2 引入按状态分级的补偿策略</text>
+  </g>
+
+  <!-- ===== Legend ===== -->
+  <g transform="translate(40, 820)" font-size="11">
+    <circle cx="8" cy="8" r="6" fill="#1f2937"/>
+    <text x="22" y="12" fill="#4b5563">初始状态</text>
+
+    <g transform="translate(110, 0)">
+      <rect width="40" height="16" rx="3" fill="#bbf7d0" stroke="#047857" stroke-width="1"/>
+      <rect x="2" y="2" width="36" height="12" rx="2" fill="none" stroke="#047857" stroke-width="0.8"/>
+      <text x="48" y="12" fill="#4b5563">终态 (Final)</text>
+    </g>
+
+    <g transform="translate(225, 0)">
+      <line x1="0" y1="8" x2="40" y2="8" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+      <text x="48" y="12" fill="#4b5563">正常迁移</text>
+    </g>
+
+    <g transform="translate(335, 0)">
+      <line x1="0" y1="8" x2="40" y2="8" stroke="#9ca3af" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arrdash)"/>
+      <text x="48" y="12" fill="#4b5563">异常终结</text>
+    </g>
+
+    <g transform="translate(440, 0)">
+      <line x1="0" y1="8" x2="40" y2="8" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrred)"/>
+      <text x="48" y="12" fill="#4b5563">主动取消</text>
+    </g>
+
+    <g transform="translate(550, 0)">
+      <line x1="0" y1="8" x2="40" y2="8" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrorng)"/>
+      <text x="48" y="12" fill="#4b5563">回流/递补</text>
+    </g>
+
+    <g transform="translate(660, 0)">
+      <rect width="20" height="16" rx="3" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
+      <text x="28" y="12" fill="#4b5563">★ 闭环关键状态</text>
+    </g>
+  </g>
+</svg>
+</div>
+
+<h3 id="sec-5-2">5.2 候选人(子)状态机</h3>
+<p>"待应聘方确认"在招募令层面是一个状态,但内部实际上是 <strong>N 个候选人各自的状态机</strong> 的集合。中介方在 <code>#17 提交筛选结果</code> 时一次性给出 (rank 1~N 入选 + rank N+1~ 备选) 的有序列表,后续递补按 rank 顺序自动激活。当所有候选人状态收敛 (全部 CONFIRMED / DECLINED / 池耗尽),招募令再做整单结算 → 已成单 / 筛选中。</p>
+<div class="diagram-wrap">
+<svg width="900" height="360" viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif">
+  <defs>
+    <marker id="arr2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#374151"/>
+    </marker>
+    <marker id="arr2orng" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#ea580c"/>
+    </marker>
+    <marker id="arr2red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <!-- Initial states (left) -->
+  <rect x="60" y="80" width="120" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="120" y="105" text-anchor="middle" font-size="12" font-weight="500">SELECTED 入选</text>
+  <text x="120" y="65" text-anchor="middle" font-size="10" fill="#6b7280" font-style="italic">rank ≤ N</text>
+
+  <rect x="60" y="200" width="120" height="40" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="120" y="225" text-anchor="middle" font-size="12" font-weight="500">BACKUP 备选</text>
+  <text x="120" y="260" text-anchor="middle" font-size="10" fill="#6b7280" font-style="italic">rank &gt; N,按序待激活</text>
+
+  <!-- Middle: PENDING -->
+  <rect x="370" y="140" width="120" height="40" rx="6" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
+  <text x="430" y="165" text-anchor="middle" font-size="12" font-weight="600" fill="#7c2d12">PENDING 应答中</text>
+  <text x="430" y="195" text-anchor="middle" font-size="10" fill="#6b7280" font-style="italic">T3 24h应答窗口</text>
+
+  <!-- Terminal states (right) -->
+  <rect x="680" y="40" width="140" height="40" rx="6" fill="#bbf7d0" stroke="#047857" stroke-width="1.5"/>
+  <rect x="683" y="43" width="134" height="34" rx="4" fill="none" stroke="#047857" stroke-width="1"/>
+  <text x="750" y="65" text-anchor="middle" font-size="12" font-weight="600" fill="#064e3b">CONFIRMED 已确认</text>
+
+  <rect x="680" y="130" width="140" height="40" rx="6" fill="#e5e7eb" stroke="#4b5563" stroke-width="1.5"/>
+  <rect x="683" y="133" width="134" height="34" rx="4" fill="none" stroke="#4b5563" stroke-width="1"/>
+  <text x="750" y="155" text-anchor="middle" font-size="12" font-weight="500">DECLINED 已放弃</text>
+
+  <rect x="680" y="200" width="140" height="40" rx="6" fill="#e5e7eb" stroke="#4b5563" stroke-width="1.5"/>
+  <rect x="683" y="203" width="134" height="34" rx="4" fill="none" stroke="#4b5563" stroke-width="1"/>
+  <text x="750" y="225" text-anchor="middle" font-size="12" font-weight="500">ABORTED 单已取消</text>
+
+  <rect x="680" y="270" width="140" height="40" rx="6" fill="#e5e7eb" stroke="#4b5563" stroke-width="1.5"/>
+  <rect x="683" y="273" width="134" height="34" rx="4" fill="none" stroke="#4b5563" stroke-width="1"/>
+  <text x="750" y="295" text-anchor="middle" font-size="12" font-weight="500">SKIPPED 未被激活</text>
+
+  <!-- Arrows -->
+  <g font-size="11" fill="#374151">
+    <!-- SELECTED → PENDING -->
+    <line x1="180" y1="100" x2="368" y2="150" stroke="#374151" stroke-width="1.5" marker-end="url(#arr2)"/>
+    <text x="270" y="115" text-anchor="middle">招聘方确认名单</text>
+
+    <!-- BACKUP → PENDING (orange, recovery) -->
+    <line x1="180" y1="220" x2="368" y2="170" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arr2orng)"/>
+    <text x="270" y="200" text-anchor="middle" fill="#9a3412" font-weight="500">被激活递补</text>
+
+    <!-- PENDING → CONFIRMED -->
+    <line x1="490" y1="150" x2="678" y2="65" stroke="#374151" stroke-width="1.5" marker-end="url(#arr2)"/>
+    <text x="580" y="105" text-anchor="middle">应聘方接受</text>
+
+    <!-- PENDING → DECLINED -->
+    <line x1="490" y1="160" x2="678" y2="150" stroke="#374151" stroke-width="1.5" marker-end="url(#arr2)"/>
+    <text x="585" y="142" text-anchor="middle">放弃 / T3 超时</text>
+    <text x="585" y="158" text-anchor="middle" fill="#9a3412" font-size="10" font-style="italic">→ 触发递补</text>
+
+    <!-- PENDING → ABORTED (red dashed) -->
+    <line x1="490" y1="175" x2="678" y2="220" stroke="#dc2626" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr2red)"/>
+    <text x="585" y="200" text-anchor="middle" fill="#dc2626">招募令取消</text>
+
+    <!-- BACKUP → SKIPPED -->
+    <line x1="180" y1="225" x2="678" y2="285" stroke="#9ca3af" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#arr2)"/>
+    <text x="430" y="280" text-anchor="middle" fill="#6b7280">招募令完成/取消时未被激活</text>
+  </g>
+
+  <!-- Note -->
+  <g>
+    <rect x="50" y="320" width="800" height="32" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" rx="4"/>
+    <text x="60" y="340" font-size="11" fill="#1e3a8a">
+      <tspan font-weight="600">招募令层面的"待应聘方确认"</tspan> = 存在至少一个 PENDING 候选人;
+      所有候选人均 CONFIRMED / DECLINED / SKIPPED 后,触发整单结算迁移。
+    </text>
+  </g>
+</svg>
+</div>
+
+<h3 id="sec-5-3">5.3 状态定义表</h3>
+<p>每个状态的语义、进入条件、退出条件,工程师可直接对应数据库 <code>recruitment.status</code> 字段枚举值。</p>
+<p style="color: #6b7280; font-size: 13px; margin-top: 4px;">每个状态的语义、进入条件、退出条件,工程师可直接对应数据库 <code>recruitment.status</code> 字段枚举值。("v3 新增/修改"标记保留以追溯改动来源)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 15%">状态</th>
+      <th style="width: 22%">业务语义</th>
+      <th style="width: 28%">进入条件</th>
+      <th style="width: 35%">退出条件 (→ 下一状态)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="tag tag-active">DRAFT</span><br>草稿</td>
+      <td>招聘方已开始填写但未提交,可随时编辑或删除</td>
+      <td>招聘方点击"新建招募令"</td>
+      <td>提交审核 → 审核中 / 删除 → (无)</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-active">REVIEWING</span><br>审核中</td>
+      <td>平台正在审核内容合规性 (敏感词、企业资质)</td>
+      <td>招聘方提交审核 (主流程 #9)</td>
+      <td>审核通过 → 已发布 / 审核驳回 → 驳回待修改</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-active">REJECTED</span><br>驳回待修改</td>
+      <td>审核未通过,等待招聘方修改后重提</td>
+      <td>审核驳回 + 原因 [异常分支 alt 1]</td>
+      <td>修改后重新提交 → 审核中 / <span class="tag tag-new">v3</span> 招聘方放弃 → 已取消</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-active">PUBLISHED</span><br>已发布</td>
+      <td>对外可见,应聘方可浏览/报名,中介方收到通知</td>
+      <td>审核通过</td>
+      <td>有人报名 → 筛选中 / 距截止24h策略后仍无人 → 已过期 / 招聘方取消 → 已取消</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-active">SCREENING</span><br>筛选中</td>
+      <td>已有报名,中介方正在审核报名人员。<strong>持续接受新报名</strong>,新报名进入"剩余报名池"等待下一轮评估</td>
+      <td>首位应聘方报名 (主流程 #14)</td>
+      <td>中介方提交筛选 (#17) → 待招聘方确认 / T1 24h超时系统自动初筛 [alt 2] → 待招聘方确认 / 招聘方取消 → 已取消</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-star">★ PENDING_EMPLOYER</span><br>待招聘方确认</td>
+      <td>中介方已提交有序候选列表 (入选 N + 备选 M),招聘方决策是否接受名单</td>
+      <td>中介方提交筛选 / 系统自动初筛</td>
+      <td>招聘方确认 → <strong>待应聘方确认</strong> (#18 推送名单) / 招聘方退回 [alt 3] → 异议重筛 / <span class="tag tag-new">v3</span> T2 48h未确认 → 异议重筛 / 招聘方取消 → 已取消</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-active">DISPUTED</span><br>异议重筛</td>
+      <td>招聘方对名单有异议或超时未确认,中介方需重新筛选 (可结合剩余报名池补充候选)</td>
+      <td>招聘方退回 + 异议原因 [alt 3] / T2 48h超时</td>
+      <td>中介方重新提交 → 待招聘方确认 / 招聘方取消 → 已取消</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-star">★ PENDING_APPLICANT</span> <span class="tag tag-new">v3 NEW</span><br>待应聘方确认</td>
+      <td><strong>本版新增</strong>。已通知入选应聘方,等待应聘方显式确认 (24h 应答窗口,默认放弃)。<br>本质是 N 个候选人各自的 PENDING 状态聚合 (见候选人子状态机)</td>
+      <td>招聘方确认名单 (#18 推送)</td>
+      <td>所有候选人均确认 + 拉群完成 → 已成单 (#19→#22) / 任一应聘方放弃/T3超时 → 递补中 / 招聘方取消 → 已取消</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-active">REPLACING</span><br>递补中</td>
+      <td>入选应聘方放弃,系统按中介方提交的备选 rank 顺序自动激活下一备选,无需中介方/招聘方重新决策</td>
+      <td>应聘方放弃录用 / T3 应答超时 [alt 4]</td>
+      <td><span class="tag tag-new">v3 改</span> 激活下一备选 → 待应聘方确认 (该备选进入 PENDING) / 备选池耗尽 → 筛选中 (回退由中介方结合剩余报名池补充) / 招聘方取消 → 已取消</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-active">FULFILLED</span><br>已成单</td>
+      <td><span class="tag tag-new">v3 强化</span> <strong>三方锁定、待执行</strong>。所有入选应聘方均已显式确认,沟通群已建</td>
+      <td>所有应聘方确认 + 拉群完成 (#20-22)</td>
+      <td>兼职完成确认 → 已关闭 / 招聘方取消 → 已取消 <em>(履约期违约,触发不同补偿,v2 处理)</em></td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-final-ok">CLOSED</span><br>已关闭 ⊚</td>
+      <td><strong>终态 (成功)</strong>。兼职已完成,招募令归档</td>
+      <td>兼职完成确认 (双方/三方确认)</td>
+      <td>— (终态)</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-final-bad">EXPIRED</span><br>已过期 ⊚</td>
+      <td><strong>终态 (失败-自然)</strong>。截止日期已到且未成单</td>
+      <td>距截止24h策略执行后仍无人报名/匹配</td>
+      <td>— (终态)</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-final-bad">CANCELLED</span><br>已取消 ⊚</td>
+      <td><strong>终态 (失败-主动)</strong>。招聘方主动取消。MVP 直接进入终态,通知所有相关方 + 取消该单全部待办任务</td>
+      <td>招聘方在 <span class="tag tag-new">驳回待修改 (v3)</span> / 已发布 / 筛选中 / 待招聘方确认 / 待应聘方确认 / 已成单 / 递补中 任意状态主动取消</td>
+      <td>— (终态)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sec-6">六、异常路径</h2>
+<p>异常分两类处理:</p>
+<ul style="font-size: 14px; margin: 8px 0 16px;">
+  <li><strong>有状态、需要画时序图的</strong>(4 种,见 §6.1):涉及多方协作、有特定恢复路径,用 UML alt 分支表达。</li>
+  <li><strong>规则性较强、不需要时序图的</strong>(8 种,见 §6.2):用规范表声明优先级、处理策略、人工介入要求即可。</li>
+</ul>
+
+<h3 id="sec-6-1">6.1 异常分支时序图(alt 1–4)</h3>
+<div class="diagram-wrap">
+<svg width="100%" viewBox="0 0 680 765" role="img" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+<title>主流程之外的异常路径(UML alt 分支) v3</title>
+<desc>展示 4 个异常场景:招募令审核驳回(含 v3 放弃分支)、中介方筛选超时、招聘方对名单异议(含 T2 超时)、应聘方放弃录用(v3 改:自动递补,不回中介方)</desc>
+
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- Participants -->
+<g font-size="14">
+  <rect x="55" y="40" width="90" height="36" rx="6" fill="#e6f1fb" stroke="#185fa5" stroke-width="0.5"/>
+  <text x="100" y="58" text-anchor="middle" dominant-baseline="central" font-weight="500" fill="#0c447c">应聘方</text>
+
+  <rect x="210" y="40" width="90" height="36" rx="6" fill="#eeedfe" stroke="#534ab7" stroke-width="0.5"/>
+  <text x="255" y="58" text-anchor="middle" dominant-baseline="central" font-weight="500" fill="#3c3489">兼职小程序</text>
+
+  <rect x="370" y="40" width="90" height="36" rx="6" fill="#e1f5ee" stroke="#0f6e56" stroke-width="0.5"/>
+  <text x="415" y="58" text-anchor="middle" dominant-baseline="central" font-weight="500" fill="#085041">招聘方</text>
+
+  <rect x="535" y="40" width="90" height="36" rx="6" fill="#faece7" stroke="#993c1d" stroke-width="0.5"/>
+  <text x="580" y="58" text-anchor="middle" dominant-baseline="central" font-weight="500" fill="#712b13">中介方</text>
+</g>
+
+<!-- Lifelines -->
+<g stroke="#888780" stroke-width="0.5" stroke-dasharray="3 3">
+  <line x1="100" y1="76" x2="100" y2="745"/>
+  <line x1="255" y1="76" x2="255" y2="745"/>
+  <line x1="415" y1="76" x2="415" y2="745"/>
+  <line x1="580" y1="76" x2="580" y2="745"/>
+</g>
+
+<!-- ============ alt 1: 招募令审核驳回 (含 v3 新增放弃分支) ============ -->
+<rect x="70" y="100" width="560" height="165" rx="4" fill="none" stroke="#888780" stroke-width="0.5"/>
+<rect x="70" y="100" width="40" height="20" fill="#faeeda" stroke="#854f0b" stroke-width="0.5"/>
+<text x="90" y="110" text-anchor="middle" dominant-baseline="central" font-weight="500" font-size="12" fill="#854f0b">alt</text>
+<text x="118" y="110" dominant-baseline="central" font-size="12" fill="#3d3d3a">[招募令审核驳回]</text>
+<text x="118" y="132" dominant-baseline="central" font-size="12" fill="#3d3d3a">↳ 入口:主流程 #9 之后,平台审核未通过</text>
+
+<text x="335" y="153" text-anchor="middle" font-size="12" fill="#3d3d3a">1: 发布招募令(命中违规词)</text>
+<line x1="413" y1="160" x2="257" y2="160" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="335" y="183" text-anchor="middle" font-size="12" fill="#3d3d3a">2: 驳回 + 违规原因</text>
+<line x1="257" y1="190" x2="413" y2="190" stroke-dasharray="6 4" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="335" y="213" text-anchor="middle" font-size="12" fill="#3d3d3a">3: 修改后重新提交(loop 回主流程)</text>
+<line x1="413" y1="220" x2="257" y2="220" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<!-- v3 NEW: 招聘方放弃修改 -->
+<line x1="80" y1="232" x2="620" y2="232" stroke="#bfae8c" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="623" y="232" text-anchor="end" dominant-baseline="central" font-size="10" fill="#854f0b" font-weight="500" font-style="italic">— 或 (v3 新增) —</text>
+<text x="335" y="251" text-anchor="middle" font-size="12" fill="#9a6b0e">4: 招聘方放弃修改 → 招募令置为「已取消」</text>
+<line x1="413" y1="258" x2="257" y2="258" marker-end="url(#arrow)" stroke="#9a6b0e" stroke-width="1.5"/>
+
+<!-- ============ alt 2: 中介方 24h 未提交筛选 ============ -->
+<rect x="70" y="280" width="560" height="135" rx="4" fill="none" stroke="#888780" stroke-width="0.5"/>
+<rect x="70" y="280" width="40" height="20" fill="#faeeda" stroke="#854f0b" stroke-width="0.5"/>
+<text x="90" y="290" text-anchor="middle" dominant-baseline="central" font-weight="500" font-size="12" fill="#854f0b">alt</text>
+<text x="118" y="290" dominant-baseline="central" font-size="12" fill="#3d3d3a">[中介方 24h 未提交筛选]</text>
+<text x="118" y="312" dominant-baseline="central" font-size="12" fill="#3d3d3a">↳ 入口:主流程 #17 之后,中介方超时无响应</text>
+
+<text x="418" y="333" text-anchor="middle" font-size="12" fill="#3d3d3a">1: 系统催办通知</text>
+<line x1="257" y1="340" x2="578" y2="340" stroke-dasharray="6 4" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="305" y="373" text-anchor="start" dominant-baseline="central" font-size="12" fill="#3d3d3a">2: 触发系统自动初筛</text>
+<path d="M 257 367 L 295 367 L 295 380 L 259 380" fill="none" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="335" y="393" text-anchor="middle" font-size="12" fill="#3d3d3a">3: 系统初筛结果(需人工复核)</text>
+<line x1="257" y1="400" x2="413" y2="400" stroke-dasharray="6 4" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<!-- ============ alt 3: 招聘方对入选名单有异议 (含 T2 48h 超时) ============ -->
+<rect x="70" y="430" width="560" height="135" rx="4" fill="none" stroke="#888780" stroke-width="0.5"/>
+<rect x="70" y="430" width="40" height="20" fill="#faeeda" stroke="#854f0b" stroke-width="0.5"/>
+<text x="90" y="440" text-anchor="middle" dominant-baseline="central" font-weight="500" font-size="12" fill="#854f0b">alt</text>
+<text x="118" y="440" dominant-baseline="central" font-size="12" fill="#3d3d3a">[招聘方对入选名单有异议]</text>
+<text x="118" y="462" dominant-baseline="central" font-size="12" fill="#3d3d3a">↳ 入口:主流程 #18 通知名单后,招聘方退回 <tspan font-weight="500" fill="#854f0b">或 T2 48h 未确认 (v3 新增)</tspan></text>
+
+<text x="335" y="483" text-anchor="middle" font-size="12" fill="#3d3d3a">1: 退回 + 异议原因 / T2 超时</text>
+<line x1="413" y1="490" x2="257" y2="490" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="418" y="513" text-anchor="middle" font-size="12" fill="#3d3d3a">2: 转达异议,要求重筛</text>
+<line x1="257" y1="520" x2="578" y2="520" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="418" y="543" text-anchor="middle" font-size="12" fill="#3d3d3a">3: 重新提交筛选结果</text>
+<line x1="578" y1="550" x2="257" y2="550" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<!-- ============ alt 4: 应聘方放弃录用 (v3 重画:自动递补,不回中介方) ============ -->
+<rect x="70" y="580" width="560" height="155" rx="4" fill="none" stroke="#888780" stroke-width="0.5"/>
+<rect x="70" y="580" width="40" height="20" fill="#faeeda" stroke="#854f0b" stroke-width="0.5"/>
+<text x="90" y="590" text-anchor="middle" dominant-baseline="central" font-weight="500" font-size="12" fill="#854f0b">alt</text>
+<text x="118" y="590" dominant-baseline="central" font-size="12" fill="#3d3d3a">[应聘方放弃录用 / T3 24h 应答超时] <tspan font-weight="500" fill="#854f0b">(v3 改)</tspan></text>
+<text x="118" y="612" dominant-baseline="central" font-size="12" fill="#3d3d3a">↳ 入口:主流程 #19 通知入选后,应聘方拒绝或不响应</text>
+
+<text x="178" y="633" text-anchor="middle" font-size="12" fill="#3d3d3a">1: 放弃录用 / T3 超时</text>
+<line x1="102" y1="640" x2="253" y2="640" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="305" y="666" text-anchor="start" dominant-baseline="central" font-size="12" fill="#3d3d3a">2: 按 rank 自动激活下一备选 (无需中介方/招聘方介入)</text>
+<path d="M 257 660 L 295 660 L 295 673 L 259 673" fill="none" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="178" y="693" text-anchor="middle" font-size="12" fill="#3d3d3a">3: 通知入选 (下一备选)</text>
+<line x1="253" y1="700" x2="102" y2="700" stroke-dasharray="6 4" marker-end="url(#arrow)" stroke="#73726c" stroke-width="1.5"/>
+
+<text x="350" y="722" text-anchor="middle" font-size="11" fill="#6b6a64" font-style="italic">备选池耗尽时才退回:平台 → 中介方,要求补充候选(回到 alt 2/3 形态)</text>
+
+</svg>
+</div>
+
+<table>
+<thead><tr><th style="width: 14%">分支</th><th style="width: 22%">触发节点</th><th style="width: 18%">恢复路径</th><th>对应状态迁移</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>alt 1</strong> 招募令审核驳回</td>
+  <td>#9 之后审核环节</td>
+  <td>修改重提 → 审核中<br><span style="color:#854f0b">或:招聘方放弃 → 已取消</span></td>
+  <td>审核中 ⇄ 驳回待修改;<br>驳回待修改 → 已取消</td>
+</tr>
+<tr>
+  <td><strong>alt 2</strong> 中介方 24h 未提交筛选</td>
+  <td>#17 之前,T1 超时</td>
+  <td>系统自动初筛 → 待招聘方确认</td>
+  <td>筛选中 → 待招聘方确认</td>
+</tr>
+<tr>
+  <td><strong>alt 3</strong> 招聘方对入选名单有异议<br>(含 T2 48h 超时)</td>
+  <td>#18 之后,T2 超时</td>
+  <td>中介方重新提交 → 待招聘方确认</td>
+  <td>待招聘方确认 ⇄ 异议重筛</td>
+</tr>
+<tr>
+  <td><strong>alt 4</strong> 应聘方放弃录用<br>(含 T3 24h 超时)</td>
+  <td>#19 之后,T3 超时</td>
+  <td>平台按 rank 自动激活下一备选 → 待应聘方确认<br><span style="color:#6b6a64">备选池耗尽 → 退回中介方重筛</span></td>
+  <td>待应聘方确认 → 递补中 → 待应聘方确认<br>(或递补中 → 筛选中)</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="sec-6-2">6.2 异常处理规范表</h3>
+<p>本表列规则性较强、不需要画时序图的异常。已在 §6.1 详细展开的 4 类不在本表重复。</p>
+<table>
+<thead>
+<tr>
+  <th style="width: 14%;">异常类型</th>
+  <th style="width: 11%;">触发节点</th>
+  <th style="width: 26%;">处理策略</th>
+  <th style="width: 13%;">通知对象</th>
+  <th style="width: 8%;">优先级</th>
+  <th style="width: 11%;">人工介入</th>
+  <th style="width: 17%;">关联模块</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>验证码失败 / 账号被封</td>
+  <td>#1, #3 登录时</td>
+  <td>限流(60s 内 ≤5 次) + 引导客服申诉</td>
+  <td>当前用户</td>
+  <td><span class="tag tag-p0">P0</span></td>
+  <td>是(客服)</td>
+  <td>登录注册</td>
+</tr>
+<tr>
+  <td>建档必填资料缺项 / 格式错误</td>
+  <td>#5, #7 建档时</td>
+  <td>前端必填校验 + 实时格式提示,提交前拦截</td>
+  <td>当前用户</td>
+  <td><span class="tag tag-p0">P0</span></td>
+  <td>否</td>
+  <td>用户中心</td>
+</tr>
+<tr>
+  <td>业务操作关联资料缺失</td>
+  <td>#9, #14 业务动作时</td>
+  <td>
+    前置校验拦截 + 引导上传
+    <span class="bullet">招聘方:企业资质 / 法人证</span>
+    <span class="bullet">应聘方:简历附件 / 学生证</span>
+  </td>
+  <td>当前用户</td>
+  <td><span class="tag tag-p0">P0</span></td>
+  <td>否</td>
+  <td>招聘 / 报名</td>
+</tr>
+<tr>
+  <td>无匹配兼职</td>
+  <td>#11 推送前</td>
+  <td>静默不推送 + 后续匹配到再推</td>
+  <td><span class="muted">—</span></td>
+  <td><span class="tag tag-p1">P1</span></td>
+  <td>否</td>
+  <td>匹配引擎</td>
+</tr>
+<tr>
+  <td>临近截止 24h 无人报名</td>
+  <td>#14 截止前 24h</td>
+  <td>
+    <span class="bullet" style="color:#2C2C2A;">① 匹配阈值放宽至 70%</span>
+    <span class="bullet" style="color:#2C2C2A;">② 提示招聘方临时加酬</span>
+    <span class="bullet" style="color:#2C2C2A;">③ 追加短信 / 公众号 push</span>
+  </td>
+  <td>招聘方、应聘方</td>
+  <td><span class="tag tag-p1">P1</span></td>
+  <td>否(自动)</td>
+  <td>匹配引擎 / 通知中心</td>
+</tr>
+<tr>
+  <td>招聘方主动取消招募令</td>
+  <td>#9 之后任意时点</td>
+  <td>通知所有相关方 + 取消该单全部待办(含已建群聊解散)。<strong>MVP 不分级</strong>,按状态分级的补偿策略见 v2</td>
+  <td>应聘方、中介方</td>
+  <td><span class="tag tag-p0">P0</span></td>
+  <td>否</td>
+  <td>招募令管理</td>
+</tr>
+<tr>
+  <td>群聊扩容失败(群满 500)</td>
+  <td>#20-22 拉群时</td>
+  <td>新建子群 + 同步公告通知 + 主群挂置顶</td>
+  <td>入选方、招聘方、中介方</td>
+  <td><span class="tag tag-p1">P1</span></td>
+  <td>否</td>
+  <td>群聊</td>
+</tr>
+<tr>
+  <td>用户拒绝入群</td>
+  <td>#20-22 拉群时</td>
+  <td>二次入群链接(24h 内有效) + 客服跟进确认意向</td>
+  <td>当前用户</td>
+  <td><span class="tag tag-p2">P2</span></td>
+  <td>是(客服)</td>
+  <td>群聊</td>
+</tr>
+</tbody>
+</table>
+<div class="legend">
+<strong>优先级定义:</strong>
+<span class="tag tag-p0">P0</span> 阻塞主流程,必须上线前修复 &nbsp;·&nbsp;
+<span class="tag tag-p1">P1</span> 影响体验,上线后第一个迭代修复 &nbsp;·&nbsp;
+<span class="tag tag-p2">P2</span> 边缘场景,后续优化<br>
+<strong>说明:</strong>已在异常分支时序图中详细展开的(招募令审核驳回 / 中介方 24h 未提交筛选 / 招聘方对名单异议 / 应聘方放弃录用)不再在本表重复,本表只列规则性较强、不需要画时序图的异常。
+</div>
+
+<h2 id="sec-7">七、超时清单(Scheduled Tasks)</h2>
+<p>所有状态相关的延时任务在此一次性列出,工程实现统一收口到 <code>scheduled_task</code> 表(进入状态时 schedule、离开时 cancel)。</p>
+<p style="color: #6b7280; font-size: 13px; margin-top: 4px;">所有状态相关的延时任务在此一次性列出,工程实现统一收口到 <code>scheduled_task</code> 表(进入状态时 schedule、离开时 cancel)。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 8%">编号</th>
+      <th style="width: 22%">名称</th>
+      <th style="width: 22%">关联状态</th>
+      <th style="width: 12%">时长建议</th>
+      <th style="width: 36%">超时动作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>T1</strong></td>
+      <td>中介方筛选超时</td>
+      <td>筛选中</td>
+      <td>24h</td>
+      <td>系统自动初筛 → 待招聘方确认</td>
+    </tr>
+    <tr>
+      <td><strong>T2</strong> <span class="tag tag-new">v3 NEW</span></td>
+      <td>招聘方确认名单超时</td>
+      <td>待招聘方确认</td>
+      <td>48h (24h 提醒 + 48h 强制)</td>
+      <td>视为退回 → 异议重筛 (不替招聘方做决策)</td>
+    </tr>
+    <tr>
+      <td><strong>T3</strong> <span class="tag tag-new">v3 NEW</span></td>
+      <td>应聘方应答超时</td>
+      <td>待应聘方确认 (候选人 PENDING)</td>
+      <td>24h</td>
+      <td>视为放弃 (decline_reason=TIMEOUT) → 触发递补</td>
+    </tr>
+    <tr>
+      <td><strong>T4</strong></td>
+      <td>变更应答窗口</td>
+      <td>已发布 / 筛选中 (修改详情后)</td>
+      <td>24h</td>
+      <td>默认接受新版本;期间应聘方可退出报名</td>
+    </tr>
+    <tr>
+      <td><strong>T5</strong></td>
+      <td>截止日期到达</td>
+      <td>已发布 起算 (招聘方可重排)</td>
+      <td>招聘方设定</td>
+      <td>未成单 → 已过期</td>
+    </tr>
+    <tr>
+      <td><strong>T11</strong></td>
+      <td>履约完成确认超时</td>
+      <td>已成单</td>
+      <td>工作日期 +7 天</td>
+      <td>自动 → 已关闭 (MVP 内简单处理)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sec-8">八、v2 延期事项</h2>
+<p>下列 7 项在评审时被明确<strong>延期到 v2</strong>,本 MVP 不实现。延期的判断标准:① 跨多个系统(支付/财务/客服);② 不影响主流程跑通;③ 现阶段没有数据支撑设计决策。</p>
+
+<table>
+<thead>
+<tr><th style="width: 28%">延期项</th><th style="width: 16%">理由分类</th><th>v2 触发条件</th></tr>
+</thead>
+<tbody>
+<tr><td>取消差异化补偿</td><td>跨支付 + 客服</td><td>MVP 数据观察到取消率 &gt; 10% 或客诉率显著</td></tr>
+<tr><td>履约期违约分级补偿</td><td>跨支付 + 客服</td><td>有实际履约违约案例发生</td></tr>
+<tr><td>第三方中介开放入驻</td><td>不影响主流程</td><td>MVP 跑通后启动招商</td></tr>
+<tr><td>多维匹配算法</td><td>无数据支撑</td><td>累积 1 万+ 报名记录后</td></tr>
+<tr><td>多招募令并发工作台</td><td>不影响主流程</td><td>招聘方人均同时管理 ≥ 3 单时</td></tr>
+<tr><td>群聊历史消息归档</td><td>不影响主流程</td><td>用户主动反馈或合规要求</td></tr>
+<tr><td>异常自愈机制</td><td>无数据支撑</td><td>异常人工介入率成为瓶颈时</td></tr>
+</tbody>
+</table>
+
+<div class="callout callout-warn">
+<strong>关于 MVP 取消处理的额外说明:</strong>本版统一处理("通知 + 解散群,不退款不分级")在评审时是有争议的,反对意见主要是"招聘方滥取消会伤害应聘方信任"。我们的应对:① 数据埋点跟踪取消行为(取消时点、取消频次、取消理由分布);② 客服处理通道仍开放,个别恶劣案例可人工介入;③ 一旦数据触线立即启动 v2 的分级补偿设计。
+</div>
+
+<h2 id="appendix-a">附录 A:三向索引(消息 ↔ 状态 ↔ 异常)</h2>
+<p>排查问题或评审 spec 时使用。同一件事在三个图里出现的位置一次性列出。</p>
+
+<table>
+<thead>
+<tr>
+  <th style="width: 14%">主流程消息</th>
+  <th style="width: 26%">触发的状态迁移</th>
+  <th style="width: 32%">关联异常路径</th>
+  <th style="width: 28%">关联超时</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>#9 发布招募令</td><td>草稿 → 审核中</td><td>alt 1 审核驳回</td><td>—</td></tr>
+<tr><td>(审核通过)</td><td>审核中 → 已发布</td><td>—</td><td>T5 截止日期(起算)</td></tr>
+<tr><td>#14 报名意向兼职</td><td>已发布 → 筛选中</td><td>异常表"无匹配兼职"<br>"临近截止 24h 无人报名"</td><td>T4 变更应答(若改详情)</td></tr>
+<tr><td>#17 提交筛选结果</td><td>筛选中 → 待招聘方确认</td><td>alt 2 中介 24h 未提交</td><td>T1 中介筛选超时</td></tr>
+<tr><td>★ #18 通知入选名单</td><td>待招聘方确认 → 待应聘方确认</td><td>alt 3 招聘方异议<br>alt 3 含 T2 超时</td><td>T2 招聘方确认超时</td></tr>
+<tr><td>#19 通知入选</td><td>(中间态:候选人 PENDING)</td><td>alt 4 应聘方放弃 / T3 超时</td><td>T3 应聘方应答超时</td></tr>
+<tr><td>★ #19a 应聘方确认接受</td><td>(N 个候选人全 CONFIRMED 后)<br>待应聘方确认 → 已成单</td><td>—</td><td>—</td></tr>
+<tr><td>#20–#22 拉群</td><td>(已成单内动作)</td><td>异常表"群聊扩容失败"<br>"用户拒绝入群"</td><td>—</td></tr>
+<tr><td>(兼职完成确认)</td><td>已成单 → 已关闭</td><td>—</td><td>T11 完工确认超时</td></tr>
+<tr><td>(招聘方任意时点取消)</td><td>多状态 → 已取消</td><td>异常表"招聘方主动取消"</td><td>—</td></tr>
+<tr><td>(截止日到达且无人成单)</td><td>已发布 → 已过期</td><td>异常表"临近截止 24h"</td><td>T5 截止日期</td></tr>
+</tbody>
+</table>
+
+<h2 id="appendix-b">附录 B:v3 修订要点(从 v2)</h2>
+<p>本 MVP 即 v3。下列 6 项是与 v2 评审稿相比的关键差异——评审过 v2 的同事可重点关注这些。</p>
+
+<table>
+<thead><tr><th style="width: 30%">修订项</th><th style="width: 30%">v2 形态</th><th style="width: 40%">v3 形态(本 MVP)</th></tr></thead>
+<tbody>
+<tr>
+  <td>拆分确认环节</td>
+  <td>招聘方确认后直接拉群成单</td>
+  <td>新增"待应聘方确认"状态,应聘方显式确认(T3 24h)<br>详见 <a href="#sec-3">§3.1</a></td>
+</tr>
+<tr>
+  <td>递补触发点</td>
+  <td>已成单 → 递补中</td>
+  <td>待应聘方确认 → 递补中(上移,语义对齐)</td>
+</tr>
+<tr>
+  <td>递补回流路径</td>
+  <td>递补 → 中介方重筛 → 招聘方审批</td>
+  <td>递补 → 直接激活下一备选(中介在 #17 已定 rank)<br>详见 <a href="#sec-3">§3.2</a></td>
+</tr>
+<tr>
+  <td>招聘方确认超时</td>
+  <td>无明确处理</td>
+  <td>新增 T2 48h:24h 提醒 + 48h 强制视为退回 → 异议重筛<br>详见 <a href="#sec-3">§3.4</a></td>
+</tr>
+<tr>
+  <td>驳回后放弃</td>
+  <td>"驳回待修改"状态无出口,数据黑洞</td>
+  <td>新增"驳回待修改 → 已取消"路径</td>
+</tr>
+<tr>
+  <td>取消处理范围</td>
+  <td>仅"已发布"状态可取消</td>
+  <td>已发布/筛选中/待招聘方确认/待应聘方确认/已成单/递补中/驳回待修改 均可取消(MVP 不分级)<br>详见 <a href="#sec-3">§3.3</a></td>
+</tr>
+</tbody>
+</table>
+
+
+</body>
+</html>
