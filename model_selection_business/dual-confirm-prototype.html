@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>双重确认闭环原型 · #18 招聘方确认名单 / #19a 应聘方确认接受</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #ece9e2; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; color: #1f2937; }
+  .page-head { text-align: center; padding: 48px 20px 8px; }
+  .page-head h1 { font-size: 22px; margin: 0 0 6px; color: #1f2937; }
+  .page-head p { font-size: 13px; color: #6b7280; margin: 0; }
+  #root { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: center; gap: 56px; padding: 32px 16px 96px; }
+  .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .phone-cap { text-align: center; }
+  .phone-cap .tag { font: 600 11px/1 ui-monospace, monospace; letter-spacing: 2px; color: #1f2937; }
+  .phone-cap .sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
+  *::-webkit-scrollbar { width: 0; height: 0; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>双重确认闭环 · 关键路径原型</h1>
+  <p>对应 PRD §3.1 双重确认闭环 / §3.4 三段超时 · 主流程 #18 与 #19a</p>
+</div>
+
+<div id="root"></div>
+
+<script>
+// ===== iOS 外壳(自包含,React.createElement,无 JSX)=====
+(function () {
+  var e = React.createElement;
+
+  function IOSStatusBar(props) {
+    return e('div', {
+      style: {
+        height: 44, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 24px', fontSize: 14, fontWeight: 600, color: '#1f2937'
+      }
+    },
+      e('span', null, '9:41'),
+      e('div', {
+        style: {
+          position: 'absolute', top: 11, left: '50%', transform: 'translateX(-50%)',
+          width: 110, height: 32, borderRadius: 20, background: '#000'
+        }
+      }),
+      e('span', { style: { fontSize: 12, letterSpacing: 1 } }, '5G  ▦  100%')
+    );
+  }
+
+  function IOSNavBar(props) {
+    return e('div', {
+      style: {
+        height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        position: 'relative', borderBottom: '0.5px solid rgba(0,0,0,0.08)', background: 'rgba(255,255,255,0.92)'
+      }
+    },
+      e('span', {
+        style: { position: 'absolute', left: 16, fontSize: 22, color: '#007aff', lineHeight: 1 }
+      }, '‹'),
+      e('span', { style: { fontSize: 16, fontWeight: 600 } }, props.title)
+    );
+  }
+
+  function IOSDevice(props) {
+    var width = props.width || 384;
+    var height = props.height || 812;
+    return e('div', {
+      style: {
+        width: width, height: height, borderRadius: 46, overflow: 'hidden', position: 'relative',
+        background: '#f2f2f7', boxShadow: '0 30px 70px rgba(0,0,0,0.20), 0 0 0 1px rgba(0,0,0,0.10)'
+      }
+    },
+      e(IOSStatusBar, null),
+      e(IOSNavBar, { title: props.title }),
+      e('div', {
+        style: { position: 'absolute', top: 92, left: 0, right: 0, bottom: 0, overflowY: 'auto' }
+      }, props.children)
+    );
+  }
+
+  Object.assign(window, { IOSDevice: IOSDevice, IOSStatusBar: IOSStatusBar, IOSNavBar: IOSNavBar });
+})();
+</script>
+
+<script>
+// ===== 屏 1 · #19a 应聘方确认接受(C 端)=====
+(function () {
+  var e = React.createElement;
+
+  function fmt(sec) {
+    var h = Math.floor(sec / 3600);
+    var m = Math.floor((sec % 3600) / 60);
+    var s = sec % 60;
+    function p(n) { return (n < 10 ? '0' : '') + n; }
+    return p(h) + ':' + p(m) + ':' + p(s);
+  }
+
+  function Field(props) {
+    return e('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '9px 0', fontSize: 14, borderBottom: '0.5px solid rgba(0,0,0,0.06)' } },
+      e('span', { style: { color: '#8e8e93' } }, props.k),
+      e('span', { style: { color: '#1f2937', fontWeight: 500 } }, props.v)
+    );
+  }
+
+  function ApplicantConfirm() {
+    var st = React.useState('pending');
+    var status = st[0], setStatus = st[1];
+    var ct = React.useState(85268); // ~23:41:08
+    var left = ct[0], setLeft = ct[1];
+
+    React.useEffect(function () {
+      if (status !== 'pending') return;
+      var id = setInterval(function () { setLeft(function (x) { return x > 0 ? x - 1 : 0; }); }, 1000);
+      return function () { clearInterval(id); };
+    }, [status]);
+
+    var card = { background: '#fff', borderRadius: 14, padding: 16, margin: '0 16px 14px' };
+
+    var banner;
+    if (status === 'confirmed') {
+      banner = e('div', { style: { background: '#d1fae5', color: '#065f46', borderRadius: 14, padding: '18px 16px', margin: '0 16px 14px', fontWeight: 600 } },
+        '✅ 已确认,等待建群', e('div', { style: { fontWeight: 400, fontSize: 13, marginTop: 6 } }, '平台将拉你进沟通群(主流程 #20–#22),请留意通知。'));
+    } else if (status === 'declined') {
+      banner = e('div', { style: { background: '#fee2e2', color: '#991b1b', borderRadius: 14, padding: '18px 16px', margin: '0 16px 14px', fontWeight: 600 } },
+        '已放弃这次机会', e('div', { style: { fontWeight: 400, fontSize: 13, marginTop: 6 } }, '名额将按 rank 自动递补给下一备选候选人(§3.2),本次报名已关闭。'));
+    } else {
+      banner = e('div', { style: { background: 'linear-gradient(135deg,#3b82f6,#2563eb)', color: '#fff', borderRadius: 14, padding: '20px 16px', margin: '0 16px 14px' } },
+        e('div', { style: { fontSize: 13, opacity: 0.85 } }, '录用通知'),
+        e('div', { style: { fontSize: 20, fontWeight: 700, marginTop: 4 } }, '🎉 你已被选中'));
+    }
+
+    var children = [banner,
+      e('div', { style: card, key: 'info' },
+        e('div', { style: { fontSize: 16, fontWeight: 700, marginBottom: 8 } }, '周末品牌快闪 · 兼职导购'),
+        e(Field, { k: '招聘方', v: 'ZARA 西单大悦城店' }),
+        e(Field, { k: '类别', v: '零售导购' }),
+        e(Field, { k: '时段', v: '6/21 10:00–18:00' }),
+        e(Field, { k: '地点', v: '西单大悦城 1F' }),
+        e('div', { style: { display: 'flex', justifyContent: 'space-between', padding: '9px 0 0', fontSize: 14 } },
+          e('span', { style: { color: '#8e8e93' } }, '报酬'),
+          e('span', { style: { color: '#dc2626', fontWeight: 700 } }, '¥240 / 天'))
+      )];
+
+    if (status === 'pending') {
+      children.push(
+        e('div', { key: 'cd', style: { background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 14, padding: '14px 16px', margin: '0 16px 14px', textAlign: 'center' } },
+          e('div', { style: { fontSize: 13, color: '#9a3412' } }, '⏳ 应答窗口剩余(T3 · 24h)'),
+          e('div', { style: { fontSize: 26, fontWeight: 700, color: '#c2410c', fontFamily: 'ui-monospace,monospace', margin: '4px 0 2px' } }, fmt(left)),
+          e('div', { style: { fontSize: 12, color: '#9a3412' } }, '超时未确认将视为放弃,名额自动递补')
+        ),
+        e('div', { key: 'btns', style: { padding: '4px 16px 24px' } },
+          e('button', {
+            onClick: function () { setStatus('confirmed'); },
+            style: { width: '100%', padding: '15px 0', border: 'none', borderRadius: 13, background: '#2563eb', color: '#fff', fontSize: 17, fontWeight: 700, marginBottom: 10 }
+          }, '确认接受'),
+          e('button', {
+            onClick: function () { setStatus('declined'); },
+            style: { width: '100%', padding: '13px 0', border: 'none', borderRadius: 13, background: 'transparent', color: '#8e8e93', fontSize: 14 }
+          }, '放弃这次机会'),
+          e('div', { style: { fontSize: 12, color: '#9ca3af', textAlign: 'center', marginTop: 10, lineHeight: 1.6 } },
+            '放弃后名额将按中介方提交的 rank 顺序自动递补给备选候选人,本次报名关闭。')
+        )
+      );
+    } else {
+      children.push(e('div', { key: 'reset', style: { padding: '4px 16px 24px' } },
+        e('button', { onClick: function () { setStatus('pending'); setLeft(85268); },
+          style: { width: '100%', padding: '12px 0', border: '1px solid #d1d5db', borderRadius: 13, background: '#fff', color: '#6b7280', fontSize: 14 } }, '↺ 重置原型')));
+    }
+
+    return e(window.IOSDevice, { title: '录用通知' }, children);
+  }
+
+  Object.assign(window, { ApplicantConfirm: ApplicantConfirm });
+})();
+</script>
+
+<script>
+// ===== 屏 2 · #18 招聘方确认名单(B 端)=====
+(function () {
+  var e = React.createElement;
+
+  function fmt(sec) {
+    var h = Math.floor(sec / 3600);
+    var m = Math.floor((sec % 3600) / 60);
+    var s = sec % 60;
+    function p(n) { return (n < 10 ? '0' : '') + n; }
+    return p(h) + ':' + p(m) + ':' + p(s);
+  }
+
+  function CandidateCard(props) {
+    var c = props.c;
+    return e('div', { style: { background: '#fff', borderRadius: 14, padding: 14, marginBottom: 10, position: 'relative', opacity: props.removed ? 0.4 : 1 } },
+      e('div', { style: { display: 'flex', alignItems: 'center', gap: 12 } },
+        e('div', { style: { width: 44, height: 44, borderRadius: 22, background: c.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 } }, c.emoji),
+        e('div', { style: { flex: 1 } },
+          e('div', { style: { fontSize: 15, fontWeight: 700 } }, 'rank ' + c.rank + ' · ' + c.name),
+          e('div', { style: { fontSize: 12, color: '#8e8e93', marginTop: 2 } }, c.tags)),
+        props.removable && !props.removed ? e('button', {
+          onClick: props.onRemove,
+          style: { border: 'none', background: '#f3f4f6', color: '#9ca3af', borderRadius: 8, width: 26, height: 26, fontSize: 14 }
+        }, '✕') : null
+      ),
+      e('div', { style: { marginTop: 10, fontSize: 13, color: '#374151', background: '#f9fafb', borderRadius: 9, padding: '8px 10px', lineHeight: 1.5 } },
+        e('span', { style: { color: '#6b7280' } }, '中介推荐理由:'), c.reason),
+      e('div', { style: { marginTop: 6, fontSize: 11, color: '#9ca3af', fontStyle: 'italic' } },
+        '↗ v2 此处将由 AI 给出推荐理由 + 置信度(见 AI_MATCHING_SPEC.md)')
+    );
+  }
+
+  function EmployerRoster() {
+    var initial = [
+      { rank: 1, name: '林晓', emoji: '👩', bg: '#dbeafe', tags: '本科 · 零售经验 2 段 · 准时率 100%', reason: '历史 4 单同类导购全好评,目标时段完全可用。', kind: 'main' },
+      { rank: 2, name: '陈宇', emoji: '🧑', bg: '#dcfce7', tags: '专科 · 快闪经验 · 评分 4.8', reason: '做过 3 场品牌快闪,沟通能力强,距工作地 1.5km。', kind: 'main' },
+      { rank: 3, name: '王萌', emoji: '👧', bg: '#fef3c7', tags: '本科 · 无经验 · 新人', reason: '形象气质好,时段匹配,可作备选。', kind: 'backup' },
+      { rank: 4, name: '赵磊', emoji: '👦', bg: '#fae8ff', tags: '专科 · 评分 4.5', reason: '有零售经验但仅下午可用,作次备选。', kind: 'backup' }
+    ];
+    var rs = React.useState(initial);
+    var roster = rs[0], setRoster = rs[1];
+    var ss = React.useState('pending');
+    var status = ss[0], setStatus = ss[1];
+    var cs = React.useState(170808); // ~47:26:48 (T2 48h)
+    var left = cs[0], setLeft = cs[1];
+    var sb = React.useState(false);
+    var showBackup = sb[0], setShowBackup = sb[1];
+
+    React.useEffect(function () {
+      if (status !== 'pending') return;
+      var id = setInterval(function () { setLeft(function (x) { return x > 0 ? x - 1 : 0; }); }, 1000);
+      return function () { clearInterval(id); };
+    }, [status]);
+
+    function removeOne(rank) {
+      setRoster(roster.map(function (c) { return c.rank === rank ? Object.assign({}, c, { _gone: true }) : c; }));
+    }
+
+    var main = roster.filter(function (c) { return c.kind === 'main'; });
+    var backup = roster.filter(function (c) { return c.kind === 'backup'; });
+
+    var kids = [];
+
+    if (status === 'confirmed') {
+      kids.push(e('div', { key: 'b', style: { background: '#d1fae5', color: '#065f46', borderRadius: 14, padding: '18px 16px', margin: '0 16px 14px', fontWeight: 600 } },
+        '✅ 名单已确认', e('div', { style: { fontWeight: 400, fontSize: 13, marginTop: 6 } }, '招募令进入「待应聘方确认」,平台已向入选应聘方推送录用通知(#19 / #19a)。')));
+    } else if (status === 'returned') {
+      kids.push(e('div', { key: 'b', style: { background: '#fef3c7', color: '#92400e', borderRadius: 14, padding: '18px 16px', margin: '0 16px 14px', fontWeight: 600 } },
+        '↩ 已退回,转入异议重筛(DISPUTED)', e('div', { style: { fontWeight: 400, fontSize: 13, marginTop: 6 } }, '中介方将结合剩余报名池重新筛选后再次提交(alt 3)。')));
+    } else {
+      kids.push(e('div', { key: 'cd', style: { background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 14, padding: '14px 16px', margin: '0 16px 14px' } },
+        e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' } },
+          e('span', { style: { fontSize: 13, color: '#9a3412' } }, '确认窗口(T2 · 48h)'),
+          e('span', { style: { fontSize: 20, fontWeight: 700, color: '#c2410c', fontFamily: 'ui-monospace,monospace' } }, fmt(left))),
+        e('div', { style: { fontSize: 12, color: '#9a3412', marginTop: 8, lineHeight: 1.6 } },
+          '超时未确认将视为退回、由中介方重新筛选 —— ',
+          e('strong', null, '系统不会替你默认通过。'))
+      ));
+    }
+
+    kids.push(e('div', { key: 'title', style: { padding: '2px 18px 6px', fontSize: 13, color: '#6b7280' } }, '入选名单 · 需 2 人(中介方已按 rank 排序提交)'));
+    kids.push(e('div', { key: 'main', style: { padding: '0 16px' } },
+      main.map(function (c) {
+        return e(CandidateCard, { key: c.rank, c: c, removable: status === 'pending', removed: c._gone, onRemove: function () { removeOne(c.rank); } });
+      })
+    ));
+
+    kids.push(e('div', { key: 'bktoggle', style: { padding: '6px 18px' } },
+      e('button', { onClick: function () { setShowBackup(!showBackup); },
+        style: { border: 'none', background: 'transparent', color: '#007aff', fontSize: 13, padding: 0 } },
+        (showBackup ? '▾ ' : '▸ ') + '备选池(rank 3–4 · 递补按此顺序自动激活)')
+    ));
+    if (showBackup) {
+      kids.push(e('div', { key: 'bk', style: { padding: '0 16px' } },
+        backup.map(function (c) { return e(CandidateCard, { key: c.rank, c: c, removable: false }); })));
+    }
+
+    if (status === 'pending') {
+      kids.push(e('div', { key: 'ops', style: { padding: '8px 16px 28px' } },
+        e('button', { onClick: function () { setStatus('confirmed'); },
+          style: { width: '100%', padding: '15px 0', border: 'none', borderRadius: 13, background: '#16a34a', color: '#fff', fontSize: 17, fontWeight: 700, marginBottom: 10 } }, '全部确认'),
+        e('button', { onClick: function () { setStatus('returned'); },
+          style: { width: '100%', padding: '13px 0', border: '1px solid #f59e0b', borderRadius: 13, background: '#fff', color: '#b45309', fontSize: 15, fontWeight: 600 } }, '退回重选 + 异议原因')
+      ));
+    } else {
+      kids.push(e('div', { key: 'reset', style: { padding: '8px 16px 28px' } },
+        e('button', { onClick: function () { setStatus('pending'); setRoster(initial); setLeft(170808); },
+          style: { width: '100%', padding: '12px 0', border: '1px solid #d1d5db', borderRadius: 13, background: '#fff', color: '#6b7280', fontSize: 14 } }, '↺ 重置原型')));
+    }
+
+    return e(window.IOSDevice, { title: '确认入选名单' }, kids);
+  }
+
+  Object.assign(window, { EmployerRoster: EmployerRoster });
+})();
+</script>
+
+<script>
+// ===== 装配:两机并排 =====
+(function () {
+  var e = React.createElement;
+  function Cap(props) {
+    return e('div', { className: 'phone-cap' },
+      e('div', { className: 'tag' }, props.tag),
+      e('div', { className: 'sub' }, props.sub));
+  }
+  function App() {
+    return e(React.Fragment, null,
+      e('div', { className: 'phone-wrap' },
+        e(Cap, { tag: '#18 · 招聘方', sub: '确认入选名单 · 体现 §3.4「系统不会替你默认通过」' }),
+        e(window.EmployerRoster, null)),
+      e('div', { className: 'phone-wrap' },
+        e(Cap, { tag: '#19a · 应聘方', sub: '确认接受 · §3.1 双重确认闭环的点睛动作' }),
+        e(window.ApplicantConfirm, null))
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(e(App));
+})();
+</script>
+
+</body>
+</html>
