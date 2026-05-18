@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Figma 导出预览 · 三方关键流程</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Serif+Text:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #f3ead8; color: #2a1f12;
+    font-family: 'Inter', 'PingFang SC', system-ui, sans-serif; }
+  body { padding: 56px 32px 96px; }
+  .head { max-width: 1200px; margin: 0 auto 48px; text-align: center; }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 4px; color: rgba(42,31,18,0.55); text-transform: uppercase; }
+  .title { font-family: 'Playfair Display', 'Noto Serif SC', serif;
+    font-size: 48px; line-height: 1.05; letter-spacing: -0.5px; margin: 12px 0 8px; }
+  .sub { font-family: 'EB Garamond', 'Noto Serif SC', serif; font-style: italic;
+    font-size: 18px; color: rgba(42,31,18,0.6); }
+  .rule { width: 60px; height: 1px; background: #7a4a28; margin: 22px auto 0; }
+  .note { max-width: 640px; margin: 24px auto 0; padding: 14px 20px;
+    border: 0.5px solid rgba(122,74,40,0.45);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.75;
+    color: rgba(42,31,18,0.7); text-align: left; }
+  .note strong { color: #c63a1f; }
+
+  .section-head { max-width: 1200px; margin: 64px auto 24px;
+    display: flex; align-items: baseline; gap: 16px; }
+  .section-head .num { font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 3px; color: rgba(42,31,18,0.55); }
+  .section-head .name { font-family: 'DM Serif Display', 'Noto Serif SC', serif;
+    font-size: 28px; }
+  .section-head .desc { font-family: 'EB Garamond', serif; font-style: italic;
+    font-size: 15px; color: rgba(42,31,18,0.55); margin-left: auto; }
+
+  .grid { max-width: 1200px; margin: 0 auto; display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 32px; }
+  .card { background: #f7f1e6; border: 0.5px solid rgba(31,26,20,0.15);
+    display: flex; flex-direction: column; }
+  .card .frame { width: 100%; aspect-ratio: 390/736; background: #f3ead8;
+    overflow: hidden; position: relative; border-bottom: 0.5px solid rgba(31,26,20,0.1); }
+  .card .frame object { width: 100%; height: 100%; pointer-events: none; }
+  .card .meta { padding: 14px 18px; }
+  .card .file { font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 1px; color: rgba(42,31,18,0.55); }
+  .card .label { font-family: 'DM Serif Text', 'Noto Serif SC', serif;
+    font-size: 17px; margin-top: 4px; }
+  .card .links { margin-top: 10px; display: flex; gap: 14px; }
+  .card .links a { font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 1px; color: #7a4a28; text-decoration: none;
+    border-bottom: 0.5px solid currentColor; padding-bottom: 1px; }
+  .card .links a:hover { color: #c63a1f; }
+
+  .footer { max-width: 800px; margin: 80px auto 0; padding: 28px 32px;
+    background: #f7f1e6; border: 0.5px solid rgba(31,26,20,0.15); }
+  .footer h3 { font-family: 'DM Serif Display', serif; font-size: 20px;
+    margin: 0 0 12px; }
+  .footer ol { font-family: 'EB Garamond', 'Noto Serif SC', serif; font-size: 15px;
+    line-height: 1.8; color: rgba(42,31,18,0.85); margin: 0; padding-left: 22px; }
+  .footer code { font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    background: rgba(122,74,40,0.08); padding: 1px 6px; }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="eyebrow">FIGMA EXPORT · STRUCTURED SVG</div>
+  <h1 class="title">三方关键流程 · Figma 可编辑导出</h1>
+  <div class="sub">7 张屏 · 结构化 SVG + 同名 PNG · 拖进 Figma 即可分解</div>
+  <div class="rule"></div>
+  <div class="note">
+    <strong>使用方式 ▷</strong> SVG 每屏一个文件,图层带 <code>data-name</code>,文本是真正的 <code>&lt;text&gt;</code> 节点。直接拖进 Figma 画布,Ungroup 后即可逐层编辑颜色 / 字体 / 间距。详见 <strong>README.md</strong>。
+  </div>
+</div>
+
+<div class="section-head">
+  <span class="num">§ 应聘方</span>
+  <span class="name">Applicant</span>
+  <span class="desc">从收到推送 → 接受录用 → 完工的应聘旅程</span>
+</div>
+<div class="grid">
+  <div class="card">
+    <div class="frame"><object data="svg/01-应聘方-报名闭环.svg" type="image/svg+xml"></object></div>
+    <div class="meta">
+      <div class="file">01 / APPLICANT · FEED</div>
+      <div class="label">报名闭环 · #11 → #14</div>
+      <div class="links">
+        <a href="svg/01-应聘方-报名闭环.svg" target="_blank">SVG</a>
+        <a href="png/01-applicant-feed-signup.png" target="_blank">PNG</a>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><object data="svg/02-应聘方-录用通知.svg" type="image/svg+xml"></object></div>
+    <div class="meta">
+      <div class="file">02 / APPLICANT · OFFER</div>
+      <div class="label">#19a · 确认接受</div>
+      <div class="links">
+        <a href="svg/02-应聘方-录用通知.svg" target="_blank">SVG</a>
+        <a href="png/02-applicant-offer-accept.png" target="_blank">PNG</a>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><object data="svg/03-应聘方-成单完工.svg" type="image/svg+xml"></object></div>
+    <div class="meta">
+      <div class="file">03 / APPLICANT · DEAL</div>
+      <div class="label">#20–22 · 成单 / 完工</div>
+      <div class="links">
+        <a href="svg/03-应聘方-成单完工.svg" target="_blank">SVG</a>
+        <a href="png/03-applicant-deal-done.png" target="_blank">PNG</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-head">
+  <span class="num">§ 招聘方</span>
+  <span class="name">Employer</span>
+  <span class="desc">从发布招募令 → 确认入选 → 完工确认的招聘旅程</span>
+</div>
+<div class="grid">
+  <div class="card">
+    <div class="frame"><object data="svg/04-招聘方-发布招募令.svg" type="image/svg+xml"></object></div>
+    <div class="meta">
+      <div class="file">04 / EMPLOYER · POST</div>
+      <div class="label">#9 · 发布招募令</div>
+      <div class="links">
+        <a href="svg/04-招聘方-发布招募令.svg" target="_blank">SVG</a>
+        <a href="png/04-employer-post.png" target="_blank">PNG</a>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><object data="svg/05-招聘方-确认入选名单.svg" type="image/svg+xml"></object></div>
+    <div class="meta">
+      <div class="file">05 / EMPLOYER · ROSTER</div>
+      <div class="label">#18 · 确认入选名单</div>
+      <div class="links">
+        <a href="svg/05-招聘方-确认入选名单.svg" target="_blank">SVG</a>
+        <a href="png/05-employer-confirm-roster.png" target="_blank">PNG</a>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="frame"><object data="svg/06-招聘方-完工确认.svg" type="image/svg+xml"></object></div>
+    <div class="meta">
+      <div class="file">06 / EMPLOYER · DONE</div>
+      <div class="label">完工确认 · T11</div>
+      <div class="links">
+        <a href="svg/06-招聘方-完工确认.svg" target="_blank">SVG</a>
+        <a href="png/06-employer-done-confirm.png" target="_blank">PNG</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-head">
+  <span class="num">§ 中介方</span>
+  <span class="name">Agency</span>
+  <span class="desc">cream 钻取链:招募令列表 → 报名者 → 档案 / #17 池</span>
+</div>
+<div class="grid">
+  <div class="card">
+    <div class="frame"><object data="svg/07-中介方-招募令列表.svg" type="image/svg+xml"></object></div>
+    <div class="meta">
+      <div class="file">07 / AGENCY · LISTING</div>
+      <div class="label">招募令列表 · ISSUE 042</div>
+      <div class="links">
+        <a href="svg/07-中介方-招募令列表.svg" target="_blank">SVG</a>
+        <a href="png/07-agency-listing.png" target="_blank">PNG</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <h3>下一步 · 进 Figma</h3>
+  <ol>
+    <li>下载 ZIP 解压(右上角的下载卡片)</li>
+    <li>打开 Figma,新建文件,直接把 <code>svg/</code> 里的 7 个文件拖进画布</li>
+    <li>选中导入的 group,<code>Cmd+Shift+G</code> 一层一层 Ungroup,文本节点可双击编辑</li>
+    <li>字体需要本地装好 DM Serif Display / DM Serif Text / EB Garamond / Playfair Display / JetBrains Mono / Noto Serif SC,否则会回退</li>
+  </ol>
+</div>
+
+</body>
+</html>
