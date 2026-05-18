@@ -1,0 +1,2940 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三方关键流程原型 · 应聘 / 招聘 / 中介 端到端旅程</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Serif+Text:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  html, body, #root { margin: 0; padding: 0; min-height: 100%; }
+  html, body { background: #f3ead8; color: #2a1f12; font-family: 'Inter', 'PingFang SC', system-ui, -apple-system, sans-serif; }
+  html { scrollbar-width: none; -ms-overflow-style: none; }
+  *::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+
+  .page-head { padding: 56px 36px 28px; text-align: center; }
+  .page-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 4px;
+    color: rgba(42,31,18,0.55); text-transform: uppercase;
+  }
+  .page-title {
+    font-family: 'Playfair Display', 'DM Serif Display', 'Noto Serif SC', serif;
+    font-size: 44px; line-height: 1.05; letter-spacing: -0.5px;
+    margin-top: 12px; color: #2a1f12;
+  }
+  .page-sub {
+    font-family: 'EB Garamond', 'Noto Serif SC', serif;
+    font-style: italic; font-size: 18px; color: rgba(42,31,18,0.55);
+    margin-top: 8px;
+  }
+  .rule { width: 60px; height: 1px; background: #7a4a28; margin: 22px auto 0; }
+
+  #root {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 64px; padding: 0 12px 96px;
+  }
+  .phone-block {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+  .phone-label {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .phone-label span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 3px; color: #2a1f12;
+    text-transform: uppercase;
+  }
+  .phone-label em {
+    font-family: 'EB Garamond', 'Playfair Display', serif;
+    font-style: italic; font-size: 13px; color: rgba(42,31,18,0.55);
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="page-eyebrow">END-TO-END FLOW · §3.1 §3.4 · #9–#22</div>
+  <div class="page-title">三方关键流程原型</div>
+  <div class="page-sub">应聘方 · 招聘方 · 中介方 —— 一条可走完的关键决策节点旅程</div>
+  <div class="rule"></div>
+  <div style="max-width:560px;margin:22px auto 0;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.75;letter-spacing:0.3px;color:rgba(42,31,18,0.62);border:0.5px solid rgba(122,74,40,0.45);padding:13px 18px;text-align:left;">
+    <strong style="color:#c63a1f;letter-spacing:1px;">AI 标记说明 ▷</strong> 凡标注 <strong>「v2 · 本版不做」</strong> 的位置均为<strong>未来愿景</strong>;MVP(本版 v3)不实现 AI,排序与筛选仍<strong>全部由中介方人工完成</strong> —— 设计依据见 <strong>AI_MATCHING_SPEC.md</strong>。
+  </div>
+</div>
+
+<div id="root"></div>
+
+<script>
+// === iOS frame ===
+// ===== ios-frame.jsx =====
+
+// iOS.jsx — Simplified iOS 26 (Liquid Glass) device frame
+// Based on the iOS 26 UI Kit + Figma status bar spec. No assets, no deps.
+// Exports: IOSDevice, IOSStatusBar, IOSNavBar, IOSGlassPill, IOSList, IOSListRow, IOSKeyboard
+
+// ─────────────────────────────────────────────────────────────
+// Status bar
+// ─────────────────────────────────────────────────────────────
+function IOSStatusBar({
+  dark = false,
+  time = '9:41'
+}) {
+  const c = dark ? '#fff' : '#000';
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 154,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '26px 24px 8px',
+      height: 56,
+      boxSizing: 'border-box',
+      position: 'relative',
+      zIndex: 20,
+      width: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      height: 22,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: '-apple-system, "SF Pro", system-ui',
+      fontWeight: 590,
+      fontSize: 17,
+      lineHeight: '22px',
+      color: c
+    }
+  }, time)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      height: 22,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 7,
+      paddingRight: 1
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "19",
+    height: "12",
+    viewBox: "0 0 19 12"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "0",
+    y: "7.5",
+    width: "3.2",
+    height: "4.5",
+    rx: "0.7",
+    fill: c
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "4.8",
+    y: "5",
+    width: "3.2",
+    height: "7",
+    rx: "0.7",
+    fill: c
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "9.6",
+    y: "2.5",
+    width: "3.2",
+    height: "9.5",
+    rx: "0.7",
+    fill: c
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14.4",
+    y: "0",
+    width: "3.2",
+    height: "12",
+    rx: "0.7",
+    fill: c
+  })), /*#__PURE__*/React.createElement("svg", {
+    width: "17",
+    height: "12",
+    viewBox: "0 0 17 12"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z",
+    fill: c
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z",
+    fill: c
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "8.5",
+    cy: "10.5",
+    r: "1.5",
+    fill: c
+  })), /*#__PURE__*/React.createElement("svg", {
+    width: "27",
+    height: "14",
+    viewBox: "0 0 27 13"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "0.5",
+    y: "0.5",
+    width: "23",
+    height: "12",
+    rx: "3.5",
+    stroke: c,
+    strokeOpacity: "0.35",
+    fill: "none"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "2",
+    y: "2",
+    width: "20",
+    height: "9",
+    rx: "2",
+    fill: c
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z",
+    fill: c,
+    fillOpacity: "0.4"
+  }))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Liquid glass pill — blur + tint + shine
+// ─────────────────────────────────────────────────────────────
+function IOSGlassPill({
+  children,
+  dark = false,
+  style = {}
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 44,
+      minWidth: 44,
+      borderRadius: 9999,
+      position: 'relative',
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxShadow: dark ? '0 2px 6px rgba(0,0,0,0.35), 0 6px 16px rgba(0,0,0,0.2)' : '0 1px 3px rgba(0,0,0,0.07), 0 3px 10px rgba(0,0,0,0.06)',
+      ...style
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 9999,
+      backdropFilter: 'blur(12px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+      background: dark ? 'rgba(120,120,128,0.28)' : 'rgba(255,255,255,0.5)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 9999,
+      boxShadow: dark ? 'inset 1.5px 1.5px 1px rgba(255,255,255,0.15), inset -1px -1px 1px rgba(255,255,255,0.08)' : 'inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4)',
+      border: dark ? '0.5px solid rgba(255,255,255,0.15)' : '0.5px solid rgba(0,0,0,0.06)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      zIndex: 1,
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0 4px'
+    }
+  }, children));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Navigation bar — glass pills + large title
+// ─────────────────────────────────────────────────────────────
+function IOSNavBar({
+  title = 'Title',
+  dark = false,
+  trailingIcon = true
+}) {
+  const muted = dark ? 'rgba(255,255,255,0.6)' : '#404040';
+  const text = dark ? '#fff' : '#000';
+  const pillIcon = content => /*#__PURE__*/React.createElement(IOSGlassPill, {
+    dark: dark
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 36,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  }, content));
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10,
+      paddingTop: 62,
+      paddingBottom: 10,
+      position: 'relative',
+      zIndex: 5
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '0 16px'
+    }
+  }, pillIcon(/*#__PURE__*/React.createElement("svg", {
+    width: "12",
+    height: "20",
+    viewBox: "0 0 12 20",
+    fill: "none",
+    style: {
+      marginLeft: -1
+    }
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M10 2L2 10l8 8",
+    stroke: muted,
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }))), trailingIcon && pillIcon(/*#__PURE__*/React.createElement("svg", {
+    width: "22",
+    height: "6",
+    viewBox: "0 0 22 6"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "3",
+    cy: "3",
+    r: "2.5",
+    fill: muted
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "3",
+    r: "2.5",
+    fill: muted
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "19",
+    cy: "3",
+    r: "2.5",
+    fill: muted
+  })))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '0 16px',
+      fontFamily: '-apple-system, system-ui',
+      fontSize: 34,
+      fontWeight: 700,
+      lineHeight: '41px',
+      color: text,
+      letterSpacing: 0.4
+    }
+  }, title));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Grouped list (inset card, r:26) + row (52px)
+// ─────────────────────────────────────────────────────────────
+function IOSListRow({
+  title,
+  detail,
+  icon,
+  chevron = true,
+  isLast = false,
+  dark = false
+}) {
+  const text = dark ? '#fff' : '#000';
+  const sec = dark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+  const ter = dark ? 'rgba(235,235,245,0.3)' : 'rgba(60,60,67,0.3)';
+  const sep = dark ? 'rgba(84,84,88,0.65)' : 'rgba(60,60,67,0.12)';
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      minHeight: 52,
+      padding: '0 16px',
+      position: 'relative',
+      fontFamily: '-apple-system, system-ui',
+      fontSize: 17,
+      letterSpacing: -0.43
+    }
+  }, icon && /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 30,
+      height: 30,
+      borderRadius: 7,
+      background: icon,
+      marginRight: 12,
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      color: text
+    }
+  }, title), detail && /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: sec,
+      marginRight: 6
+    }
+  }, detail), chevron && /*#__PURE__*/React.createElement("svg", {
+    width: "8",
+    height: "14",
+    viewBox: "0 0 8 14",
+    style: {
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M1 1l6 6-6 6",
+    stroke: ter,
+    strokeWidth: "2",
+    fill: "none",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  })), !isLast && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+      left: icon ? 58 : 16,
+      height: 0.5,
+      background: sep
+    }
+  }));
+}
+function IOSList({
+  header,
+  children,
+  dark = false
+}) {
+  const hc = dark ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)';
+  const bg = dark ? '#1C1C1E' : '#fff';
+  return /*#__PURE__*/React.createElement("div", null, header && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: '-apple-system, system-ui',
+      fontSize: 13,
+      color: hc,
+      textTransform: 'uppercase',
+      padding: '8px 36px 6px',
+      letterSpacing: -0.08
+    }
+  }, header), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: bg,
+      borderRadius: 26,
+      margin: '0 16px',
+      overflow: 'hidden'
+    }
+  }, children));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Device frame
+// ─────────────────────────────────────────────────────────────
+function IOSDevice({
+  children,
+  width = 402,
+  height = 874,
+  dark = false,
+  title,
+  keyboard = false,
+  bg,
+  onBack,
+  tabBar,
+  onAdd
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      width,
+      height,
+      borderRadius: 48,
+      overflow: 'hidden',
+      position: 'relative',
+      background: bg || (dark ? '#000' : '#F2F2F7'),
+      boxShadow: '0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)',
+      fontFamily: '-apple-system, system-ui, sans-serif',
+      WebkitFontSmoothing: 'antialiased'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 11,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      width: 126,
+      height: 37,
+      borderRadius: 24,
+      background: '#000',
+      zIndex: 50
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 100,
+      background: bg || (dark ? '#000' : '#F2F2F7'),
+      zIndex: 10
+    }
+  }, /*#__PURE__*/React.createElement(IOSStatusBar, {
+    dark: dark
+  })), /*#__PURE__*/React.createElement(WeChatCapsule, {
+    dark: dark
+  }), onBack && /*#__PURE__*/React.createElement("button", {
+    onClick: onBack,
+    style: {
+      all: 'unset',
+      position: 'absolute',
+      top: 58,
+      left: 14,
+      width: 32,
+      height: 32,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      zIndex: 40
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: 11,
+    height: 20,
+    viewBox: "0 0 11 20",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M9.5 1.5 L1.5 10 L9.5 18.5",
+    stroke: dark ? '#fff' : '#000',
+    strokeWidth: 2,
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }))), onAdd && /*#__PURE__*/React.createElement("button", {
+    onClick: onAdd,
+    style: {
+      all: 'unset',
+      position: 'absolute',
+      top: 58,
+      left: 14,
+      width: 32,
+      height: 32,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      zIndex: 40
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: 20,
+    height: 20,
+    viewBox: "0 0 20 20",
+    fill: "none"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M10 4.5 V15.5 M4.5 10 H15.5",
+    stroke: dark ? '#fff' : '#000',
+    strokeWidth: 2,
+    strokeLinecap: "round"
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column'
+    }
+  }, title !== undefined && /*#__PURE__*/React.createElement(IOSNavBar, {
+    title: title,
+    dark: dark
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflow: 'auto'
+    }
+  }, children), keyboard && /*#__PURE__*/React.createElement(IOSKeyboard, {
+    dark: dark
+  })), tabBar && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 55
+    }
+  }, tabBar), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      zIndex: 60,
+      height: 34,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+      paddingBottom: 8,
+      pointerEvents: 'none'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 139,
+      height: 5,
+      borderRadius: 100,
+      background: dark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.25)'
+    }
+  })));
+}
+
+// ===== WeChat mini-program capsule · 微信小程序胶囊按钮 =====
+function WeChatCapsule({
+  dark = false
+}) {
+  const c = dark ? '#fff' : '#000';
+  const dotStyle = {
+    width: 4.5,
+    height: 4.5,
+    borderRadius: '50%',
+    background: c
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 58,
+      right: 14,
+      zIndex: 40,
+      pointerEvents: 'none'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 87,
+      height: 32,
+      borderRadius: 16,
+      boxSizing: 'border-box',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      background: dark ? 'rgba(0,0,0,0.16)' : 'rgba(0,0,0,0.05)',
+      border: '0.5px solid ' + (dark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.12)'),
+      backdropFilter: 'blur(8px)',
+      WebkitBackdropFilter: 'blur(8px)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: dotStyle
+  }), /*#__PURE__*/React.createElement("span", {
+    style: dotStyle
+  }), /*#__PURE__*/React.createElement("span", {
+    style: dotStyle
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 1,
+      height: 18,
+      background: dark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)'
+    }
+  }), /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 18 18"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "9",
+    cy: "9",
+    r: "7",
+    fill: "none",
+    stroke: c,
+    strokeWidth: "1.6"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "9",
+    cy: "9",
+    r: "2.6",
+    fill: c
+  }))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Keyboard — iOS 26 liquid glass
+// ─────────────────────────────────────────────────────────────
+function IOSKeyboard({
+  dark = false
+}) {
+  const glyph = dark ? 'rgba(255,255,255,0.7)' : '#595959';
+  const sugg = dark ? 'rgba(255,255,255,0.6)' : '#333';
+  const keyBg = dark ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.85)';
+
+  // special-key icons
+  const icons = {
+    shift: /*#__PURE__*/React.createElement("svg", {
+      width: "19",
+      height: "17",
+      viewBox: "0 0 19 17"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M9.5 1L1 9.5h4.5V16h8V9.5H18L9.5 1z",
+      fill: glyph
+    })),
+    del: /*#__PURE__*/React.createElement("svg", {
+      width: "23",
+      height: "17",
+      viewBox: "0 0 23 17"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M7 1h13a2 2 0 012 2v11a2 2 0 01-2 2H7l-6-7.5L7 1z",
+      fill: "none",
+      stroke: glyph,
+      strokeWidth: "1.6",
+      strokeLinejoin: "round"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M10 5l7 7M17 5l-7 7",
+      stroke: glyph,
+      strokeWidth: "1.6",
+      strokeLinecap: "round"
+    })),
+    ret: /*#__PURE__*/React.createElement("svg", {
+      width: "20",
+      height: "14",
+      viewBox: "0 0 20 14"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M18 1v6H4m0 0l4-4M4 7l4 4",
+      fill: "none",
+      stroke: "#fff",
+      strokeWidth: "1.8",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }))
+  };
+  const key = (content, {
+    w,
+    flex,
+    ret,
+    fs = 25,
+    k
+  } = {}) => /*#__PURE__*/React.createElement("div", {
+    key: k,
+    style: {
+      height: 42,
+      borderRadius: 8.5,
+      flex: flex ? 1 : undefined,
+      width: w,
+      minWidth: 0,
+      background: ret ? '#08f' : keyBg,
+      boxShadow: '0 1px 0 rgba(0,0,0,0.075)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: '-apple-system, "SF Compact", system-ui',
+      fontSize: fs,
+      fontWeight: 458,
+      color: ret ? '#fff' : glyph
+    }
+  }, content);
+  const row = (keys, pad = 0) => /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6.5,
+      justifyContent: 'center',
+      padding: `0 ${pad}px`
+    }
+  }, keys.map(l => key(l, {
+    flex: true,
+    k: l
+  })));
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      zIndex: 15,
+      borderRadius: 27,
+      overflow: 'hidden',
+      padding: '11px 0 2px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      boxShadow: dark ? '0 -2px 20px rgba(0,0,0,0.09)' : '0 -1px 6px rgba(0,0,0,0.018), 0 -3px 20px rgba(0,0,0,0.012)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 27,
+      backdropFilter: 'blur(12px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+      background: dark ? 'rgba(120,120,128,0.14)' : 'rgba(255,255,255,0.25)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 27,
+      boxShadow: dark ? 'inset 1.5px 1.5px 1px rgba(255,255,255,0.15)' : 'inset 1.5px 1.5px 1px rgba(255,255,255,0.7), inset -1px -1px 1px rgba(255,255,255,0.4)',
+      border: dark ? '0.5px solid rgba(255,255,255,0.15)' : '0.5px solid rgba(0,0,0,0.06)',
+      pointerEvents: 'none'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 20,
+      alignItems: 'center',
+      padding: '8px 22px 13px',
+      width: '100%',
+      boxSizing: 'border-box',
+      position: 'relative'
+    }
+  }, ['"The"', 'the', 'to'].map((w, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: i
+  }, i > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 1,
+      height: 25,
+      background: '#ccc',
+      opacity: 0.3
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      textAlign: 'center',
+      fontFamily: '-apple-system, system-ui',
+      fontSize: 17,
+      color: sugg,
+      letterSpacing: -0.43,
+      lineHeight: '22px'
+    }
+  }, w)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 13,
+      padding: '0 6.5px',
+      width: '100%',
+      boxSizing: 'border-box',
+      position: 'relative'
+    }
+  }, row(['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p']), row(['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], 20), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 14.25,
+      alignItems: 'center'
+    }
+  }, key(icons.shift, {
+    w: 45,
+    k: 'shift'
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6.5,
+      flex: 1
+    }
+  }, ['z', 'x', 'c', 'v', 'b', 'n', 'm'].map(l => key(l, {
+    flex: true,
+    k: l
+  }))), key(icons.del, {
+    w: 45,
+    k: 'del'
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6,
+      alignItems: 'center'
+    }
+  }, key('ABC', {
+    w: 92.25,
+    fs: 18,
+    k: 'abc'
+  }), key('', {
+    flex: true,
+    k: 'space'
+  }), key(icons.ret, {
+    w: 92.25,
+    ret: true,
+    k: 'ret'
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 56,
+      width: '100%',
+      position: 'relative'
+    }
+  }));
+}
+Object.assign(window, {
+  IOSDevice,
+  WeChatCapsule,
+  IOSStatusBar,
+  IOSNavBar,
+  IOSGlassPill,
+  IOSList,
+  IOSListRow,
+  IOSKeyboard
+});
+
+const VC_PAPER = '#f0e8db';
+const VC_PAPER_DK = '#1d1814';
+const VC_INK = '#1f1a14';
+const VC_INK_DK = '#f0e8db';
+const VC_COFFEE = '#7a4a28'; // accent
+const VC_RED = '#c63a1f'; // editorial mark
+
+const vcTheme = dark => ({
+  bg: dark ? VC_PAPER_DK : VC_PAPER,
+  card: dark ? '#262019' : '#f7f1e6',
+  fg: dark ? VC_INK_DK : VC_INK,
+  rule: dark ? 'rgba(240,232,219,0.22)' : 'rgba(31,26,20,0.2)',
+  muted: dark ? 'rgba(240,232,219,0.55)' : 'rgba(31,26,20,0.5)',
+  coffee: VC_COFFEE,
+  stamp: VC_RED
+});
+const VC_DISPLAY = '"DM Serif Display", "Playfair Display", "Songti SC", serif';
+const VC_SERIF = '"DM Serif Text", "EB Garamond", "Songti SC", serif';
+const VC_MONO = '"JetBrains Mono", ui-monospace, monospace';
+const VC_SANS = '"Inter", "PingFang SC", system-ui, sans-serif';
+function VCImg({
+  kind,
+  ratio = '3 / 4',
+  dark
+}) {
+  const t = vcTheme(dark);
+  const toneMap = {
+    bare: dark ? ['#2a2118', '#322820'] : ['#ddd0b9', '#e8dcc6'],
+    glam: dark ? ['#2e1f15', '#382820'] : ['#d6c4a8', '#e2d2b7'],
+    full: dark ? ['#241e16', '#2c241c'] : ['#d4c8b0', '#e0d4bb'],
+    side: dark ? ['#2a1f17', '#34281f'] : ['#d8caaf', '#e4d6ba'],
+    street: dark ? ['#2c2016', '#36281d'] : ['#d4c4a4', '#e0d2b0'],
+    studio: dark ? ['#241d16', '#2e261c'] : ['#d0c4ac', '#dcd0b6']
+  };
+  const tones = toneMap[kind] || toneMap.bare;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      width: '100%',
+      aspectRatio: ratio,
+      background: `repeating-linear-gradient(7deg, ${tones[0]} 0, ${tones[0]} 3px, ${tones[1]} 3px, ${tones[1]} 9px)`,
+      overflow: 'hidden',
+      boxShadow: dark ? 'inset 0 0 24px rgba(0,0,0,0.4)' : 'inset 0 0 36px rgba(120,80,30,0.18)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      background: `radial-gradient(ellipse 55% 65% at 50% 55%, ${dark ? 'rgba(0,0,0,0.35)' : 'rgba(80,55,25,0.14)'} 0%, transparent 75%)`
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 6,
+      right: 6,
+      fontFamily: VC_MONO,
+      fontSize: 8,
+      letterSpacing: 1,
+      color: t.coffee,
+      border: `0.5px solid ${t.coffee}`,
+      padding: '2px 5px',
+      opacity: 0.7
+    }
+  }, (kind || '').toUpperCase()));
+}
+function VCTab({
+  children,
+  rotate = -4,
+  dark,
+  color
+}) {
+  const t = vcTheme(dark);
+  return /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'inline-block',
+      transform: `rotate(${rotate}deg)`,
+      background: color || t.coffee,
+      color: '#f5ecd9',
+      fontFamily: VC_MONO,
+      fontSize: 9,
+      letterSpacing: 1.5,
+      padding: '3px 8px',
+      textTransform: 'uppercase'
+    }
+  }, children);
+}
+
+Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY: VC_DISPLAY, VC_SERIF: VC_SERIF, VC_MONO: VC_MONO, VC_SANS: VC_SANS });
+</script>
+<script>
+// ===== 屏 1 · #19a 应聘方确认接受(cream 风格)=====
+(function () {
+  var e = React.createElement;
+  var t = window.vcTheme(false);
+  var D = window.VC_DISPLAY, S = window.VC_SERIF, M = window.VC_MONO, SS = window.VC_SANS;
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function fmt(s) { return pad(Math.floor(s / 3600)) + ':' + pad(Math.floor((s % 3600) / 60)) + ':' + pad(s % 60); }
+
+  function Eyebrow(props) {
+    return e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted, marginBottom: 6 } }, props.children);
+  }
+  function Field(props) {
+    return e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '10px 0', borderBottom: '0.5px solid ' + t.rule } },
+      e('span', { style: { fontFamily: M, fontSize: 9.5, letterSpacing: 1, textTransform: 'uppercase', color: t.muted } }, props.k),
+      e('span', { style: { fontFamily: S, fontSize: 15, color: props.accent ? t.stamp : t.fg } }, props.v));
+  }
+
+  function ApplicantConfirm() {
+    var a = React.useState('pending'); var status = a[0], setStatus = a[1];
+    var b = React.useState(85268); var left = b[0], setLeft = b[1];
+    React.useEffect(function () {
+      if (status !== 'pending') return;
+      var id = setInterval(function () { setLeft(function (x) { return x > 0 ? x - 1 : 0; }); }, 1000);
+      return function () { clearInterval(id); };
+    }, [status]);
+
+    var paper = { background: t.card, border: '0.5px solid ' + t.rule, boxShadow: '0 1px 0 rgba(255,255,255,0.6), 0 12px 24px -14px rgba(80,50,20,0.25)', position: 'relative' };
+
+    var header = e('div', { style: { padding: '14px 22px 16px', position: 'relative' } },
+      e(window.VCTab, { color: t.stamp, rotate: -3 }, '录用通知 · OFFER'),
+      e('div', { style: { fontFamily: D, fontSize: 58, lineHeight: 0.9, letterSpacing: -1, marginTop: 12 } },
+        '你 被', e('br', null),
+        e('span', { style: { fontStyle: 'italic', fontFamily: S, fontWeight: 400, fontSize: 52, color: t.coffee } }, '选中了。')),
+      e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13.5, lineHeight: 1.55, marginTop: 12, color: t.muted, maxWidth: 290 } },
+        '中介方已确认名单,你在 rank 1 入选位。请在 24 小时内显式确认接受 —— 逾期视为放弃,名额自动递补。'));
+
+    var infoCard = e('div', { style: { margin: '0 22px 18px', padding: '18px 16px', ...paper } },
+      e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { rotate: -4 }, 'ZARA · 西单')),
+      e('div', { style: { fontFamily: D, fontSize: 22, marginBottom: 6, marginTop: 4 } }, '周末品牌快闪 · 兼职导购'),
+      e(Field, { k: '招聘方', v: 'ZARA 西单大悦城店' }),
+      e(Field, { k: '类别 / 时段', v: '零售导购 · 6/21 10–18' }),
+      e(Field, { k: '地点', v: '西单大悦城 1F' }),
+      e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: 12 } },
+        e('span', { style: { fontFamily: M, fontSize: 9.5, letterSpacing: 1, textTransform: 'uppercase', color: t.muted } }, '报酬'),
+        e('span', { style: { fontFamily: D, fontSize: 24, color: t.stamp } }, '¥240 / 天')));
+
+    var kids = [e('div', { key: 'h' }, header), e('div', { key: 'c' }, infoCard)];
+
+    if (status === 'pending') {
+      kids.push(
+        e('div', { key: 'cd', style: { margin: '0 22px 18px', padding: '16px', border: '0.5px solid ' + t.rule, textAlign: 'center' } },
+          e(Eyebrow, null, '应答窗口 · T3 · 24H'),
+          e('div', { style: { fontFamily: M, fontSize: 30, color: t.coffee, letterSpacing: 1, margin: '2px 0 4px' } }, fmt(left)),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12.5, color: t.muted } }, '超时未确认将视为放弃,名额按 rank 自动递补')),
+        e('div', { key: 'btn', style: { padding: '2px 22px 26px' } },
+          e('button', { onClick: function () { setStatus('confirmed'); },
+            style: { all: 'unset', cursor: 'pointer', display: 'block', textAlign: 'center', width: '100%', boxSizing: 'border-box', padding: '15px 0', background: t.coffee, color: '#f5ecd9', fontFamily: D, fontStyle: 'italic', fontSize: 19, boxShadow: '0 6px 16px -8px rgba(120,60,20,0.4)', marginBottom: 12 } }, '确 认 接 受   →'),
+          e('button', { onClick: function () { setStatus('declined'); },
+            style: { all: 'unset', cursor: 'pointer', display: 'block', textAlign: 'center', width: '100%', boxSizing: 'border-box', padding: '12px 0', border: '0.5px solid ' + t.coffee, color: t.coffee, fontFamily: M, fontSize: 11, letterSpacing: 2, textTransform: 'uppercase' } }, '放弃这次机会'),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12, color: t.muted, marginTop: 14, lineHeight: 1.6, textAlign: 'center' } }, '放弃后名额将按中介方提交的 rank 顺序自动递补给下一备选,本次报名关闭。')));
+    } else {
+      var ok = status === 'confirmed';
+      kids.push(
+        e('div', { key: 'st', style: { margin: '0 22px 26px', padding: '22px 16px', ...paper, textAlign: 'center' } },
+          e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: ok ? t.coffee : t.stamp, rotate: -3 }, ok ? '已确认 · CONFIRMED' : '已放弃 · DECLINED')),
+          e('div', { style: { fontFamily: D, fontSize: 30, color: ok ? t.coffee : t.stamp, marginTop: 6 } }, ok ? '已确认接受' : '已放弃'),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.muted, marginTop: 8, lineHeight: 1.6 } },
+            ok ? '等待平台拉沟通群(主流程 #20–#22),请留意通知。' : '名额已进入自动递补(§3.2),按 rank 激活下一备选。'),
+          e('button', { onClick: function () { setStatus('pending'); setLeft(85268); },
+            style: { all: 'unset', cursor: 'pointer', marginTop: 16, fontFamily: M, fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: t.muted, borderBottom: '0.5px solid ' + t.rule } }, '↺ 重置原型')));
+    }
+
+    return e('div', { style: { background: t.bg, color: t.fg, minHeight: '100%', fontFamily: SS, backgroundImage: 'radial-gradient(circle at 20% 10%, rgba(122,74,40,0.10), transparent 50%)', paddingBottom: 40 } }, kids);
+  }
+  Object.assign(window, { ApplicantConfirm: ApplicantConfirm });
+})();
+</script>
+
+<script>
+// ===== 屏 2 · #18 招聘方确认名单(cream 风格)=====
+(function () {
+  var e = React.createElement;
+  var t = window.vcTheme(false);
+  var D = window.VC_DISPLAY, S = window.VC_SERIF, M = window.VC_MONO, SS = window.VC_SANS;
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function fmt(s) { return pad(Math.floor(s / 3600)) + ':' + pad(Math.floor((s % 3600) / 60)) + ':' + pad(s % 60); }
+
+  var DATA = [
+    { rank: 1, name: '林晓', ini: '林', tags: '本科 · 零售 2 段 · 准时率 100%', reason: '历史 4 单同类导购全好评,目标时段完全可用。', kind: 'main' },
+    { rank: 2, name: '陈宇', ini: '陈', tags: '专科 · 快闪经验 · 评分 4.8', reason: '做过 3 场品牌快闪,沟通力强,距工作地 1.5km。', kind: 'main' },
+    { rank: 3, name: '王萌', ini: '王', tags: '本科 · 新人', reason: '形象气质好,时段匹配,可作备选。', kind: 'backup' },
+    { rank: 4, name: '赵磊', ini: '赵', tags: '专科 · 评分 4.5', reason: '有零售经验但仅下午可用,作次备选。', kind: 'backup' }
+  ];
+
+  function Avatar(props) {
+    return e('div', { style: { width: 38, height: 38, borderRadius: '50%', background: t.coffee, color: '#f5ecd9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: D, fontStyle: 'italic', fontSize: 16, flexShrink: 0 } }, props.ini);
+  }
+
+  function Card(props) {
+    var c = props.c;
+    return e('div', { style: { background: t.card, border: '0.5px solid ' + t.rule, boxShadow: '0 1px 0 rgba(255,255,255,0.6), 0 12px 24px -14px rgba(80,50,20,0.25)', padding: '16px 14px', marginBottom: 12, position: 'relative', opacity: props.gone ? 0.38 : 1 } },
+      e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { rotate: c.rank % 2 ? -4 : 3, color: props.backup ? t.muted : t.coffee }, 'RANK ' + c.rank)),
+      e('div', { style: { display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 } },
+        e(Avatar, { ini: c.ini }),
+        e('div', { style: { flex: 1 } },
+          e('div', { style: { fontFamily: D, fontSize: 19 } }, c.name),
+          e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 0.8, color: t.muted, marginTop: 3, textTransform: 'uppercase' } }, c.tags)),
+        (props.removable && !props.gone) ? e('button', { onClick: props.onRemove, style: { all: 'unset', cursor: 'pointer', fontFamily: M, fontSize: 12, color: t.muted, border: '0.5px solid ' + t.rule, padding: '3px 7px' } }, '✕') : null),
+      e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.fg, marginTop: 10, paddingTop: 10, borderTop: '0.5px solid ' + t.rule, lineHeight: 1.5 } },
+        e('span', { style: { fontFamily: M, fontStyle: 'normal', fontSize: 8.5, letterSpacing: 1, textTransform: 'uppercase', color: t.muted, marginRight: 6 } }, '中介推荐'), c.reason),
+      e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, color: t.muted, fontStyle: 'italic', marginTop: 7 } }, '↗ v2 此处将由 AI 给出推荐理由 + 置信度(见 AI_MATCHING_SPEC.md)'));
+  }
+
+  function EmployerRoster() {
+    var a = React.useState(DATA.map(function (x) { return Object.assign({}, x); })); var roster = a[0], setRoster = a[1];
+    var b = React.useState('pending'); var status = b[0], setStatus = b[1];
+    var c = React.useState(170808); var left = c[0], setLeft = c[1];
+    var d = React.useState(false); var showBk = d[0], setShowBk = d[1];
+    React.useEffect(function () {
+      if (status !== 'pending') return;
+      var id = setInterval(function () { setLeft(function (x) { return x > 0 ? x - 1 : 0; }); }, 1000);
+      return function () { clearInterval(id); };
+    }, [status]);
+
+    function rm(rank) { setRoster(roster.map(function (x) { return x.rank === rank ? Object.assign({}, x, { gone: true }) : x; })); }
+    var main = roster.filter(function (x) { return x.kind === 'main'; });
+    var bk = roster.filter(function (x) { return x.kind === 'backup'; });
+
+    var header = e('div', { style: { padding: '14px 22px 14px' } },
+      e(window.VCTab, { color: t.stamp, rotate: -3 }, '确认名单 · ROSTER'),
+      e('div', { style: { fontFamily: D, fontSize: 54, lineHeight: 0.9, letterSpacing: -1, marginTop: 12 } },
+        '入 选', e('br', null),
+        e('span', { style: { fontStyle: 'italic', fontFamily: S, fontWeight: 400, fontSize: 46, color: t.coffee } }, '名单确认。')),
+      e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, lineHeight: 1.55, marginTop: 12, color: t.muted, maxWidth: 290 } },
+        '中介方已按 rank 提交有序候选。周末品牌快闪 · 兼职导购 · 需 2 人。'));
+
+    var kids = [e('div', { key: 'h' }, header)];
+
+    if (status === 'pending') {
+      kids.push(e('div', { key: 'cd', style: { margin: '0 22px 18px', padding: '16px', border: '0.5px solid ' + t.rule } },
+        e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' } },
+          e('span', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted } }, '确认窗口 · T2 · 48H'),
+          e('span', { style: { fontFamily: M, fontSize: 22, color: t.coffee } }, fmt(left))),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12.5, color: t.muted, marginTop: 10, lineHeight: 1.6 } },
+          '超时未确认将视为退回、由中介方重新筛选 —— ',
+          e('span', { style: { color: t.stamp, fontWeight: 700 } }, '系统不会替你默认通过。'))));
+    } else {
+      var okc = status === 'confirmed';
+      kids.push(e('div', { key: 'st', style: { margin: '0 22px 22px', padding: '20px 16px', background: t.card, border: '0.5px solid ' + t.rule, boxShadow: '0 12px 24px -14px rgba(80,50,20,0.25)', position: 'relative', textAlign: 'center' } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: okc ? t.coffee : t.stamp, rotate: -3 }, okc ? '已确认 · CONFIRMED' : '已退回 · DISPUTED')),
+        e('div', { style: { fontFamily: D, fontSize: 26, color: okc ? t.coffee : t.stamp, marginTop: 6 } }, okc ? '名单已确认' : '已退回重选'),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.muted, marginTop: 8, lineHeight: 1.6 } },
+          okc ? '进入「待应聘方确认」,平台已向入选方推送录用通知(#19 / #19a)。' : '转入异议重筛(DISPUTED),中介方将结合剩余报名池重新提交(alt 3)。'),
+        e('button', { onClick: function () { setStatus('pending'); setRoster(DATA.map(function (x) { return Object.assign({}, x); })); setLeft(170808); },
+          style: { all: 'unset', cursor: 'pointer', marginTop: 16, fontFamily: M, fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: t.muted, borderBottom: '0.5px solid ' + t.rule } }, '↺ 重置原型')));
+    }
+
+    kids.push(e('div', { key: 'lbl', style: { padding: '2px 22px 8px', fontFamily: M, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted } }, '入选 · RANK 1–2'));
+    kids.push(e('div', { key: 'main', style: { padding: '0 22px' } },
+      main.map(function (x) { return e(Card, { key: x.rank, c: x, removable: status === 'pending', gone: x.gone, onRemove: function () { rm(x.rank); } }); })));
+
+    kids.push(e('div', { key: 'bt', style: { padding: '4px 22px 8px' } },
+      e('button', { onClick: function () { setShowBk(!showBk); }, style: { all: 'unset', cursor: 'pointer', fontFamily: M, fontSize: 9.5, letterSpacing: 1.2, textTransform: 'uppercase', color: t.coffee } },
+        (showBk ? '▾ ' : '▸ ') + '备选池 · RANK 3–4 · 递补按此顺序自动激活')));
+    if (showBk) kids.push(e('div', { key: 'bk', style: { padding: '0 22px' } },
+      bk.map(function (x) { return e(Card, { key: x.rank, c: x, removable: false, backup: true }); })));
+
+    if (status === 'pending') {
+      kids.push(e('div', { key: 'ops', style: { padding: '10px 22px 30px' } },
+        e('button', { onClick: function () { setStatus('confirmed'); },
+          style: { all: 'unset', cursor: 'pointer', display: 'block', textAlign: 'center', width: '100%', boxSizing: 'border-box', padding: '15px 0', background: t.coffee, color: '#f5ecd9', fontFamily: D, fontStyle: 'italic', fontSize: 19, boxShadow: '0 6px 16px -8px rgba(120,60,20,0.4)', marginBottom: 12 } }, '全 部 确 认   →'),
+        e('button', { onClick: function () { setStatus('returned'); },
+          style: { all: 'unset', cursor: 'pointer', display: 'block', textAlign: 'center', width: '100%', boxSizing: 'border-box', padding: '12px 0', border: '0.5px solid ' + t.stamp, color: t.stamp, fontFamily: M, fontSize: 11, letterSpacing: 2, textTransform: 'uppercase' } }, '退回重选 + 异议原因')));
+    }
+
+    return e('div', { style: { background: t.bg, color: t.fg, minHeight: '100%', fontFamily: SS, backgroundImage: 'radial-gradient(circle at 20% 10%, rgba(122,74,40,0.10), transparent 50%)', paddingBottom: 40 } }, kids);
+  }
+  Object.assign(window, { EmployerRoster: EmployerRoster });
+})();
+</script>
+
+<script>
+// ===== 新增 6 屏 · 三方关键决策节点(cream 风格,与 #18/#19a 同款外壳)=====
+(function () {
+  var e = React.createElement;
+  var t = window.vcTheme(false);
+  var D = window.VC_DISPLAY, S = window.VC_SERIF, M = window.VC_MONO, SS = window.VC_SANS;
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function fmt(s) { return pad(Math.floor(s / 3600)) + ':' + pad(Math.floor((s % 3600) / 60)) + ':' + pad(s % 60); }
+  function fmtD(s) { var d = Math.floor(s / 86400); return d + ' 天 ' + fmt(s % 86400); }
+
+  var paper = { background: t.card, border: '0.5px solid ' + t.rule, boxShadow: '0 1px 0 rgba(255,255,255,0.6), 0 12px 24px -14px rgba(80,50,20,0.25)', position: 'relative' };
+  var page = { background: t.bg, color: t.fg, minHeight: '100%', fontFamily: SS, backgroundImage: 'radial-gradient(circle at 20% 10%, rgba(122,74,40,0.10), transparent 50%)', paddingBottom: 40 };
+
+  function Eyebrow(p) { return e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted, marginBottom: 6 } }, p.children); }
+  function Field(p) {
+    return e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '10px 0', borderBottom: '0.5px solid ' + t.rule } },
+      e('span', { style: { fontFamily: M, fontSize: 9.5, letterSpacing: 1, textTransform: 'uppercase', color: t.muted } }, p.k),
+      e('span', { style: { fontFamily: S, fontSize: 15, color: p.accent ? t.stamp : t.fg } }, p.v));
+  }
+  function Avatar(p) { return e('div', { style: { width: 38, height: 38, borderRadius: '50%', background: t.coffee, color: '#f5ecd9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: D, fontStyle: 'italic', fontSize: 16, flexShrink: 0 } }, p.ini); }
+
+  // AI v2 落点 —— 醒目、明确「本版不做」(贯彻 memory feedback_ai_is_future_vision)
+  function AiBanner(p) {
+    return e('div', { style: { margin: '0 22px 16px', padding: '13px 14px 12px', border: '1px dashed ' + t.coffee, background: 'rgba(122,74,40,0.06)', position: 'relative' } },
+      e('div', { style: { position: 'absolute', top: -8, left: 12 } }, e(window.VCTab, { color: t.stamp, rotate: -3 }, 'v2 · 本版不做')),
+      e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: t.coffee, marginTop: 5, marginBottom: 6 } }, '▷ AI 辅助 · 未来愿景'),
+      e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12.5, lineHeight: 1.55, color: t.fg } }, p.children),
+      e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, color: t.muted, marginTop: 8 } }, 'MVP(v3)不实现 AI · 仍全人工 · 见 AI_MATCHING_SPEC.md'));
+  }
+
+  function Title(tab, l1, l2, sub, big) {
+    return e('div', { style: { padding: '14px 22px 14px' } },
+      e(window.VCTab, { color: t.stamp, rotate: -3 }, tab),
+      e('div', { style: { fontFamily: D, fontSize: big || 50, lineHeight: 0.9, letterSpacing: -1, marginTop: 12 } },
+        l1, e('br', null),
+        e('span', { style: { fontStyle: 'italic', fontFamily: S, fontWeight: 400, fontSize: (big || 50) - 8, color: t.coffee } }, l2)),
+      sub ? e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, lineHeight: 1.55, marginTop: 12, color: t.muted, maxWidth: 290 } }, sub) : null);
+  }
+  function Primary(p) { return e('button', { onClick: p.onClick, style: { all: 'unset', cursor: 'pointer', display: 'block', textAlign: 'center', width: '100%', boxSizing: 'border-box', padding: '15px 0', background: t.coffee, color: '#f5ecd9', fontFamily: D, fontStyle: 'italic', fontSize: 19, boxShadow: '0 6px 16px -8px rgba(120,60,20,0.4)', marginBottom: 12 } }, p.children); }
+  function Ghost(p) { return e('button', { onClick: p.onClick, style: { all: 'unset', cursor: 'pointer', display: 'block', textAlign: 'center', width: '100%', boxSizing: 'border-box', padding: '12px 0', border: '0.5px solid ' + (p.danger ? t.stamp : t.coffee), color: p.danger ? t.stamp : t.coffee, fontFamily: M, fontSize: 11, letterSpacing: 2, textTransform: 'uppercase' } }, p.children); }
+  function Reset(p) { return e('button', { onClick: p.onClick, style: { all: 'unset', cursor: 'pointer', marginTop: 16, fontFamily: M, fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: t.muted, borderBottom: '0.5px solid ' + t.rule } }, '↺ 重置原型'); }
+  function StatusCard(p) {
+    return e('div', { style: { margin: '0 22px 24px', padding: '22px 16px', ...paper, textAlign: 'center' } },
+      e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: p.ok ? t.coffee : t.stamp, rotate: -3 }, p.tab)),
+      e('div', { style: { fontFamily: D, fontSize: 28, color: p.ok ? t.coffee : t.stamp, marginTop: 6 } }, p.title),
+      e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.muted, marginTop: 8, lineHeight: 1.6 } }, p.desc),
+      e(Reset, { onClick: p.onReset }));
+  }
+
+  // ── 屏 1 · 应聘方 #11 收到匹配推送 / 招募令列表 ──
+  var FEED = [
+    { tab: '最佳匹配', best: true, title: '周末品牌快闪 · 兼职导购', org: 'ZARA 西单大悦城店', cat: '零售导购 · 6/21 10–18', pay: '¥240 / 天', rule: '规则匹配:类别 ✓ · 时段 ✓ · 地点 3km 内' },
+    { tab: '可报名', title: '新品发布会 · 现场引导', org: '李宁 三里屯旗舰店', cat: '活动执行 · 6/22 13–20', pay: '¥260 / 天', rule: '规则匹配:类别 ✓ · 时段 ✓' },
+    { tab: '可报名', title: '周中库存盘点 · 临时工', org: '优衣库 朝阳大悦城', cat: '仓储理货 · 6/19 09–17', pay: '¥200 / 天', rule: '规则匹配:类别 ✓ · 时段 △ 部分重叠' }
+  ];
+  function ApplicantBrowse(props) {
+    var go = function () { if (props && props.onOpen) props.onOpen(); };
+    var cards = FEED.map(function (x, i) {
+      return e('div', { key: i, onClick: go, style: { margin: '0 22px 14px', padding: '16px 14px', cursor: 'pointer', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: x.best ? t.stamp : t.muted, rotate: i % 2 ? 3 : -4 }, x.tab)),
+        e('div', { style: { fontFamily: D, fontSize: 21, marginTop: 4 } }, x.title),
+        e(Field, { k: '招聘方', v: x.org }),
+        e(Field, { k: '类别 / 时段', v: x.cat }),
+        e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: 11 } },
+          e('span', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, color: t.muted, fontStyle: 'italic', maxWidth: 175, lineHeight: 1.4 } }, x.rule),
+          e('span', { style: { fontFamily: D, fontSize: 22, color: t.stamp } }, x.pay)),
+        e('div', { style: { textAlign: 'right', marginTop: 9, fontFamily: M, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: t.coffee } }, '报名 ›'));
+    });
+    return e('div', { style: page },
+      Title('推送 · FEED', '为你', '推荐兼职。', '按你的画像与可用时段筛出的招募令。点任意一条进入详情并报名(下一步 #14)。', 50),
+      e(AiBanner, null, 'v2:平台 AI 将按你的画像(技能 tag / 历史成单类别 / 评分 / 准时率)对每条招募令算相关性分,按高/中/低置信度排序并给出推荐理由 —— 见 AI_MATCHING_SPEC.md §介入点。'),
+      cards,
+      e('div', { style: { padding: '6px 22px 8px', fontFamily: M, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted } }, '↦ 点任一推荐 → 进入 #14 报名'));
+  }
+
+  // ── 屏 2 · 应聘方 #14 报名意向兼职 ──
+  function ApplicantApply() {
+    var a = React.useState('idle'); var st = a[0], setSt = a[1];
+    var head = Title('报名 · APPLY', '报名', '这次机会。', '提交报名意向后进入报名池,首位报名将触发「已发布 → 筛选中」。', 50);
+    var info = e('div', { style: { margin: '0 22px 18px', padding: '18px 16px', ...paper } },
+      e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { rotate: -4 }, 'ZARA · 西单')),
+      e('div', { style: { fontFamily: D, fontSize: 22, marginBottom: 6, marginTop: 4 } }, '周末品牌快闪 · 兼职导购'),
+      e(Field, { k: '招聘方', v: 'ZARA 西单大悦城店' }),
+      e(Field, { k: '类别 / 时段', v: '零售导购 · 6/21 10–18' }),
+      e(Field, { k: '地点 / 报酬', v: '西单大悦城 1F · ¥240/天' }));
+    var kids = [e('div', { key: 'h' }, head), e('div', { key: 'i' }, info)];
+    if (st === 'idle') {
+      kids.push(e('div', { key: 'b', style: { padding: '4px 22px 26px' } },
+        e(Primary, { onClick: function () { setSt('applied'); } }, '提 交 报 名   →'),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12, color: t.muted, marginTop: 12, lineHeight: 1.6, textAlign: 'center' } }, '报名后不代表入选 —— 需经中介方筛选(#17)、招聘方确认名单(#18)、你本人确认接受(#19a)三步。')));
+    } else {
+      var steps = ['你已加入报名池', '中介方筛选并排序(#17)', '招聘方确认入选名单(#18)', '你显式确认接受(#19a)'];
+      kids.push(e('div', { key: 's', style: { margin: '0 22px 24px', padding: '20px 16px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.coffee, rotate: -3 }, '已报名 · IN POOL')),
+        e('div', { style: { fontFamily: D, fontSize: 24, color: t.coffee, marginTop: 6, marginBottom: 12 } }, '已加入报名池'),
+        steps.map(function (s, i) {
+          return e('div', { key: i, style: { display: 'flex', alignItems: 'baseline', gap: 10, padding: '7px 0', borderBottom: i < 3 ? '0.5px solid ' + t.rule : 'none' } },
+            e('span', { style: { fontFamily: M, fontSize: 10, color: i === 0 ? t.stamp : t.muted } }, i === 0 ? '◉' : '○'),
+            e('span', { style: { fontFamily: S, fontSize: 13.5, color: i === 0 ? t.fg : t.muted } }, s));
+        }),
+        e('div', { style: { textAlign: 'center' } }, e(Reset, { onClick: function () { setSt('idle'); } }))));
+    }
+    return e('div', { style: page }, kids);
+  }
+
+  // ── 屏 1.5 · 应聘方 职位详情(职位列表 → 此页 → #14 报名)──
+  function ApplicantJobDetail(props) {
+    var go = function () { if (props && props.onApply) props.onApply(); };
+    var tags = ['零售经验优先', '形象气质佳', '可全天', '普通话流利'];
+    return e('div', { style: page },
+      Title('详情 · DETAIL', '岗位', '详情。', '查看完整岗位信息,确认匹配后再报名。', 50),
+      e('div', { style: { margin: '0 22px 16px', padding: '18px 16px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { rotate: -4 }, 'ZARA · 西单')),
+        e('div', { style: { fontFamily: D, fontSize: 23, marginBottom: 4, marginTop: 4 } }, '周末品牌快闪 · 兼职导购'),
+        e(Field, { k: '招聘方', v: 'ZARA 西单大悦城店' }),
+        e(Field, { k: '类别 / 时段', v: '零售导购 · 6/21 周六 10–18' }),
+        e(Field, { k: '地点', v: '西单大悦城 1F · 距你 2.4km' }),
+        e(Field, { k: '需求人数', v: '2 人(另留备选)' }),
+        e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: 12 } },
+          e('span', { style: { fontFamily: M, fontSize: 9.5, letterSpacing: 1, textTransform: 'uppercase', color: t.muted } }, '报酬'),
+          e('span', { style: { fontFamily: D, fontSize: 24, color: t.stamp } }, '¥240 / 天'))),
+      e('div', { style: { padding: '0 22px 10px' } },
+        e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted, marginBottom: 9 } }, '岗位要求'),
+        e('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 7 } },
+          tags.map(function (g, i) {
+            return e('span', { key: i, style: { fontFamily: M, fontSize: 9, letterSpacing: 0.5, color: t.coffee, border: '0.5px solid ' + t.coffee, padding: '3px 8px' } }, g);
+          }))),
+      e('div', { style: { padding: '14px 22px 4px' } },
+        e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted, marginBottom: 8 } }, '岗位描述'),
+        e('div', { style: { fontFamily: S, fontSize: 14, lineHeight: 1.75, color: t.fg } }, '协助门店周末快闪活动:引导顾客、整理样衣、配合店员完成连带销售。无需经验,岗前有 30 分钟简训;着装由门店提供。当日按时到岗、完工经招聘方确认后 7 日内结算。')),
+      e('div', { style: { padding: '18px 22px 30px' } },
+        e(Primary, { onClick: go }, '报 名 这 次 机 会   →'),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12, color: t.muted, marginTop: 10, lineHeight: 1.6, textAlign: 'center' } }, '报名后进入报名池,需经中介筛选(#17)、招聘方确认(#18)、你本人确认(#19a)。')));
+  }
+
+  // ── 屏 3 · 应聘方 确认后成单 / 入群(#19a → #20–22 → 完工)──
+  function ApplicantDeal() {
+    var a = React.useState(0); var step = a[0], setStep = a[1];
+    var line = [
+      { t: '已确认接受', d: '你已在 T3 窗口内确认(#19a),候选状态收敛为 CONFIRMED。' },
+      { t: '平台建沟通群', d: '平台拉应聘方 / 招聘方 / 中介方入群(#20–#22)。' },
+      { t: '已成单', d: '所有入选方确认 + 拉群完成,招募令进入「已成单」。' },
+      { t: '工作完成', d: '线下履约后,等招聘方在 T11 7 天内确认完工。' },
+      { t: '待双向评价', d: '完工确认后进入互评,沉淀为后续匹配的画像数据。' }
+    ];
+    var nodes = line.map(function (x, i) {
+      var on = i <= step;
+      return e('div', { key: i, style: { display: 'flex', gap: 12, padding: '0 22px' } },
+        e('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
+          e('div', { style: { width: 14, height: 14, borderRadius: '50%', border: '1.5px solid ' + (on ? t.coffee : t.rule), background: i === step ? t.coffee : 'transparent', marginTop: 4 } }),
+          i < line.length - 1 ? e('div', { style: { width: 1.5, flex: 1, minHeight: 30, background: i < step ? t.coffee : t.rule } }) : null),
+        e('div', { style: { paddingBottom: 18, opacity: on ? 1 : 0.45 } },
+          e('div', { style: { fontFamily: D, fontSize: 18, color: i === step ? t.coffee : t.fg } }, x.t),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12.5, color: t.muted, marginTop: 4, lineHeight: 1.5, maxWidth: 250 } }, x.d)));
+    });
+    return e('div', { style: page },
+      Title('成单 · DEAL', '从确认', '到完工。', '#19a 确认接受之后,平台侧自动推进的成单与履约链路。', 48),
+      e('div', { style: { padding: '4px 0 6px' } }, nodes),
+      e('div', { style: { padding: '6px 22px 30px', textAlign: 'center' } },
+        step < line.length - 1
+          ? e(Primary, { onClick: function () { setStep(step + 1); } }, '推 进 一 步   →')
+          : e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.muted } }, '一笔招募令的应聘方旅程到此闭环。'),
+        e(Reset, { onClick: function () { setStep(0); } })));
+  }
+
+  // ── 屏 4 · 招聘方 #9 发布招募令 ──
+  function EmployerPublish() {
+    var a = React.useState('draft'); var st = a[0], setSt = a[1];
+    var head = Title('发布 · POST', '发一条', '招募令。', '招聘方填写需求并提交平台审核(合规 / 资质),通过后对外可见。', 48);
+    if (st === 'draft') {
+      return e('div', { style: page }, head,
+        e('div', { style: { margin: '0 22px 14px', padding: '16px 16px 18px', ...paper } },
+          e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { rotate: -4 }, '草稿 · DRAFT')),
+          e('div', { style: { marginTop: 4 } },
+            e(Field, { k: '类别', v: '零售导购' }),
+            e(Field, { k: '时段', v: '6/21(周六)10:00–18:00' }),
+            e(Field, { k: '地点', v: 'ZARA 西单大悦城店 1F' }),
+            e(Field, { k: '预算 / 报酬', v: '¥240 / 人 / 天' }),
+            e(Field, { k: '需求人数', v: '2 人(另留备选)' }),
+            e('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 7, paddingTop: 12 } },
+              ['零售经验', '形象气质佳', '可全天', '普通话'].map(function (g, i) {
+                return e('span', { key: i, style: { fontFamily: M, fontSize: 9, letterSpacing: 0.5, color: t.coffee, border: '0.5px solid ' + t.coffee, padding: '3px 8px' } }, g);
+              })))),
+        e('div', { style: { margin: '0 22px 16px', fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, color: t.muted, fontStyle: 'italic', lineHeight: 1.5 } },
+          '↗ v2:以上字段将作为 AI 匹配的招聘需求特征(AI_MATCHING_SPEC.md §输入特征);本版 MVP 仅供中介方人工 / 规则筛选,不做 AI。'),
+        e('div', { style: { padding: '2px 22px 28px' } }, e(Primary, { onClick: function () { setSt('reviewing'); } }, '提 交 审 核   →')));
+    }
+    if (st === 'reviewing') {
+      return e('div', { style: page }, head,
+        e('div', { style: { margin: '0 22px 22px', padding: '22px 16px', ...paper, textAlign: 'center' } },
+          e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.stamp, rotate: -3 }, '审核中 · REVIEW')),
+          e('div', { style: { fontFamily: D, fontSize: 26, color: t.stamp, marginTop: 6 } }, '平台审核中'),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.muted, marginTop: 8, lineHeight: 1.6 } }, '平台校验内容合规(敏感词)与企业资质;不通过将退回修改后重提。')),
+        e('div', { style: { padding: '0 22px 28px' } }, e(Ghost, { onClick: function () { setSt('published'); } }, '模拟审核通过')));
+    }
+    return e(StatusCard, { ok: true, tab: '已发布 · LIVE', title: '招募令已发布', desc: '对外可见,应聘方可浏览 / 报名(#11 / #14);首位报名将触发「已发布 → 筛选中」。', onReset: function () { setSt('draft'); } });
+  }
+
+  // ── 屏 5 · 招聘方 完工确认(T11 7 天窗口)──
+  function EmployerComplete() {
+    var a = React.useState('pending'); var st = a[0], setSt = a[1];
+    var b = React.useState(601239); var left = b[0], setLeft = b[1];
+    React.useEffect(function () {
+      if (st !== 'pending') return;
+      var id = setInterval(function () { setLeft(function (x) { return x > 0 ? x - 1 : 0; }); }, 1000);
+      return function () { clearInterval(id); };
+    }, [st]);
+    var head = Title('完工 · DONE', '确认', '完工。', '线下履约结束后,招聘方在 T11 7 天窗口内确认完工,触发结算与互评。', 50);
+    if (st === 'pending') {
+      return e('div', { style: page }, head,
+        e('div', { style: { margin: '0 22px 18px', padding: '18px 16px', ...paper } },
+          e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { rotate: -4 }, 'ZARA · 6/21 已履约')),
+          e(Field, { k: '招募令', v: '周末品牌快闪 · 兼职导购' }),
+          e(Field, { k: '到岗 / 需求', v: '2 / 2 人' }),
+          e(Field, { k: '应结报酬', v: '¥480(2 人 × ¥240)', accent: true })),
+        e('div', { style: { margin: '0 22px 18px', padding: '16px', border: '0.5px solid ' + t.rule, textAlign: 'center' } },
+          e(Eyebrow, null, '完工确认窗口 · T11 · 7D'),
+          e('div', { style: { fontFamily: M, fontSize: 24, color: t.coffee, letterSpacing: 1, margin: '2px 0 4px' } }, fmtD(left)),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12, color: t.muted } }, '逾期未确认将按 PRD §6.2 异常处理表处理(本原型不展开)')),
+        e('div', { style: { padding: '2px 22px 28px' } },
+          e(Primary, { onClick: function () { setSt('done'); } }, '确 认 完 工   →'),
+          e(Ghost, { danger: true, onClick: function () { setSt('disputed'); } }, '有异议 · 提交申诉')));
+    }
+    var ok = st === 'done';
+    return e(StatusCard, {
+      ok: ok, tab: ok ? '已完工 · SETTLED' : '已申诉 · DISPUTED', title: ok ? '已确认完工' : '已提交完工异议',
+      desc: ok ? '进入结算与双向评价;评价数据沉淀为后续匹配的画像输入。' : '转人工客服核实(§6.2),结算暂挂起。本原型不展开后续。',
+      onReset: function () { setSt('pending'); setLeft(601239); }
+    });
+  }
+
+  // ── 屏 6 · 中介方 报名池 + #17 提交筛选结果(AI 最强落点)──
+  var CAND = [
+    { name: '林晓', ini: '林', tags: '本科 · 零售 2 段 · 准时率 100%', note: '历史 4 单同类导购全好评,目标时段完全可用' },
+    { name: '陈宇', ini: '陈', tags: '专科 · 快闪 3 场 · 评分 4.8', note: '沟通力强,距工作地 1.5km' },
+    { name: '王萌', ini: '王', tags: '本科 · 新人', note: '形象气质好,时段匹配,可作备选' },
+    { name: '赵磊', ini: '赵', tags: '专科 · 评分 4.5', note: '有零售经验,但仅下午可用' }
+  ];
+  var NEED = 2;
+  function AgentPool() {
+    var a = React.useState(CAND.slice()); var ord = a[0], setOrd = a[1];
+    var b = React.useState('pending'); var st = b[0], setSt = b[1];
+    function move(i, dir) {
+      var j = i + dir; if (j < 0 || j >= ord.length) return;
+      var arr = ord.slice(); var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; setOrd(arr);
+    }
+    var head = Title('报名池 · POOL', '排序并', '提交。', '中介方在 #17 一次性提交有序候选:rank 1~N 入选 + N+1~M 备选,递补按此顺序自动激活。', 48);
+    if (st !== 'pending') {
+      return e('div', { style: page }, head, e(StatusCard, {
+        ok: true, tab: '已提交 · #17 SENT', title: '筛选结果已提交',
+        desc: '触发「筛选中 → 待招聘方确认」;招聘方将在 T2 48h 内确认(见招聘方旅程 #18 屏)。',
+        onReset: function () { setOrd(CAND.slice()); setSt('pending'); }
+      }));
+    }
+    var rows = ord.map(function (c, i) {
+      var sel = i < NEED;
+      return e('div', { key: c.name, style: { margin: '0 22px 12px', padding: '14px 12px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: sel ? t.coffee : t.muted, rotate: i % 2 ? 3 : -4 }, 'RANK ' + (i + 1) + ' · ' + (sel ? '入选' : '备选'))),
+        e('div', { style: { display: 'flex', alignItems: 'center', gap: 11, marginTop: 4 } },
+          e(Avatar, { ini: c.ini }),
+          e('div', { style: { flex: 1 } },
+            e('div', { style: { fontFamily: D, fontSize: 18 } }, c.name),
+            e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.6, color: t.muted, marginTop: 3, textTransform: 'uppercase' } }, c.tags)),
+          e('div', { style: { display: 'flex', flexDirection: 'column', gap: 4 } },
+            e('button', { onClick: function () { move(i, -1); }, style: { all: 'unset', cursor: 'pointer', fontFamily: M, fontSize: 12, color: i === 0 ? t.rule : t.coffee, border: '0.5px solid ' + t.rule, padding: '1px 7px' } }, '▲'),
+            e('button', { onClick: function () { move(i, 1); }, style: { all: 'unset', cursor: 'pointer', fontFamily: M, fontSize: 12, color: i === ord.length - 1 ? t.rule : t.coffee, border: '0.5px solid ' + t.rule, padding: '1px 7px' } }, '▼'))),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12.5, color: t.fg, marginTop: 9, paddingTop: 9, borderTop: '0.5px solid ' + t.rule, lineHeight: 1.5 } },
+          e('span', { style: { fontFamily: M, fontStyle: 'normal', fontSize: 8, letterSpacing: 1, textTransform: 'uppercase', color: t.muted, marginRight: 6 } }, '人工评注'), c.note));
+    });
+    return e('div', { style: page }, head,
+      e(AiBanner, null, 'v2:打开报名池时平台 AI 先按相关性把报名排序并标 top-K —— 把 N×3 报名压成 N×1 候选池,你在 AI 排好序的池子上做最终 rank 与背书。本版报名池按报名时间排列,全部由你人工排序。'),
+      e('div', { style: { padding: '0 22px 6px', fontFamily: M, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted } }, '需求 ' + NEED + ' 人 · 上 ' + NEED + ' 名入选 · 其余备选(▲▼ 调序)'),
+      rows,
+      e('div', { style: { padding: '8px 22px 30px' } },
+        e(Primary, { onClick: function () { setSt('submitted'); } }, '提 交 筛 选 结 果 #17   →'),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12, color: t.muted, marginTop: 10, lineHeight: 1.6, textAlign: 'center' } }, '提交后递补无需再回中介方,按上面 rank 顺序在平台内自动闭环(§3.2)。')));
+  }
+
+  // ===== tabBar 净新屏(MVP 全人工,无 AI;复用本 IIFE helper)=====
+  function ProfileHead(p) {
+    return e('div', { style: { margin: '0 22px 16px', padding: '18px 16px', ...paper, display: 'flex', alignItems: 'center', gap: 14 } },
+      e('div', { style: { width: 52, height: 52, borderRadius: '50%', background: t.coffee, color: '#f5ecd9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: D, fontStyle: 'italic', fontSize: 21, flexShrink: 0 } }, p.ini),
+      e('div', { style: { flex: 1 } },
+        e('div', { style: { fontFamily: D, fontSize: 21 } }, p.name),
+        e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.6, textTransform: 'uppercase', color: t.muted, marginTop: 4 } }, p.meta)),
+      e('div', { style: { textAlign: 'right' } },
+        e('div', { style: { fontFamily: D, fontSize: 21, color: t.coffee } }, p.score),
+        e('div', { style: { fontFamily: M, fontSize: 8, letterSpacing: 1, color: t.muted } }, p.scoreLabel)));
+  }
+  function Stats(items) {
+    return e('div', { style: { display: 'flex', margin: '0 22px 18px' } },
+      items.map(function (s, i) {
+        return e('div', { key: i, style: { flex: 1, textAlign: 'center', fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, textTransform: 'uppercase', color: t.muted } },
+          e('div', { style: { fontFamily: D, fontSize: 18, color: t.fg, marginBottom: 3 } }, s.v), s.k);
+      }));
+  }
+  function OrderRow(o, i) {
+    return e('div', { key: i, style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '12px 22px', borderBottom: '0.5px solid ' + t.rule } },
+      e('div', null,
+        e('div', { style: { fontFamily: S, fontSize: 15 } }, o.title),
+        e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, textTransform: 'uppercase', color: t.muted, marginTop: 3 } }, o.date + ' · ' + o.st)),
+      e('div', { style: { fontFamily: M, fontSize: 14, color: t.coffee } }, o.amt));
+  }
+  function ListHint(s) { return e('div', { style: { padding: '0 22px 8px', fontFamily: M, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted } }, s); }
+  function EntryRow(p) {
+    return e('button', { onClick: p.onTap, style: { all: 'unset', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', boxSizing: 'border-box', padding: '13px 22px', borderBottom: '0.5px solid ' + t.rule } },
+      e('div', null,
+        e('div', { style: { fontFamily: S, fontSize: 15, color: t.fg } }, p.label),
+        e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, textTransform: 'uppercase', color: t.muted, marginTop: 3 } }, p.sub)),
+      e('div', { style: { fontFamily: D, fontSize: 18, color: t.coffee } }, '›'));
+  }
+
+  function ApplicantSchedule() {
+    var L = [
+      { st: '进行中', u: true, title: '零售导购', pay: '¥240/天', date: '6/21 周六', time: '10:00–18:00', loc: 'ZARA 西单大悦城店 1F' },
+      { st: '待开始', u: false, title: '展会引导', pay: '¥260/天', date: '6/24 周二', time: '09:00–17:00', loc: '国家会议中心 B 馆' },
+      { st: '待开始', u: false, title: '咖啡师助理', pay: '¥180/4h', date: '6/27 周五', time: '14:00–18:00', loc: 'Manner 三里屯店' }
+    ];
+    return e('div', { style: page },
+      Title('日程 · SCHEDULE', '我的', '接单。', '已确认的兼职按开始时间排列,到岗 / 完工 / 结算在此跟踪。', 46),
+      ListHint('本周 3 场 · 合计 ¥680'),
+      L.map(function (d, i) {
+        return e('div', { key: i, style: { margin: '0 22px 12px', padding: '14px 14px', ...paper } },
+          e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: d.u ? t.stamp : t.coffee, rotate: -3 }, d.st)),
+          e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 6 } },
+            e('div', { style: { fontFamily: D, fontSize: 19 } }, d.title),
+            e('div', { style: { fontFamily: M, fontSize: 13, color: t.coffee } }, d.pay)),
+          e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 0.5, textTransform: 'uppercase', color: t.muted, marginTop: 7 } }, d.date + '  ·  ' + d.time),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.fg, marginTop: 4 } }, d.loc));
+      }));
+  }
+  function ApplicantMine(props) {
+    var O = [
+      { title: '零售导购 · ZARA 西单', date: '6/14', st: '已结算', amt: '¥240' },
+      { title: '问卷地推 · 三里屯', date: '6/02', st: '已结算', amt: '¥150' },
+      { title: '展会引导 · 国会中心', date: '5/20', st: '已结算', amt: '¥260' }
+    ];
+    return e('div', { style: page },
+      Title('我的 · PROFILE', '应聘方', '主页。', '个人资料、信用分与历史兼职订单。', 44),
+      ProfileHead({ ini: '陈', name: '陈一鸣', meta: '在校生 · 北京 · 实名已认证', score: '4.8', scoreLabel: '评分' }),
+      Stats([{ k: '接单', v: '23' }, { k: '准时率', v: '96%' }, { k: '好评', v: '21' }]),
+      ListHint('快捷入口'),
+      e(EntryRow, { label: '录用通知 · 确认接受', sub: '#19a · 待你 24h 内确认', onTap: function () { props.onOpen('confirm'); } }),
+      e(EntryRow, { label: '我的成单 / 完工进度', sub: '#20–22 · 入群 / 履约 / 互评', onTap: function () { props.onOpen('deal'); } }),
+      ListHint('历史订单'),
+      O.map(OrderRow));
+  }
+  function EmployerRecruitList() {
+    var L = [
+      { st: '在招 · LIVE', live: true, title: '零售导购', budget: '¥240/人', date: '6/21 周六', need: 2, applied: 9 },
+      { st: '待确认 · #18', live: true, title: '展会引导', budget: '¥260/人', date: '6/24 周二', need: 4, applied: 12 },
+      { st: '进行中', live: false, title: '咖啡师助理', budget: '¥180/人', date: '6/27 周五', need: 1, applied: 5 },
+      { st: '已完成', live: false, title: '问卷地推', budget: '¥150/人', date: '6/02 周日', need: 3, applied: 8 }
+    ];
+    return e('div', { style: page },
+      Title('招聘 · POSTS', '我发布的', '招募令。', '本招聘方所有招募令,按状态跟踪到完工结算。', 42),
+      ListHint('共 ' + L.length + ' 条 · 2 条进行中'),
+      L.map(function (d, i) {
+        return e('div', { key: i, style: { margin: '0 22px 12px', padding: '14px 14px', ...paper } },
+          e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: d.live ? t.coffee : t.muted, rotate: -3 }, d.st)),
+          e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 6 } },
+            e('div', { style: { fontFamily: D, fontSize: 19 } }, d.title),
+            e('div', { style: { fontFamily: M, fontSize: 12, color: t.coffee } }, d.budget)),
+          e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 0.5, textTransform: 'uppercase', color: t.muted, marginTop: 7 } }, d.date + '  ·  需求 ' + d.need + ' 人  ·  报名 ' + d.applied));
+      }));
+  }
+  function EmployerMine(props) {
+    var O = [
+      { title: '零售导购 · 6 月场', date: '6/21', st: '进行中', amt: '¥480' },
+      { title: '展会引导 · 6 月场', date: '6/24', st: '待确认', amt: '¥1040' },
+      { title: '问卷地推 · 5 月场', date: '6/02', st: '已结算', amt: '¥450' }
+    ];
+    return e('div', { style: page },
+      Title('我的 · PROFILE', '招聘方', '主页。', '企业资料、用工统计与招募令订单。', 44),
+      ProfileHead({ ini: 'Z', name: 'ZARA 西单大悦城店', meta: '连锁零售 · 企业资质已核', score: '4.9', scoreLabel: '雇主分' }),
+      Stats([{ k: '发布', v: '17' }, { k: '在招', v: '2' }, { k: '完成率', v: '94%' }]),
+      ListHint('快捷入口'),
+      e(EntryRow, { label: '确认入选名单', sub: '#18 · 中介已提交待你确认', onTap: function () { props.onOpen('roster'); } }),
+      e(EntryRow, { label: '完工确认 · 结算', sub: 'T11 · 7 天窗口内确认完工', onTap: function () { props.onOpen('complete'); } }),
+      ListHint('招募令订单'),
+      O.map(OrderRow));
+  }
+  function PlatformTodo() {
+    var L = [
+      { stage: 'T1 · 待筛选', u: true, title: '零售导购 · ZARA', left: '剩 2h', due: '今日 18:00', todo: '9 人报名待你筛选并提交有序 rank(#17)' },
+      { stage: 'T2 · 待招聘方确认', u: true, title: '展会引导 · 国会', left: '剩 6h', due: '今日 22:00', todo: '名单已提交,等招聘方 #18 确认;超时转异议重筛' },
+      { stage: 'T3 · 待应聘方确认', u: false, title: '咖啡师助理 · Manner', left: '剩 1 天', due: '6/26 14:00', todo: '入选者确认接受中(#19a),关注递补激活' },
+      { stage: '待完工确认', u: false, title: '问卷地推 · 三里屯', left: '剩 3 天', due: '6/29 12:00', todo: '兼职已完成,等招聘方 T11 完工确认结算' }
+    ];
+    return e('div', { style: page },
+      Title('待办 · TODO', '按截止', '排序。', '平台侧执行队列:订单按截止时间升序,先处理最紧急。', 44),
+      ListHint('4 项待办 · 2 项 6h 内到期'),
+      L.map(function (d, i) {
+        return e('div', { key: i, style: { margin: '0 22px 12px', padding: '14px 14px', ...paper } },
+          e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: d.u ? t.stamp : t.coffee, rotate: -3 }, d.stage)),
+          e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 6 } },
+            e('div', { style: { fontFamily: D, fontSize: 18 } }, d.title),
+            e('div', { style: { fontFamily: M, fontSize: 12, color: d.u ? t.stamp : t.coffee } }, d.left)),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12.5, color: t.fg, marginTop: 7, lineHeight: 1.5 } }, d.todo),
+          e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, textTransform: 'uppercase', color: t.muted, marginTop: 6 } }, '截止 ' + d.due));
+      }));
+  }
+  function PlatformMine() {
+    var O = [
+      { title: '零售导购 · ZARA', date: '6/21', st: '筛选中', amt: '8 报名' },
+      { title: '展会引导 · 国会', date: '6/24', st: '待确认', amt: '12 报名' },
+      { title: '问卷地推 · 三里屯', date: '6/02', st: '已结算', amt: '成单 3' }
+    ];
+    return e('div', { style: page },
+      Title('我的 · PROFILE', '中介方', '主页。', '平台执行方资料、成单与结算统计、经手订单。', 44),
+      ProfileHead({ ini: '林', name: '林之航 · 平台执行', meta: '中介团队 A 组 · 平台侧', score: '4.7', scoreLabel: '协作分' }),
+      Stats([{ k: '成单', v: '156' }, { k: '本月', v: '12' }, { k: '结算', v: '¥3.7w' }]),
+      ListHint('经手订单'),
+      O.map(OrderRow));
+  }
+
+  Object.assign(window, {
+    ApplicantBrowse: ApplicantBrowse, ApplicantApply: ApplicantApply, ApplicantDeal: ApplicantDeal,
+    EmployerPublish: EmployerPublish, EmployerComplete: EmployerComplete, AgentPool: AgentPool,
+    ApplicantSchedule: ApplicantSchedule, ApplicantMine: ApplicantMine,
+    EmployerRecruitList: EmployerRecruitList, EmployerMine: EmployerMine,
+    PlatformTodo: PlatformTodo, PlatformMine: PlatformMine,
+    ApplicantJobDetail: ApplicantJobDetail
+  });
+})();
+</script>
+
+<script>
+// ===== [字节级复用 cream-dossier] data.jsx · window.RECRUITS/APPLICANTS/PHOTO_KINDS =====
+(function(){
+// ===== data.jsx =====
+// Sample data for the 灵活用工 prototype.
+// Shared across all three variations.
+
+window.RECRUITS = [{
+  id: 'r1',
+  brand: 'LANEIGE 兰芝',
+  initials: 'LN',
+  title: '春季新品视觉大片',
+  type: '平面',
+  city: '北京',
+  venue: '751 D·Park · 棚 03',
+  dateRange: '2026.03.15 — 03.17',
+  deadline: '03.10 24:00 截止报名',
+  needCount: 2,
+  appliedCount: 18,
+  budget: '¥3,500 / 天',
+  requirements: ['165–172cm', '24–28岁', '气质清冷 / 古典'],
+  description: '春季限定系列主视觉，需配合化妆师试妆 1 次，正片当日交付授权 1 年。',
+  issueNo: 'NO. 042'
+}, {
+  id: 'r2',
+  brand: 'MAISON KITSUNÉ',
+  initials: 'MK',
+  title: 'SS26 直播间主秀',
+  type: '直播',
+  city: '上海',
+  venue: '安福路旗舰店',
+  dateRange: '2026.03.20  19:30 — 23:30',
+  deadline: '03.18 18:00 截止报名',
+  needCount: 4,
+  appliedCount: 31,
+  budget: '¥1,800 / 场',
+  requirements: ['168–176cm', '22–30岁', '法式 / 街头'],
+  description: '4 小时连播，提供 8 套换装，要求镜头表现自然、能即兴互动。',
+  issueNo: 'NO. 041'
+}, {
+  id: 'r3',
+  brand: '网易严选',
+  initials: 'YX',
+  title: '春日家居场景电商',
+  type: '电商',
+  city: '杭州',
+  venue: '余杭仓 · 直拍棚',
+  dateRange: '2026.03.22 — 03.24',
+  deadline: '03.19 截止报名',
+  needCount: 3,
+  appliedCount: 47,
+  budget: '¥1,200 / 天',
+  requirements: ['158–170cm', '不限', '邻家 / 通告脸'],
+  description: '床品、家居服、餐厨三组，每日 80–120 件。可包食宿。',
+  issueNo: 'NO. 040'
+}, {
+  id: 'r4',
+  brand: 'HOMME PLISSÉ',
+  initials: 'HP',
+  title: '北京时装周 · 即看即买',
+  type: '走秀',
+  city: '北京',
+  venue: '今日美术馆',
+  dateRange: '2026.03.28  20:00',
+  deadline: '03.20 截止报名',
+  needCount: 6,
+  appliedCount: 22,
+  budget: '面议',
+  requirements: ['178cm+', '22–30岁', '高级 / 冷感'],
+  description: '需出席 03.26 走台彩排一次。提供造型与差旅。',
+  issueNo: 'NO. 039'
+}, {
+  id: 'r5',
+  brand: '小红书 × 茶颜',
+  initials: 'RT',
+  title: '春日穿搭 KOL 合作',
+  type: '平面',
+  city: '成都',
+  venue: '玉林西路 · 实景',
+  dateRange: '2026.03.25  全天',
+  deadline: '03.22 截止报名',
+  needCount: 1,
+  appliedCount: 9,
+  budget: '¥5,000 包干',
+  requirements: ['160–170cm', '20–26岁', '通告 / 元气'],
+  description: '需自带小红书账号 ≥ 5k 粉丝；配合 1 条短视频 + 9 图笔记。',
+  issueNo: 'NO. 038'
+}];
+
+// Applicants per recruit — first recruit gets a curated list; others share.
+window.APPLICANTS = {
+  r1: ['m1', 'm4', 'm2', 'm6', 'm3', 'm5'],
+  r2: ['m2', 'm6', 'm1', 'm5', 'm4', 'm3'],
+  r3: ['m3', 'm4', 'm5', 'm1'],
+  r4: ['m6', 'm2', 'm1'],
+  r5: ['m4', 'm5', 'm3']
+};
+window.MODELS = {
+  m1: {
+    id: 'm1',
+    name: '林  夕',
+    pinyin: 'LIN XI',
+    age: 24,
+    height: 172,
+    weight: 50,
+    bust: 84,
+    waist: 62,
+    hip: 90,
+    city: '北京',
+    tags: ['古风', '平面', '杂志'],
+    rate: '¥1,500 / 天',
+    rating: 4.9,
+    jobs: 42,
+    verified: true,
+    status: '可约',
+    bio: '中传播音系，签约模特两年。镜头偏冷，擅长古典造型与黑白胶片质感。',
+    measure: 'B84 / W62 / H90'
+  },
+  m2: {
+    id: 'm2',
+    name: '苏  野',
+    pinyin: 'SU YE',
+    age: 26,
+    height: 178,
+    weight: 55,
+    bust: 86,
+    waist: 64,
+    hip: 92,
+    city: '上海',
+    tags: ['时尚', '直播', '走秀'],
+    rate: '¥1,800 / 天',
+    rating: 4.8,
+    jobs: 56,
+    verified: true,
+    status: '可约',
+    bio: '法语系毕业，常驻沪杭。直播镜头表现自然，可英法双语沟通。',
+    measure: 'B86 / W64 / H92'
+  },
+  m3: {
+    id: 'm3',
+    name: '顾  绾',
+    pinyin: 'GU WAN',
+    age: 22,
+    height: 168,
+    weight: 48,
+    bust: 82,
+    waist: 60,
+    hip: 88,
+    city: '杭州',
+    tags: ['电商', '通告', '邻家'],
+    rate: '¥1,200 / 天',
+    rating: 4.7,
+    jobs: 89,
+    verified: true,
+    status: '已约 · 03.18 释放',
+    bio: '电商棚拍熟手,日均换装 100+,试装、走位、表情都不用磨。',
+    measure: 'B82 / W60 / H88'
+  },
+  m4: {
+    id: 'm4',
+    name: '安  然',
+    pinyin: 'AN RAN',
+    age: 25,
+    height: 170,
+    weight: 52,
+    bust: 84,
+    waist: 62,
+    hip: 90,
+    city: '北京',
+    tags: ['平面', '杂志', '高级'],
+    rate: '¥2,200 / 天',
+    rating: 5.0,
+    jobs: 28,
+    verified: true,
+    status: '可约',
+    bio: '《时尚芭莎》《嘉人》内页常客。冷调骨相,擅长大片调度。',
+    measure: 'B84 / W62 / H90'
+  },
+  m5: {
+    id: 'm5',
+    name: '江  婧',
+    pinyin: 'JIANG JING',
+    age: 23,
+    height: 170,
+    weight: 50,
+    bust: 83,
+    waist: 61,
+    hip: 89,
+    city: '成都',
+    tags: ['通告', '直播', '元气'],
+    rate: '¥1,300 / 天',
+    rating: 4.6,
+    jobs: 67,
+    verified: false,
+    status: '可约',
+    bio: '川渝主场,小红书 1.2w 粉。镜头活泼,直播稳如老练主播。',
+    measure: 'B83 / W61 / H89'
+  },
+  m6: {
+    id: 'm6',
+    name: '程  曦',
+    pinyin: 'CHENG XI',
+    age: 27,
+    height: 180,
+    weight: 53,
+    bust: 85,
+    waist: 63,
+    hip: 91,
+    city: '北京',
+    tags: ['走秀', '高定', '冷感'],
+    rate: '¥2,500 / 天',
+    rating: 4.9,
+    jobs: 35,
+    verified: true,
+    status: '可约',
+    bio: '上海时装周开/闭场常驻。台步训练 6 年,擅长高定与男装秀场。',
+    measure: 'B85 / W63 / H91'
+  }
+};
+
+// Photo "kinds" — three columns per model: bare-face / styled / full-body.
+window.PHOTO_KINDS = [{
+  key: 'bare',
+  cn: '素颜图',
+  en: 'BARE',
+  fig: 'FIG. 01'
+}, {
+  key: 'glam',
+  cn: '带妆图',
+  en: 'GLAM',
+  fig: 'FIG. 02'
+}, {
+  key: 'full',
+  cn: '全身照',
+  en: 'FULL',
+  fig: 'FIG. 03'
+}];
+window.PHOTO_KINDS_MORE = [{
+  key: 'bare',
+  cn: '素颜图',
+  en: 'BARE',
+  fig: 'FIG. 01'
+}, {
+  key: 'glam',
+  cn: '带妆图',
+  en: 'GLAM',
+  fig: 'FIG. 02'
+}, {
+  key: 'full',
+  cn: '全身照',
+  en: 'FULL',
+  fig: 'FIG. 03'
+}, {
+  key: 'side',
+  cn: '侧颜图',
+  en: 'PROFILE',
+  fig: 'FIG. 04'
+}, {
+  key: 'street',
+  cn: '街拍图',
+  en: 'STREET',
+  fig: 'FIG. 05'
+}, {
+  key: 'studio',
+  cn: '棚拍图',
+  en: 'STUDIO',
+  fig: 'FIG. 06'
+}];
+
+})();
+</script>
+
+<script>
+// ===== [字节级复用 cream-dossier] variation-c.jsx · VCRecruitList/VCApplicants/VCDetail =====
+(function(){
+// ===== variation-c.jsx =====
+// Variation C — 米色卷宗 / CREAM DOSSIER: warm paper, deep coffee accent,
+// avant-garde rotated tabs, asymmetric placements. Most experimental of the three.
+
+const VC_PAPER = '#f0e8db';
+const VC_PAPER_DK = '#1d1814';
+const VC_INK = '#1f1a14';
+const VC_INK_DK = '#f0e8db';
+const VC_COFFEE = '#7a4a28'; // accent
+const VC_RED = '#c63a1f'; // editorial mark
+
+const vcTheme = dark => ({
+  bg: dark ? VC_PAPER_DK : VC_PAPER,
+  card: dark ? '#262019' : '#f7f1e6',
+  fg: dark ? VC_INK_DK : VC_INK,
+  rule: dark ? 'rgba(240,232,219,0.22)' : 'rgba(31,26,20,0.2)',
+  muted: dark ? 'rgba(240,232,219,0.55)' : 'rgba(31,26,20,0.5)',
+  coffee: VC_COFFEE,
+  stamp: VC_RED
+});
+const VC_DISPLAY = '"DM Serif Display", "Playfair Display", "Songti SC", serif';
+const VC_SERIF = '"DM Serif Text", "EB Garamond", "Songti SC", serif';
+const VC_MONO = '"JetBrains Mono", ui-monospace, monospace';
+const VC_SANS = '"Inter", "PingFang SC", system-ui, sans-serif';
+function VCImg({
+  kind,
+  ratio = '3 / 4',
+  dark
+}) {
+  const t = vcTheme(dark);
+  const toneMap = {
+    bare: dark ? ['#2a2118', '#322820'] : ['#ddd0b9', '#e8dcc6'],
+    glam: dark ? ['#2e1f15', '#382820'] : ['#d6c4a8', '#e2d2b7'],
+    full: dark ? ['#241e16', '#2c241c'] : ['#d4c8b0', '#e0d4bb'],
+    side: dark ? ['#2a1f17', '#34281f'] : ['#d8caaf', '#e4d6ba'],
+    street: dark ? ['#2c2016', '#36281d'] : ['#d4c4a4', '#e0d2b0'],
+    studio: dark ? ['#241d16', '#2e261c'] : ['#d0c4ac', '#dcd0b6']
+  };
+  const tones = toneMap[kind] || toneMap.bare;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      width: '100%',
+      aspectRatio: ratio,
+      background: `repeating-linear-gradient(7deg, ${tones[0]} 0, ${tones[0]} 3px, ${tones[1]} 3px, ${tones[1]} 9px)`,
+      overflow: 'hidden',
+      boxShadow: dark ? 'inset 0 0 24px rgba(0,0,0,0.4)' : 'inset 0 0 36px rgba(120,80,30,0.18)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      background: `radial-gradient(ellipse 55% 65% at 50% 55%, ${dark ? 'rgba(0,0,0,0.35)' : 'rgba(80,55,25,0.14)'} 0%, transparent 75%)`
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 6,
+      right: 6,
+      fontFamily: VC_MONO,
+      fontSize: 8,
+      letterSpacing: 1,
+      color: t.coffee,
+      border: `0.5px solid ${t.coffee}`,
+      padding: '2px 5px',
+      opacity: 0.7
+    }
+  }, (kind || '').toUpperCase()));
+}
+function VCTab({
+  children,
+  rotate = -4,
+  dark,
+  color
+}) {
+  const t = vcTheme(dark);
+  return /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'inline-block',
+      transform: `rotate(${rotate}deg)`,
+      background: color || t.coffee,
+      color: '#f5ecd9',
+      fontFamily: VC_MONO,
+      fontSize: 9,
+      letterSpacing: 1.5,
+      padding: '3px 8px',
+      textTransform: 'uppercase'
+    }
+  }, children);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 1 — Recruit list
+// ─────────────────────────────────────────────────────────────
+function VCRecruitList({
+  dark,
+  dense,
+  onOpen
+}) {
+  const t = vcTheme(dark);
+  const recruits = window.RECRUITS;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: VC_SANS,
+      backgroundImage: dark ? `radial-gradient(circle at 20% 10%, rgba(122,74,40,0.12), transparent 50%)` : `radial-gradient(circle at 20% 10%, rgba(122,74,40,0.10), transparent 50%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 22px 8px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 28,
+      height: 28,
+      borderRadius: '50%',
+      background: t.coffee,
+      color: '#f5ecd9',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: VC_DISPLAY,
+      fontSize: 16,
+      fontStyle: 'italic'
+    }
+  }, "\u67D2"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 15,
+      lineHeight: 1
+    }
+  }, "\u67D2  \u6808"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 8.5,
+      letterSpacing: 1.5,
+      color: t.muted,
+      marginTop: 1
+    }
+  }, "CASTING \xB7 QIZHAN"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 9,
+      letterSpacing: 1.4,
+      color: t.muted,
+      border: `0.5px solid ${t.rule}`,
+      padding: '4px 8px'
+    }
+  }, "\u58EC\u5BC5 \xB7 \u4E09\u6708")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '14px 22px 18px',
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.stamp,
+    rotate: -3
+  }, "\u4ECA\u65E5\u62DB\u52DF \xB7 ISSUE 042"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 64,
+      lineHeight: 0.9,
+      letterSpacing: -1,
+      marginTop: 10
+    }
+  }, "\u62DB  \u52DF", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontStyle: 'italic',
+      fontFamily: VC_SERIF,
+      fontWeight: 400,
+      fontSize: 56,
+      color: t.coffee
+    }
+  }, "The Casting.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 13.5,
+      lineHeight: 1.55,
+      marginTop: 12,
+      color: t.muted,
+      maxWidth: 280
+    }
+  }, "\u672C\u671F\u5171 ", recruits.length, " \u6761 \u2014 \u4E2D\u4ECB\u6309\u57CE\u5E02\u4E0E\u6863\u671F\u4E3A\u4E94\u4E2A\u54C1\u724C\u65B9\u5339\u914D\u6A21\u7279\u3002")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '0 22px 100px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: dense ? 12 : 16
+    }
+  }, recruits.map((r, i) => /*#__PURE__*/React.createElement("button", {
+    key: r.id,
+    onClick: () => onOpen(r.id),
+    style: {
+      all: 'unset',
+      cursor: 'pointer',
+      display: 'block',
+      background: t.card,
+      padding: `${dense ? 14 : 18}px 16px`,
+      position: 'relative',
+      boxShadow: dark ? '0 1px 0 rgba(255,255,255,0.04), 0 12px 24px -16px rgba(0,0,0,0.6)' : '0 1px 0 rgba(255,255,255,0.6), 0 12px 24px -14px rgba(80,50,20,0.25)',
+      border: `0.5px solid ${t.rule}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: -7,
+      left: 14
+    }
+  }, /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    rotate: i % 2 === 0 ? -4 : 3
+  }, r.type, " \xB7 ", r.city)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 12,
+      right: 18,
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 44,
+      lineHeight: 0.9,
+      color: t.coffee,
+      opacity: 0.4
+    }
+  }, ".", String(i + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 10,
+      paddingRight: 56
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 22,
+      lineHeight: 1.1,
+      letterSpacing: -0.4
+    }
+  }, r.brand), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 17,
+      color: t.coffee,
+      marginTop: 2,
+      lineHeight: 1.2
+    }
+  }, r.title), !dense && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      lineHeight: 1.55,
+      color: t.fg,
+      marginTop: 10,
+      opacity: 0.85
+    }
+  }, r.description), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.rule,
+      margin: '12px 0 10px'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 4,
+      fontFamily: VC_MONO,
+      fontSize: 10,
+      letterSpacing: 0.8,
+      color: t.muted
+    }
+  }, /*#__PURE__*/React.createElement("div", null, "\u65E5 \u671F \xB7 ", r.dateRange.split('—')[0].trim()), /*#__PURE__*/React.createElement("div", null, "\u9700 ", r.needCount, " \u4F4D \xB7 \u62A5 ", r.appliedCount), /*#__PURE__*/React.createElement("div", null, "\u62A5 \u4EF7 \xB7 ", r.budget), /*#__PURE__*/React.createElement("div", null, "\u622A \u6B62 \xB7 ", r.deadline.split(' ')[0])))))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 2 — Applicants
+// ─────────────────────────────────────────────────────────────
+function VCApplicants({
+  dark,
+  dense,
+  recruitId,
+  onOpenModel,
+  onBack,
+  onSubmit
+}) {
+  const t = vcTheme(dark);
+  const r = window.RECRUITS.find(x => x.id === recruitId) || window.RECRUITS[0];
+  const ids = window.APPLICANTS[r.id] || [];
+  const [selected, setSelected] = React.useState(new Set());
+  const toggleSel = id => setSelected(prev => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n; });
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: VC_SANS
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 22px 10px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span"), /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.coffee,
+    rotate: 2
+  }, r.issueNo)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      margin: '0 22px',
+      background: t.card,
+      boxShadow: dark ? '0 1px 0 rgba(255,255,255,0.04), 0 12px 24px -16px rgba(0,0,0,0.6)' : '0 1px 0 rgba(255,255,255,0.6), 0 12px 24px -14px rgba(80,50,20,0.25)',
+      border: `0.5px solid ${t.rule}`,
+      padding: '16px 16px 14px',
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: -7,
+      left: 12
+    }
+  }, /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.stamp,
+    rotate: -3
+  }, "\u62DB\u52DF\u4EE4")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 26,
+      lineHeight: 1.05,
+      letterSpacing: -0.4,
+      marginTop: 6
+    }
+  }, r.brand), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 18,
+      color: t.coffee,
+      marginTop: 2
+    }
+  }, r.title), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 0.5,
+      background: t.rule,
+      margin: '12px 0 10px'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 6,
+      fontFamily: VC_MONO,
+      fontSize: 10,
+      letterSpacing: 0.8,
+      color: t.muted
+    }
+  }, /*#__PURE__*/React.createElement("div", null, "\u65E5\u671F \xB7 ", r.dateRange.split('—')[0].trim()), /*#__PURE__*/React.createElement("div", null, r.city, " \xB7 ", r.type), /*#__PURE__*/React.createElement("div", null, "\u9700 ", r.needCount, " \u4F4D"), /*#__PURE__*/React.createElement("div", null, "\u5DF2\u62A5 ", ids.length))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '20px 22px 8px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 9.5,
+      letterSpacing: 1.5,
+      color: t.muted,
+      marginBottom: 2
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 26,
+      color: t.coffee,
+      lineHeight: 1
+    }
+  }, "\u62A5 \u540D \u540D \u5F55")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 30,
+      color: t.fg,
+      fontVariantNumeric: 'tabular-nums',
+      lineHeight: 1
+    }
+  }, String(ids.length).padStart(2, '0'))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '4px 22px 130px'
+    }
+  }, ids.map((mid, i) => {
+    const m = window.MODELS[mid];
+    if (!m) return null;
+    const rotate = i % 2 === 0 ? -0.4 : 0.5;
+    return /*#__PURE__*/React.createElement("div", {
+      key: mid,
+      style: {
+        background: t.card,
+        marginTop: 14,
+        border: `0.5px solid ${t.rule}`,
+        padding: `${dense ? 12 : 14}px 14px`,
+        transform: `rotate(${rotate}deg)`,
+        boxShadow: dark ? '0 12px 24px -16px rgba(0,0,0,0.6)' : '0 12px 24px -14px rgba(80,50,20,0.22)',
+        position: 'relative'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: 'absolute',
+        top: -10,
+        left: 14,
+        fontFamily: VC_DISPLAY,
+        fontStyle: 'italic',
+        fontSize: 28,
+        color: t.coffee,
+        background: t.bg,
+        padding: '0 8px',
+        lineHeight: 1
+      }
+    }, ".", String(i + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("button", {
+      onClick: (ev) => { ev.stopPropagation(); toggleSel(mid); },
+      'aria-label': selected.has(mid) ? '取消选择' : '选择',
+      style: {
+        all: 'unset',
+        cursor: 'pointer',
+        position: 'absolute',
+        top: -10,
+        right: 14,
+        width: 22,
+        height: 22,
+        background: selected.has(mid) ? t.coffee : t.bg,
+        border: `1px solid ${t.coffee}`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: VC_MONO,
+        fontSize: 14,
+        lineHeight: 1,
+        color: selected.has(mid) ? '#f5ecd9' : 'transparent',
+        boxSizing: 'border-box'
+      }
+    }, "\u2713"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        marginBottom: 12,
+        marginTop: 6
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 46,
+        height: 46,
+        borderRadius: '50%',
+        background: `repeating-linear-gradient(45deg, ${dark ? '#3a2c20' : '#d9c7aa'} 0 3px, ${dark ? '#2a2018' : '#e3d4ba'} 3px 7px)`,
+        border: `0.5px solid ${t.coffee}`,
+        flexShrink: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: VC_DISPLAY,
+        fontStyle: 'italic',
+        fontSize: 18,
+        color: t.coffee
+      }
+    }, m.name[0]), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_DISPLAY,
+        fontSize: 19,
+        lineHeight: 1.1
+      }
+    }, m.name, m.verified && /*#__PURE__*/React.createElement("span", {
+      style: {
+        marginLeft: 8,
+        fontFamily: VC_MONO,
+        fontSize: 9,
+        color: t.coffee,
+        border: `0.5px solid ${t.coffee}`,
+        padding: '1px 5px',
+        verticalAlign: 2
+      }
+    }, "\u8BA4\u8BC1")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_MONO,
+        fontSize: 9.5,
+        letterSpacing: 1,
+        color: t.muted,
+        marginTop: 2
+      }
+    }, m.height, "cm \xB7 ", m.measure, " \xB7 ", m.city)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: 'right'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_DISPLAY,
+        fontSize: 18,
+        color: t.coffee
+      }
+    }, "\u2605", m.rating), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_MONO,
+        fontSize: 9,
+        color: t.muted,
+        letterSpacing: 0.8
+      }
+    }, m.jobs, " \u5355"))), /*#__PURE__*/React.createElement("button", {
+      onClick: () => onOpenModel(m.id),
+      style: {
+        all: 'unset',
+        cursor: 'pointer',
+        display: 'block',
+        width: '100%'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "model-swiper",
+      style: {
+        display: 'flex',
+        gap: 6,
+        overflowX: 'auto',
+        scrollSnapType: 'x mandatory',
+        scrollbarWidth: 'none'
+      }
+    }, window.PHOTO_KINDS_MORE.map((k, j) => /*#__PURE__*/React.createElement("div", {
+      key: k.key,
+      style: {
+        width: 'calc((100% - 12px) / 3)',
+        flexShrink: 0,
+        scrollSnapAlign: 'start'
+      }
+    }, /*#__PURE__*/React.createElement(VCImg, {
+      kind: k.key,
+      dark: dark
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_SERIF,
+        fontStyle: 'italic',
+        fontSize: 12,
+        color: t.coffee,
+        marginTop: 4,
+        textAlign: 'center'
+      }
+    }, k.cn))))), !dense && /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 5,
+        flexWrap: 'wrap'
+      }
+    }, m.tags.slice(0, 3).map((tg, k) => /*#__PURE__*/React.createElement("span", {
+      key: tg,
+      style: {
+        fontFamily: VC_MONO,
+        fontSize: 9,
+        letterSpacing: 0.8,
+        color: t.coffee,
+        padding: '2px 6px',
+        background: dark ? 'rgba(122,74,40,0.18)' : 'rgba(122,74,40,0.08)'
+      }
+    }, tg))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: VC_DISPLAY,
+        fontSize: 15,
+        color: t.fg
+      }
+    }, m.rate)));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      padding: '14px 22px 28px',
+      background: `linear-gradient(180deg, transparent, ${t.bg} 30%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    onClick: onSubmit,
+    style: {
+      background: t.coffee,
+      color: '#f5ecd9',
+      padding: '14px 18px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      boxShadow: '0 6px 16px -8px rgba(120,60,20,0.4)',
+      cursor: 'pointer'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 10,
+      letterSpacing: 1.5
+    }
+  }, "\u4E2D\u4ECB \xB7 \u63A8\u8350 ", selected.size, " / ", r.needCount), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 17
+    }
+  }, "\u63D0 \u4EA4\xA0 \u2192"))));
+}
+
+// ─────────────────────────────────────────────────────────────
+// Screen 3 — Detail
+// ─────────────────────────────────────────────────────────────
+function VCDetail({
+  dark,
+  dense,
+  modelId,
+  onBack
+}) {
+  const t = vcTheme(dark);
+  const m = window.MODELS[modelId] || window.MODELS.m1;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.bg,
+      color: t.fg,
+      minHeight: '100%',
+      fontFamily: VC_SANS
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '6px 22px 8px',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span"), /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.coffee,
+    rotate: 3
+  }, m.pinyin, " \xB7 \u5377\u5B97")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 22px 0',
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 56,
+      lineHeight: 0.95,
+      letterSpacing: -1,
+      marginTop: 4
+    }
+  }, m.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 18,
+      color: t.coffee,
+      marginTop: 4
+    }
+  }, m.pinyin.toLowerCase(), " \xB7 ", m.city, " \xB7 ", m.age, " \u5C81"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 16,
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      background: t.card,
+      transform: 'rotate(-1.5deg)',
+      boxShadow: dark ? '0 12px 24px -14px rgba(0,0,0,0.6)' : '0 12px 24px -14px rgba(80,50,20,0.3)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      transform: 'rotate(1deg)'
+    }
+  }, /*#__PURE__*/React.createElement(VCImg, {
+    kind: "full",
+    ratio: "3 / 4.2",
+    dark: dark
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      bottom: -12,
+      right: -4
+    }
+  }, /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.stamp,
+    rotate: 6
+  }, "\u2605 ", m.rating, "  \xB7  ", m.jobs, " \u5355")))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '28px 22px 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: t.card,
+      padding: '16px 16px',
+      border: `0.5px solid ${t.rule}`,
+      boxShadow: dark ? '0 12px 24px -16px rgba(0,0,0,0.6)' : '0 12px 24px -14px rgba(80,50,20,0.2)',
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: -8,
+      left: 14
+    }
+  }, /*#__PURE__*/React.createElement(VCTab, {
+    dark: dark,
+    color: t.coffee,
+    rotate: -3
+  }, "SPEC \xB7 \u4F53\u5F81")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      columnGap: 16,
+      rowGap: 10,
+      marginTop: 6
+    }
+  }, [['身  高', `${m.height} cm`], ['体  重', `${m.weight} kg`], ['三  围', m.measure], ['日  薪', m.rate], ['档  期', m.status.split('·')[0].trim()], ['标  签', m.tags.join(' / ')]].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
+    key: k
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 9,
+      letterSpacing: 1.4,
+      color: t.muted
+    }
+  }, k), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontSize: 16,
+      marginTop: 2
+    }
+  }, v)))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px 22px 8px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 22,
+      color: t.coffee,
+      marginBottom: 8
+    }
+  }, "\u5173\u4E8E\u5979"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontSize: 14,
+      lineHeight: 1.7,
+      color: t.fg
+    }
+  }, m.bio)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 22px 16px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'baseline',
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 22,
+      color: t.coffee
+    }
+  }, "\u4F5C \u54C1 \u96C6"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 9.5,
+      letterSpacing: 1.2,
+      color: t.muted
+    }
+  }, "3 / 3")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      gridColumn: '1 / 3'
+    }
+  }, /*#__PURE__*/React.createElement(VCImg, {
+    kind: "glam",
+    ratio: "16 / 9",
+    dark: dark
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 13,
+      color: t.coffee,
+      marginTop: 4,
+      textAlign: 'right'
+    }
+  }, "FIG. 02 \xB7 \u5E26\u5986\u56FE")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(VCImg, {
+    kind: "bare",
+    dark: dark
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 13,
+      color: t.coffee,
+      marginTop: 4,
+      textAlign: 'right'
+    }
+  }, "FIG. 01 \xB7 \u7D20\u989C")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(VCImg, {
+    kind: "full",
+    dark: dark
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontStyle: 'italic',
+      fontSize: 13,
+      color: t.coffee,
+      marginTop: 4,
+      textAlign: 'right'
+    }
+  }, "FIG. 03 \xB7 \u5168\u8EAB")))), !dense && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 22px 12px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 22,
+      color: t.coffee,
+      marginBottom: 8
+    }
+  }, "\u8FD1 \u671F \u901A \u544A"), [['壬寅 · 正月', '《嘉人》二月刊内页 · 北京'], ['辛丑 · 腊月', 'SHANG XIA 秋冬 lookbook'], ['辛丑 · 冬月', 'LANEIGE 雪润电商']].map(([d, j]) => /*#__PURE__*/React.createElement("div", {
+    key: d,
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '100px 1fr',
+      padding: '9px 0',
+      borderBottom: `0.5px solid ${t.rule}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_MONO,
+      fontSize: 10,
+      color: t.muted,
+      letterSpacing: 1
+    }
+  }, d), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: VC_SERIF,
+      fontSize: 13
+    }
+  }, j)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 90
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      padding: '14px 22px 28px',
+      background: `linear-gradient(180deg, transparent, ${t.bg} 30%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 56,
+      padding: '14px 0',
+      textAlign: 'center',
+      background: t.card,
+      border: `0.5px solid ${t.coffee}`,
+      color: t.coffee,
+      fontFamily: VC_DISPLAY,
+      fontSize: 16
+    }
+  }, "\u2661"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      padding: '14px 0',
+      textAlign: 'center',
+      background: t.coffee,
+      color: '#f5ecd9',
+      fontFamily: VC_DISPLAY,
+      fontStyle: 'italic',
+      fontSize: 17,
+      boxShadow: '0 6px 16px -8px rgba(120,60,20,0.4)'
+    }
+  }, "\u63A8 \u8350 \u7ED9 \u62DB \u8058 \u65B9   \u2192"))));
+}
+Object.assign(window, {
+  VCRecruitList,
+  VCApplicants,
+  VCDetail
+});
+})();
+</script>
+
+<script>
+// ===== 装配:照搬 cream-dossier 的 InteractivePhone 栈式导航;返回只在真正连贯的相邻屏 =====
+(function () {
+  var e = React.createElement;
+  var t = window.vcTheme(false);
+  var D = window.VC_DISPLAY, S = window.VC_SERIF, M = window.VC_MONO;
+
+  // cream 风格「返回」—— 逐字沿用 cream-dossier 的 ← 返 回(VC_SERIF 斜体 17)
+  function BackBar(props) {
+    return e('div', { style: { padding: '6px 22px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: t.bg } },
+      e('button', { onClick: props.onBack, style: { all: 'unset', cursor: 'pointer', fontFamily: S, fontStyle: 'italic', fontSize: 17, color: t.fg } }, '← 返 回'),
+      e(window.VCTab, { color: t.coffee, rotate: 2 }, props.tag));
+  }
+
+  // ===== 微信小程序底部 tabBar(按角色)=====
+  var TABS = {
+    applicant: [{ k: 'browse', label: '职位' }, { k: 'schedule', label: '日程' }, { k: 'cmine', label: '我的' }],
+    employer: [{ k: 'erecruit', label: '招聘' }, { k: 'emine', label: '我的' }],
+    platform: [{ k: 'list', label: '首页' }, { k: 'todo', label: '待办' }, { k: 'pmine', label: '我的' }]
+  };
+  function tabIcon(k, c) {
+    function P(i, d) { return e('path', { key: i, d: d, fill: 'none', stroke: c, strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' }); }
+    function R(i, x, y, w, h) { return e('rect', { key: i, x: x, y: y, width: w, height: h, rx: 1.5, fill: 'none', stroke: c, strokeWidth: 1.7 }); }
+    var kids;
+    if (k === 'browse') {
+      kids = [R(0, 3, 7.5, 18, 12.5), P(1, 'M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5'), P(2, 'M3 12h18')];
+    } else if (k === 'schedule') {
+      kids = [R(0, 3.5, 5, 17, 15), P(1, 'M3.5 9.5h17'), P(2, 'M8 3.5v3'), P(3, 'M16 3.5v3')];
+    } else if (k === 'erecruit') {
+      kids = [P(0, 'M4 10.5v3l12 4V6.5l-12 4z'), P(1, 'M16 8.5a3.5 3.5 0 0 1 0 7'), P(2, 'M7 14v4l3 .8V14.8')];
+    } else if (k === 'todo') {
+      kids = [R(0, 5, 4.5, 14, 16), P(1, 'M9 4.5h6v2.5H9z'), P(2, 'M8.5 11l1.5 1.5 3-3'), P(3, 'M8.5 16h7')];
+    } else if (k === 'list') {
+      kids = [P(0, 'M3.5 11.5 12 4.5l8.5 7'), P(1, 'M5.5 10v9.5h13V10'), P(2, 'M10 19.5v-5.5h4v5.5')];
+    } else {
+      kids = [e('circle', { key: 0, cx: 12, cy: 9, r: 3.4, fill: 'none', stroke: c, strokeWidth: 1.7 }), P(1, 'M5.5 19.5c1-3.5 3.6-5.2 6.5-5.2s5.5 1.7 6.5 5.2')];
+    }
+    return e('svg', { width: 21, height: 21, viewBox: '0 0 24 24' }, kids);
+  }
+  function TabBar(props) {
+    var tabs = TABS[props.role] || [];
+    return e('div', { style: { display: 'flex', background: t.bg, borderTop: '0.5px solid ' + t.rule, padding: '9px 0 22px' } },
+      tabs.map(function (tb) {
+        var on = props.activeView === tb.k;
+        var col = on ? t.coffee : t.muted;
+        return e('button', {
+          key: tb.k, onClick: function () { props.onNav(tb.k); },
+          style: { all: 'unset', cursor: 'pointer', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }
+        },
+          e('div', { style: { width: 21, height: 21, display: 'flex', alignItems: 'center', justifyContent: 'center' } }, tabIcon(tb.k, col)),
+          e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1, color: col } }, tb.label));
+      }));
+  }
+
+  // 照搬 cream-dossier InteractivePhone:导航栈 stack/pop/push;root(栈深 1)无返回
+  function InteractivePhone(props) {
+    var a = React.useState(props.initial); var stack = a[0], setStack = a[1];
+    var top = stack[stack.length - 1];
+    var pop = function () { if (stack.length > 1) setStack(stack.slice(0, -1)); };
+    var push = function (s) { setStack(stack.concat([s])); };
+    var v = top.view, screen;
+
+    if (v === 'browse') {
+      screen = e(window.ApplicantBrowse, { onOpen: function () { push({ view: 'jobdetail' }); } });
+    } else if (v === 'jobdetail') {
+      screen = e(window.ApplicantJobDetail, { onApply: function () { push({ view: 'apply' }); } });
+    } else if (v === 'apply') {
+      screen = e(window.ApplicantApply, null);
+    } else if (v === 'confirm') {
+      screen = e(window.ApplicantConfirm, null);                 // 独立 root,无导航
+    } else if (v === 'deal') {
+      screen = e(window.ApplicantDeal, null);                    // 独立 root,无导航
+    } else if (v === 'publish') {
+      screen = e(window.EmployerPublish, null);                  // 独立 root,无导航
+    } else if (v === 'roster') {
+      screen = e(window.EmployerRoster, null);                   // 独立 root,无导航
+    } else if (v === 'complete') {
+      screen = e(window.EmployerComplete, null);                 // 独立 root,无导航
+    } else if (v === 'list') {
+      screen = e(window.VCRecruitList, { dark: false, dense: false, onOpen: function (rid) { push({ view: 'applicants', recruitId: rid }); } });
+    } else if (v === 'applicants') {
+      // 返回/前进全靠 VCApplicants 自带:原生 ← 返 回→list、点模特→detail、自带「提 交 →」→报名池#17
+      screen = e(window.VCApplicants, {
+        dark: false, dense: false, recruitId: top.recruitId,
+        onBack: pop,
+        onOpenModel: function (mid) { push({ view: 'detail', recruitId: top.recruitId, modelId: mid }); },
+        onSubmit: function () { push({ view: 'pool' }); }
+      });
+    } else if (v === 'detail') {
+      screen = e(window.VCDetail, { dark: false, dense: false, modelId: top.modelId, onBack: pop });
+    } else if (v === 'schedule') {
+      screen = e(window.ApplicantSchedule, null);             // tab · 应聘方 日程
+    } else if (v === 'cmine') {
+      screen = e(window.ApplicantMine, { onOpen: function (k) { push({ view: k }); } });   // tab · 应聘方 我的
+    } else if (v === 'erecruit') {
+      screen = e(window.EmployerRecruitList, null);           // tab · 招聘方 招聘
+    } else if (v === 'emine') {
+      screen = e(window.EmployerMine, { onOpen: function (k) { push({ view: k }); } });    // tab · 招聘方 我的
+    } else if (v === 'todo') {
+      screen = e(window.PlatformTodo, null);                  // tab · 平台 待办
+    } else if (v === 'pmine') {
+      screen = e(window.PlatformMine, null);                  // tab · 平台 我的
+    } else { // pool · #17 报名池
+      screen = e(window.AgentPool, null);
+    }
+
+    var backTo = { confirm: 'cmine', deal: 'cmine', roster: 'emine', complete: 'emine', publish: 'erecruit' };
+    var noTab = backTo.hasOwnProperty(v);
+    var hideTab = noTab || v === 'jobdetail' || v === 'apply' || v === 'applicants' || v === 'detail' || v === 'pool';   // 职位详情/报名表单/报名者列表/模特档案/报名池#17:钻取子页,去 tabBar(返回仍走 pop)
+    return e(Phone, {
+      label: props.label, sub: props.sub,
+      onBack: noTab ? function () { setStack([{ view: backTo[v] }]); } : (stack.length > 1 ? pop : null),
+      tabBar: (props.role && !hideTab) ? e(TabBar, { role: props.role, activeView: v, onNav: function (k) { setStack([{ view: k }]); } }) : null,
+      onAdd: v === 'erecruit' ? function () { push({ view: 'publish' }); } : null
+    },
+      e('div', { style: { minHeight: '100%' } }, screen));
+  }
+
+  function Phone(props) {
+    return e('div', { className: 'phone-block' },
+      e('div', { className: 'phone-label' },
+        e('span', null, props.label),
+        e('em', null, props.sub)),
+      e(window.IOSDevice, { width: 390, height: 736, bg: '#f0e8db' /* VC_PAPER 主题色 */, onBack: props.onBack, tabBar: props.tabBar, onAdd: props.onAdd },
+        e('div', { style: { height: '100%' } },
+          e('div', { style: { height: 100 } }),
+          props.children,
+          e('div', { style: { height: 64 } }))));
+  }
+  function RoleBand(props) {
+    return e('div', { style: { textAlign: 'center', padding: '14px 0 2px' } },
+      e('div', { style: { fontFamily: M, fontSize: 11, letterSpacing: 4, textTransform: 'uppercase', color: 'rgba(42,31,18,0.5)' } }, props.eyebrow),
+      e('div', { style: { fontFamily: D, fontSize: 36, color: '#2a1f12', marginTop: 6 } }, props.title),
+      e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 15, color: 'rgba(42,31,18,0.55)', marginTop: 4 } }, props.sub),
+      e('div', { style: { width: 40, height: 1, background: '#7a4a28', margin: '14px auto 0' } }));
+  }
+  function Flow(props) {
+    var kids = [];
+    props.steps.forEach(function (st, i) {
+      kids.push(e(InteractivePhone, { key: 'p' + i, label: st.label, sub: st.sub, initial: st.initial, role: props.role }));
+    });
+    return e('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, padding: '6px 0 4px' } }, kids);
+  }
+  function Section(props) {
+    return e('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, width: '100%' } },
+      e(RoleBand, { eyebrow: props.eyebrow, title: props.title, sub: props.sub }),
+      e(Flow, { steps: props.steps, role: props.role }));
+  }
+  function App() {
+    return e(React.Fragment, null,
+      e(Section, {
+        role: 'applicant', eyebrow: 'Journey 01 · C-Side', title: '应聘方 · C 端旅程', sub: '#11→#14 合一屏可交互钻取;#19a、成单/完工 各自独立单步',
+        steps: [
+          { label: '报名闭环 · #11 → #14', sub: '本屏含:#11 收到匹配推送 · #14 报名意向兼职 — 点推荐卡进 #14,cream ← 返 回 回 #11', initial: [{ view: 'browse' }] },
+          { label: '#19a · 确认接受', sub: '本屏含:#19a 确认接受(独立单步,无导航)', initial: [{ view: 'confirm' }] },
+          { label: '#20–22 · 成单 / 完工', sub: '本屏含:#20–22 成单 / 完工(独立单步,无导航)', initial: [{ view: 'deal' }] }
+        ]
+      }),
+      e(Section, {
+        role: 'employer', eyebrow: 'Journey 02 · B-Side', title: '招聘方 · B 端旅程', sub: '#9 / #18 / 完工确认 T11 各自独立单步,无导航',
+        steps: [
+          { label: '#9 · 发布招募令', sub: '本屏含:#9 发布招募令(独立单步,无导航)', initial: [{ view: 'publish' }] },
+          { label: '#18 · 确认入选名单', sub: '本屏含:#18 确认入选名单(独立单步,无导航)', initial: [{ view: 'roster' }] },
+          { label: '完工确认 · T11', sub: '本屏含:完工确认 T11(独立单步,无导航)', initial: [{ view: 'complete' }] }
+        ]
+      }),
+      e(Section, {
+        role: 'platform', eyebrow: 'Journey 03 · Platform-Side', title: '中介方 · 平台侧执行方', sub: '整条 cream 钻取链合一屏:招募令列表→报名者→模特档案;报名者─提交→报名池#17',
+        steps: [
+          { label: 'cream 钻取链 · 招募令列表 → 报名者 → 档案 / #17 池', sub: '本屏含:招募令列表 · 报名者 · 模特档案 · 报名池#17 — 点招募→报名者,点模特→档案(原生 ← 返 回),自带「提 交 →」→报名池#17(cream ← 返 回 回报名者)', initial: [{ view: 'list' }] }
+        ]
+      }));
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(e(App));
+})();
+</script>
+</body>
+</html>

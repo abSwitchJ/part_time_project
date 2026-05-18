@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(node *)",
+      "Bash(git -C C:/Users/--/Desktop/part_time_project status --porcelain)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\--\\\\Desktop\\\\part_time_project\" -Recurse -Include \"*.html\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "Bash(powershell *)",
+      "Bash(dir *)",
+      "Bash(git status *)"
+    ]
+  }
+}
