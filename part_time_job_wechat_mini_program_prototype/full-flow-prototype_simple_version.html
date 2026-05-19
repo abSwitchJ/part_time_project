@@ -3065,35 +3065,65 @@ Object.assign(window, {
     return e('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, padding: '6px 0 4px' } }, kids);
   }
   function Section(props) {
-    return e('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, width: '100%' } },
+    return e('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, width: 'auto' } },
       e(RoleBand, { eyebrow: props.eyebrow, title: props.title, sub: props.sub }),
       e(Flow, { steps: props.steps, role: props.role }));
   }
   function App() {
-    return e(React.Fragment, null,
+    var lay = React.useState('v');           // 'v' 竖排(默认) · 'h' 横排
+    var horizontal = lay[0] === 'h';
+    var seg = function (val, txt) {
+      var on = lay[0] === val;
+      return e('div', {
+        onClick: function () { lay[1](val); },
+        style: {
+          padding: '7px 14px', cursor: 'pointer',
+          background: on ? '#7a4a28' : 'transparent',
+          color: on ? '#f3ead8' : '#2a1f12'
+        }
+      }, txt);
+    };
+    var toggle = e('div', {
+      style: {
+        position: 'fixed', top: 20, right: 24, zIndex: 100,
+        display: 'flex', borderRadius: 9999, overflow: 'hidden',
+        border: '0.5px solid rgba(122,74,40,0.45)',
+        background: 'rgba(243,234,216,0.92)', backdropFilter: 'blur(6px)',
+        fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+        letterSpacing: 2, textTransform: 'uppercase',
+        boxShadow: '0 2px 10px rgba(42,31,18,0.12)'
+      }
+    }, seg('v', '竖排'), seg('h', '横排'));
+    var layoutBox = e('div', {
+      style: {
+        display: 'flex',
+        flexDirection: horizontal ? 'row' : 'column',
+        alignItems: horizontal ? 'flex-start' : 'center',
+        justifyContent: 'center',
+        flexWrap: horizontal ? 'wrap' : 'nowrap',
+        gap: horizontal ? 48 : 64,
+        width: '100%'
+      }
+    },
       e(Section, {
-        role: 'applicant', eyebrow: 'Journey 01 · C-Side', title: '应聘方 · C 端旅程', sub: '#11→#14 合一屏可交互钻取;#19a、成单/完工 各自独立单步',
+        role: 'applicant', eyebrow: 'Journey 01 · C-Side', title: '应聘方 · C 端旅程', sub: '仅保留「职位」首页一屏',
         steps: [
-          { label: '报名闭环 · #11 → #14', sub: '本屏含:#11 收到匹配推送 · #14 报名意向兼职 — 点推荐卡进 #14,cream ← 返 回 回 #11', initial: [{ view: 'browse' }] },
-          { label: '#19a · 确认接受', sub: '本屏含:#19a 确认接受(独立单步,无导航)', initial: [{ view: 'confirm' }] },
-          { label: '#20–22 · 成单 / 完工', sub: '本屏含:#20–22 成单 / 完工(独立单步,无导航)', initial: [{ view: 'deal' }] }
+          { label: '应聘方首页 · 职位', sub: '本屏:应聘方「职位」首页(#11 浏览推荐,可钻取 #14)', initial: [{ view: 'browse' }] }
         ]
       }),
       e(Section, {
-        role: 'employer', eyebrow: 'Journey 02 · B-Side', title: '招聘方 · B 端旅程', sub: '#9 / #18 / 完工确认 T11 各自独立单步,无导航',
+        role: 'employer', eyebrow: 'Journey 02 · B-Side', title: '招聘方 · B 端旅程', sub: '仅保留「招聘」首页一屏',
         steps: [
-          { label: '#9 · 发布招募令', sub: '本屏含:#9 发布招募令(独立单步,无导航)', initial: [{ view: 'publish' }] },
-          { label: '#18 · 确认入选名单', sub: '本屏含:#18 确认入选名单(独立单步,无导航)', initial: [{ view: 'roster' }] },
-          { label: '完工确认 · T11', sub: '本屏含:完工确认 T11(独立单步,无导航)', initial: [{ view: 'complete' }] }
+          { label: '招聘方首页 · 招聘', sub: '本屏:招聘方「招聘」首页(我发布的招募令;右上「+」发 #9)', initial: [{ view: 'erecruit' }] }
         ]
       }),
       e(Section, {
-        role: 'platform', eyebrow: 'Journey 03 · Platform-Side', title: '中介方 · 平台侧执行方', sub: '整条 cream 钻取链合一屏:招募令列表→报名者→模特档案;报名者─提交→报名池#17',
+        role: 'platform', eyebrow: 'Journey 03 · Platform-Side', title: '中介方 · 平台侧执行方', sub: '仅保留「首页」一屏',
         steps: [
-          { label: 'cream 钻取链 · 招募令列表 → 报名者 → 档案 / #17 池', sub: '本屏含:招募令列表 · 报名者 · 模特档案 · 报名池#17 — 点招募→报名者,点模特→档案(原生 ← 返 回),自带「提 交 →」→报名池#17(cream ← 返 回 回报名者)', initial: [{ view: 'list' }] }
+          { label: '中介方首页 · 平台', sub: '本屏:中介方「首页」(招募令列表 → 报名者 → 档案 / #17 池)', initial: [{ view: 'list' }] }
         ]
-      }),
-      e(window.TweaksPanel, null));
+      }));
+    return e(React.Fragment, null, toggle, layoutBox, e(window.TweaksPanel, null));
   }
   ReactDOM.createRoot(document.getElementById('root')).render(e(App));
 })();

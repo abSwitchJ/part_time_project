@@ -9,7 +9,13 @@
       "Bash(Sort-Object FullName)",
       "Bash(powershell *)",
       "Bash(dir *)",
-      "Bash(git status *)"
+      "Bash(git status *)",
+      "Read(//c/Users/--/Desktop/**)",
+      "Bash(git diff *)",
+      "Read(//tmp/**)",
+      "Bash(grep -vE \"om-edit-overrides|^[-+]$|nth-child|</style>\")",
+      "PowerShell(Copy-Item *)",
+      "PowerShell($dir=\"C:\\\\Users\\\\--\\\\Desktop\\\\part_time_project\\\\part_time_job_wechat_mini_program_prototype\"; git diff --no-index --stat \"$dir\\\\full-flow-prototype.html\" \"$dir\\\\full-flow-prototype_simple_version.html\"; Write-Output \"----- detailed diff -----\"; git --no-pager diff --no-index \"$dir\\\\full-flow-prototype.html\" \"$dir\\\\full-flow-prototype_simple_version.html\")"
     ]
   }
 }
