@@ -1701,24 +1701,133 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
       ListHint('历史订单'),
       O.map(OrderRow));
   }
-  function EmployerRecruitList() {
-    var L = [
-      { st: '在招 · LIVE', live: true, title: '零售导购', budget: '¥240/人', date: '6/21 周六', need: 2, applied: 9 },
-      { st: '待确认 · #18', live: true, title: '展会引导', budget: '¥260/人', date: '6/24 周二', need: 4, applied: 12 },
-      { st: '进行中', live: false, title: '咖啡师助理', budget: '¥180/人', date: '6/27 周五', need: 1, applied: 5 },
-      { st: '已完成', live: false, title: '问卷地推', budget: '¥150/人', date: '6/02 周日', need: 3, applied: 8 }
-    ];
+  // RLIST[0] 与 #9 EmployerPublish / #19a ApplicantConfirm / #18 EmployerRoster / T11 EmployerComplete 同一笔 ZARA 招募令字段对齐
+  var RLIST = [
+    {
+      st: '在招 · LIVE', live: true, title: '周末品牌快闪 · 兼职导购', budget: '¥240/人', date: '6/21 周六', need: 2, applied: 9,
+      org: 'ZARA 西单大悦城店', cat: '零售导购', time: '6/21(周六)10:00–18:00', place: 'ZARA 西单大悦城店 1F', payFull: '¥240 / 人 / 天',
+      tags: ['零售经验', '形象气质佳', '可全天', '普通话'],
+      desc: '协助门店周末快闪活动:引导顾客、整理样衣、配合店员完成连带销售。无需经验,岗前有 30 分钟简训;着装由门店提供。当日按时到岗、完工经招聘方确认后 7 日内结算。'
+    },
+    {
+      st: '待确认 · #18', live: true, title: '展会引导 · 现场协助', budget: '¥260/人', date: '6/24 周二', need: 4, applied: 12,
+      org: '国家会议中心 · 某科技展', cat: '活动执行', time: '6/24(周二)09:00–17:00', place: '国家会议中心 B 馆主入口', payFull: '¥260 / 人 / 天',
+      tags: ['沟通力强', '站立耐受', '应届可', '英语日常'],
+      desc: '负责展会主入口观众引导、证件核验协助、动线疏导;高峰期需长时间站立,要求着正装(自备深色西裤 / 白衬衫)。'
+    },
+    {
+      st: '进行中', live: false, title: '咖啡师助理 · 周五档', budget: '¥180/人', date: '6/27 周五', need: 1, applied: 5,
+      org: 'Manner 三里屯太古里店', cat: '餐饮服务', time: '6/27(周五)13:00–21:00', place: 'Manner 三里屯太古里店', payFull: '¥180 / 人 / 天',
+      tags: ['健康证', '吧台经验优先', '手脚麻利'],
+      desc: '协助吧台出品:备料、清洗器具、传单、收台;有咖啡 / 茶饮吧台经验优先,需持有效健康证。'
+    },
+    {
+      st: '已完成', live: false, title: '问卷地推 · 周日场', budget: '¥150/人', date: '6/02 周日', need: 3, applied: 8,
+      org: '朝阳大悦城 · 某品牌调研', cat: '市场推广', time: '6/02(周日)10:00–16:00', place: '朝阳大悦城 1F 中庭', payFull: '¥150 / 人 / 天',
+      tags: ['表达清晰', '抗拒挫', '会用问卷小程序'],
+      desc: '在商场中庭拦截目标客群完成纸质 / 电子问卷,每人每日有效问卷量目标 30 份,按有效量另有绩效。'
+    }
+  ];
+  function EmployerRecruitList(props) {
+    var open = function (d) { if (props && props.onOpen) props.onOpen(d); };
     return e('div', { style: page },
-      Title('招聘 · POSTS', '我发布的', '招募令。', '本招聘方所有招募令,按状态跟踪到完工结算。', 42),
-      ListHint('共 ' + L.length + ' 条 · 2 条进行中'),
-      L.map(function (d, i) {
-        return e('div', { key: i, style: { margin: '0 22px 12px', padding: '14px 14px', ...paper } },
+      Title('招聘 · POSTS', '我发布的', '招募令。', '本招聘方所有招募令,按状态跟踪到完工结算;点任一条进入详情,可修改后重新提交审核。', 42),
+      ListHint('共 ' + RLIST.length + ' 条 · 2 条进行中'),
+      RLIST.map(function (d, i) {
+        return e('div', { key: i, onClick: function () { open(d); }, style: { margin: '0 22px 12px', padding: '14px 14px', cursor: 'pointer', ...paper } },
           e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: d.live ? t.coffee : t.muted, rotate: -3 }, d.st)),
           e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 6 } },
             e('div', { style: { fontFamily: D, fontSize: 19 } }, d.title),
             e('div', { style: { fontFamily: M, fontSize: 14, color: t.coffee } }, d.budget)),
-          e('div', { style: { fontFamily: M, fontSize: 14, letterSpacing: 0.5, textTransform: 'uppercase', color: t.muted, marginTop: 7 } }, d.date + '  ·  需求 ' + d.need + ' 人  ·  报名 ' + d.applied));
+          e('div', { style: { fontFamily: M, fontSize: 14, letterSpacing: 0.5, textTransform: 'uppercase', color: t.muted, marginTop: 7 } }, d.date + '  ·  需求 ' + d.need + ' 人  ·  报名 ' + d.applied),
+          e('div', { style: { textAlign: 'right', marginTop: 8, fontFamily: M, fontSize: 14, letterSpacing: 1, textTransform: 'uppercase', color: t.coffee } }, '详情 / 修改 ›'));
       }));
+  }
+
+  // §3 风格「设计决策」注记 —— 纯人工产品决策,非 AI(不复用 AiBanner;遵 memory feedback_ai_is_future_vision)
+  function DecisionNote(p) {
+    return e('div', { style: { margin: '0 22px 16px', padding: '14px 14px 12px', border: '0.5px solid ' + t.stamp, background: 'rgba(140,40,30,0.045)', position: 'relative' } },
+      e('div', { style: { position: 'absolute', top: -8, left: 12 } }, e(window.VCTab, { color: t.stamp, rotate: -3 }, '设计决策 · 本版简化')),
+      e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: t.stamp, marginTop: 5, marginBottom: 6 } }, '▷ 边界 · 已有报名时的修改'),
+      e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12.5, lineHeight: 1.6, color: t.fg } },
+        '招募令已有 ', e('strong', null, p.applied + ' 人'), ' 报名后,若改报酬 / 时段 / 类别等实质字段,不应静默覆盖 —— 已报名者是基于旧条款进入报名池的。本版(MVP)简化为「修改即触发平台重审,审核期间旧版对外不变」;实质改 vs 文案改的分级、是否需重新征得已报名者同意,留待 v2。'),
+      e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, color: t.muted, marginTop: 8 } }, '参 PRD §5 状态机 · 本版不分级、不回溯已报名者'));
+  }
+
+  // 招聘方 · 招募令详情 + 修改后重新提交审核(MVP 全人工,无 AI)
+  function EmployerRecruitDetail(props) {
+    var base = (props && props.rec && props.rec.cat) ? props.rec : RLIST[0];
+    var a = React.useState('view'); var mode = a[0], setMode = a[1];   // view · edit · reviewing
+    var init = { cat: base.cat, time: base.time, place: base.place, pay: base.payFull, need: String(base.need), tags: (base.tags || []).join(' / '), desc: base.desc };
+    var b = React.useState(init); var f = b[0], setF = b[1];
+    var c = React.useState(null); var saved = c[0], setSaved = c[1];   // 通过重审后定格的内容
+    function set(k, val) { var n = Object.assign({}, f); n[k] = val; setF(n); }
+    function EI(label, k, area) {
+      return e('div', { style: { padding: '11px 0', borderBottom: '0.5px solid ' + t.rule } },
+        e('div', { style: { fontFamily: M, fontSize: 14, letterSpacing: 1, textTransform: 'uppercase', color: t.muted, marginBottom: 7 } }, label),
+        e(area ? 'textarea' : 'input', {
+          value: f[k], rows: area ? 4 : undefined,
+          onChange: function (ev) { set(k, ev.target.value); },
+          style: { all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', fontFamily: S, fontSize: 15, color: t.fg, lineHeight: area ? 1.65 : 1.4, background: 'rgba(122,74,40,0.06)', border: '0.5px solid ' + t.rule, padding: '9px 11px', resize: 'none' }
+        }));
+    }
+    var cur = saved || init;
+    var head = Title('招募令 · POST', '招募令', '详情。', '查看完整招募令内容;修改后需重新提交平台审核(合规 / 资质),通过后才重新对外生效。', 42);
+
+    if (mode === 'view') {
+      var tagArr = String(cur.tags).split('/').map(function (x) { return x.trim(); }).filter(Boolean);
+      return e('div', { style: page }, head,
+        e('div', { style: { margin: '0 22px 16px', padding: '18px 16px', ...paper } },
+          e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: base.live ? t.coffee : t.muted, rotate: -4 }, saved ? '在招 · 已重审' : base.st)),
+          e('div', { style: { fontFamily: D, fontSize: 23, marginBottom: 4, marginTop: 4 } }, base.title),
+          e(Field, { k: '招聘方', v: base.org }),
+          e(Field, { k: '类别', v: cur.cat }),
+          e(Field, { k: '时段', v: cur.time }),
+          e(Field, { k: '地点', v: cur.place }),
+          e(Field, { k: '报酬', v: cur.pay, accent: true }),
+          e(Field, { k: '需求人数', v: cur.need + ' 人(另留备选)' }),
+          e(Field, { k: '当前报名', v: base.applied + ' 人' })),
+        e('div', { style: { padding: '0 22px 10px' } },
+          e('div', { style: { fontFamily: M, fontSize: 14, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted, marginBottom: 9 } }, '岗位要求'),
+          e('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 7 } },
+            tagArr.map(function (g, i) {
+              return e('span', { key: i, style: { fontFamily: M, fontSize: 14, letterSpacing: 0.5, color: t.coffee, border: '0.5px solid ' + t.coffee, padding: '3px 8px' } }, g);
+            }))),
+        e('div', { style: { padding: '14px 22px 4px' } },
+          e('div', { style: { fontFamily: M, fontSize: 14, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted, marginBottom: 8 } }, '岗位描述'),
+          e('div', { style: { fontFamily: S, fontSize: 15, lineHeight: 1.75, color: t.fg } }, cur.desc)),
+        saved ? e('div', { style: { margin: '14px 22px 0', padding: '11px 13px', border: '0.5px solid ' + t.rule, fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, lineHeight: 1.55 } }, '本次会话已修改并通过平台重审,内容已重新对外生效(审核期间旧版保持不变)。') : null,
+        e('div', { style: { padding: '20px 22px 30px' } },
+          e(Primary, { onClick: function () { setMode('edit'); } }, '✎ 修 改 招 募 令   →'),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, marginTop: 10, lineHeight: 1.6, textAlign: 'center' } }, '修改实质字段将重新提交平台审核;审核期间本招募令对外保持当前内容不变。')));
+    }
+
+    if (mode === 'edit') {
+      return e('div', { style: page }, head,
+        e(DecisionNote, { applied: base.applied }),
+        e('div', { style: { margin: '0 22px 14px', padding: '14px 16px 18px', ...paper } },
+          e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.stamp, rotate: -4 }, '修改中 · EDIT')),
+          e('div', { style: { fontFamily: D, fontSize: 21, margin: '6px 0 2px' } }, base.title),
+          EI('类别', 'cat'),
+          EI('时段', 'time'),
+          EI('地点', 'place'),
+          EI('报酬', 'pay'),
+          EI('需求人数', 'need'),
+          EI('岗位要求(用 / 分隔)', 'tags'),
+          EI('岗位描述', 'desc', true)),
+        e('div', { style: { padding: '2px 22px 30px' } },
+          e(Primary, { onClick: function () { setMode('reviewing'); } }, '重 新 提 交 审 核   →'),
+          e(Ghost, { onClick: function () { setF(saved || init); setMode('view'); } }, '取消修改 · 不保存')));
+    }
+
+    // reviewing
+    return e('div', { style: page }, head,
+      e('div', { style: { margin: '0 22px 22px', padding: '22px 16px', ...paper, textAlign: 'center' } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.stamp, rotate: -3 }, '审核中 · REVIEW')),
+        e('div', { style: { fontFamily: D, fontSize: 26, color: t.stamp, marginTop: 6 } }, '修改已提交 · 平台审核中'),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, marginTop: 8, lineHeight: 1.6 } }, '平台校验改后内容合规(敏感词)与企业资质;不通过将退回修改后重提。审核期间本招募令对外保持原内容不变(参 PRD §5 状态机)。')),
+      e('div', { style: { padding: '0 22px 28px' } },
+        e(Ghost, { onClick: function () { setSaved(Object.assign({}, f)); setMode('view'); } }, '模拟审核通过 · 内容生效')));
   }
   function EmployerMine(props) {
     var O = [
@@ -1773,7 +1882,7 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
     ApplicantBrowse: ApplicantBrowse, ApplicantApply: ApplicantApply, ApplicantDeal: ApplicantDeal,
     EmployerPublish: EmployerPublish, EmployerComplete: EmployerComplete, AgentPool: AgentPool,
     ApplicantSchedule: ApplicantSchedule, ApplicantCheckIn: ApplicantCheckIn, ApplicantMine: ApplicantMine,
-    EmployerRecruitList: EmployerRecruitList, EmployerMine: EmployerMine,
+    EmployerRecruitList: EmployerRecruitList, EmployerRecruitDetail: EmployerRecruitDetail, EmployerMine: EmployerMine,
     PlatformTodo: PlatformTodo, PlatformMine: PlatformMine,
     ApplicantJobDetail: ApplicantJobDetail
   });
@@ -2939,11 +3048,27 @@ Object.assign(window, {
     employer: [{ k: 'erecruit', label: '招聘' }, { k: 'emine', label: '我的' }],
     platform: [{ k: 'list', label: '首页' }, { k: 'todo', label: '待办' }, { k: 'pmine', label: '我的' }]
   };
-  function tabIcon(k, c) {
+  function tabIcon(k, c, filled) {
     function P(i, d) { return e('path', { key: i, d: d, fill: 'none', stroke: c, strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' }); }
     function R(i, x, y, w, h) { return e('rect', { key: i, x: x, y: y, width: w, height: h, rx: 1.5, fill: 'none', stroke: c, strokeWidth: 1.7 }); }
+    function FP(i, d) { return e('path', { key: i, d: d, fill: c }); }
+    function FR(i, x, y, w, h) { return e('rect', { key: i, x: x, y: y, width: w, height: h, rx: 1.5, fill: c }); }
+    function KP(i, d) { return e('path', { key: i, d: d, fill: 'none', stroke: t.bg, strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' }); }
+    function KFP(i, d) { return e('path', { key: i, d: d, fill: t.bg }); }
     var kids;
-    if (k === 'browse') {
+    if (filled && k === 'browse') {
+      kids = [FR(0, 3, 7.5, 18, 12.5), P(1, 'M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5'), KP(2, 'M3 12h18')];
+    } else if (filled && k === 'schedule') {
+      kids = [FR(0, 3.5, 5, 17, 15), KP(1, 'M3.5 9.5h17'), P(2, 'M8 3.5v3'), P(3, 'M16 3.5v3')];
+    } else if (filled && k === 'erecruit') {
+      kids = [FP(0, 'M4 10.5v3l12 4V6.5l-12 4z'), P(1, 'M16 8.5a3.5 3.5 0 0 1 0 7'), FP(2, 'M7 14v4l3 .8V14.8z')];
+    } else if (filled && k === 'todo') {
+      kids = [FR(0, 5, 4.5, 14, 16), FP(1, 'M9 4.5h6v2.5H9z'), KP(2, 'M8.5 11l1.5 1.5 3-3'), KP(3, 'M8.5 16h7')];
+    } else if (filled && k === 'list') {
+      kids = [FP(0, 'M12 3.6L20.5 11H18.5V20H5.5V11H3.5Z'), KFP(1, 'M10 20v-5h4v5z')];
+    } else if (filled) {
+      kids = [e('circle', { key: 0, cx: 12, cy: 8.5, r: 3.6, fill: c }), FP(1, 'M5 20c0-3.9 3.1-6.2 7-6.2s7 2.3 7 6.2z')];
+    } else if (k === 'browse') {
       kids = [R(0, 3, 7.5, 18, 12.5), P(1, 'M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5'), P(2, 'M3 12h18')];
     } else if (k === 'schedule') {
       kids = [R(0, 3.5, 5, 17, 15), P(1, 'M3.5 9.5h17'), P(2, 'M8 3.5v3'), P(3, 'M16 3.5v3')];
@@ -2956,7 +3081,7 @@ Object.assign(window, {
     } else {
       kids = [e('circle', { key: 0, cx: 12, cy: 9, r: 3.4, fill: 'none', stroke: c, strokeWidth: 1.7 }), P(1, 'M5.5 19.5c1-3.5 3.6-5.2 6.5-5.2s5.5 1.7 6.5 5.2')];
     }
-    return e('svg', { width: 21, height: 21, viewBox: '0 0 24 24' }, kids);
+    return e('svg', { width: 24, height: 24, viewBox: '0 0 24 24' }, kids);
   }
   function TabBar(props) {
     var tabs = TABS[props.role] || [];
@@ -2968,7 +3093,7 @@ Object.assign(window, {
           key: tb.k, onClick: function () { props.onNav(tb.k); },
           style: { all: 'unset', cursor: 'pointer', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }
         },
-          e('div', { style: { width: 21, height: 21, display: 'flex', alignItems: 'center', justifyContent: 'center' } }, tabIcon(tb.k, col)),
+          e('div', { style: { width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' } }, tabIcon(tb.k, col, on)),
           e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1, color: col } }, tb.label));
       }));
   }
@@ -3016,7 +3141,9 @@ Object.assign(window, {
     } else if (v === 'cmine') {
       screen = e(window.ApplicantMine, { onOpen: function (k) { push({ view: k }); } });   // tab · 应聘方 我的
     } else if (v === 'erecruit') {
-      screen = e(window.EmployerRecruitList, null);           // tab · 招聘方 招聘
+      screen = e(window.EmployerRecruitList, { onOpen: function (rec) { push({ view: 'recruitdetail', rec: rec }); } });   // tab · 招聘方 招聘
+    } else if (v === 'recruitdetail') {
+      screen = e(window.EmployerRecruitDetail, { rec: top.rec || {} });   // 钻取 · 招募令详情 / 修改重审
     } else if (v === 'emine') {
       screen = e(window.EmployerMine, { onOpen: function (k) { push({ view: k }); } });    // tab · 招聘方 我的
     } else if (v === 'todo') {
@@ -3029,7 +3156,7 @@ Object.assign(window, {
 
     var backTo = { confirm: 'cmine', deal: 'cmine', roster: 'emine', complete: 'emine', publish: 'erecruit' };
     var noTab = backTo.hasOwnProperty(v);
-    var hideTab = noTab || v === 'jobdetail' || v === 'apply' || v === 'applicants' || v === 'detail' || v === 'pool' || v === 'checkin';   // 职位详情/报名表单/报名者列表/模特档案/报名池#17:钻取子页,去 tabBar(返回仍走 pop)
+    var hideTab = noTab || v === 'jobdetail' || v === 'apply' || v === 'applicants' || v === 'detail' || v === 'pool' || v === 'checkin' || v === 'recruitdetail';   // 职位详情/报名表单/报名者列表/模特档案/报名池#17/招募令详情:钻取子页,去 tabBar(返回仍走 pop)
     return e(Phone, {
       label: props.label, sub: props.sub,
       onBack: noTab ? function () { setStack([{ view: backTo[v] }]); } : (stack.length > 1 ? pop : null),
