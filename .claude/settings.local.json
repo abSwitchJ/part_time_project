@@ -15,7 +15,18 @@
       "Read(//tmp/**)",
       "Bash(grep -vE \"om-edit-overrides|^[-+]$|nth-child|</style>\")",
       "PowerShell(Copy-Item *)",
-      "PowerShell($dir=\"C:\\\\Users\\\\--\\\\Desktop\\\\part_time_project\\\\part_time_job_wechat_mini_program_prototype\"; git diff --no-index --stat \"$dir\\\\full-flow-prototype.html\" \"$dir\\\\full-flow-prototype_simple_version.html\"; Write-Output \"----- detailed diff -----\"; git --no-pager diff --no-index \"$dir\\\\full-flow-prototype.html\" \"$dir\\\\full-flow-prototype_simple_version.html\")"
+      "PowerShell($dir=\"C:\\\\Users\\\\--\\\\Desktop\\\\part_time_project\\\\part_time_job_wechat_mini_program_prototype\"; git diff --no-index --stat \"$dir\\\\full-flow-prototype.html\" \"$dir\\\\full-flow-prototype_simple_version.html\"; Write-Output \"----- detailed diff -----\"; git --no-pager diff --no-index \"$dir\\\\full-flow-prototype.html\" \"$dir\\\\full-flow-prototype_simple_version.html\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\--\\\\Desktop\\\\part_time_project\" -Recurse -Filter \"*.html\")",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "PowerShell($a = Get-FileHash \"C:\\\\Users\\\\--\\\\Desktop\\\\part_time_project\\\\part_time_job_wechat_mini_program_prototype\\\\full-flow-prototype.html\" -Algorithm SHA256; $b = Get-FileHash \"C:\\\\Users\\\\--\\\\Desktop\\\\part_time_project\\\\part_time_job_wechat_mini_program_prototype\\\\full-flow-prototype_simple_version.html\" -Algorithm SHA256; \"main=$\\($a.Hash\\)\"; \"simp=$\\($b.Hash\\)\"; if \\($a.Hash -eq $b.Hash\\) { \"IDENTICAL\" } else { \"DIFFER\" })",
+      "PowerShell($m = \\(Get-Content \"C:\\\\Users\\\\--\\\\Desktop\\\\part_time_project\\\\part_time_job_wechat_mini_program_prototype\\\\full-flow-prototype.html\"\\)[1846..1865] -join \"`n\"; $s = \\(Get-Content \"C:\\\\Users\\\\--\\\\Desktop\\\\part_time_project\\\\part_time_job_wechat_mini_program_prototype\\\\full-flow-prototype_simple_version.html\"\\)[1846..1865] -join \"`n\"; if \\($m -eq $s\\) { \"PlatformTodo block IDENTICAL across two files\" } else { \"DIFFERS\" })",
+      "Bash(Get-Content \"C:\\\\Users\\\\--\\\\.claude\\\\memory\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-String \"feedback_pair_counterpart_screens|project_full_flow_two_files_lockstep\" -Context 5)",
+      "PowerShell(Get-Content *)",
+      "Bash(Get-FileHash -Path \"part_time_job_wechat_mini_program_prototype\\\\full-flow-prototype.html\" -Algorithm SHA256)",
+      "PowerShell(cd \"C:\\\\Users\\\\--\\\\Desktop\\\\part_time_project\"; \\(Get-FileHash -Path \"part_time_job_wechat_mini_program_prototype\\\\full-flow-prototype.html\" -Algorithm SHA256\\).Hash; \\(Get-FileHash -Path \"part_time_job_wechat_mini_program_prototype\\\\full-flow-prototype_simple_version.html\" -Algorithm SHA256\\).Hash)",
+      "PowerShell(Compare-Object *)",
+      "PowerShell(Select-String *)"
     ]
   }
 }

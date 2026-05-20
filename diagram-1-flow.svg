@@ -68,7 +68,7 @@
   <g fill="#fed7aa" stroke="#ea580c" stroke-width="0.8">
     <rect x="826" y="429" width="8" height="18"/>
     <rect x="826" y="532" width="8" height="48"/>
-    <rect x="826" y="738" width="8" height="18"/>
+    <rect x="826" y="686" width="8" height="36"/>
   </g>
 
   <!-- Messages -->
@@ -133,15 +133,15 @@
     <!-- 19a ★ NEW v3 (应聘方显式确认接受) -->
     <line x1="135" y1="650" x2="365" y2="650" stroke="#c2410c" stroke-width="1.8" marker-end="url(#arro)"/>
     <text x="250" y="645" text-anchor="middle" fill="#c2410c" font-weight="600">★ 19a: 应聘方确认接受 (T3 24h 应答窗口)</text>
-    <!-- 20 unified label -->
-    <line x1="365" y1="690" x2="135" y2="690" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
-    <text x="250" y="685" text-anchor="middle">20: 拉入沟通群聊</text>
-    <!-- 21 -->
-    <line x1="375" y1="718" x2="605" y2="718" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
-    <text x="490" y="713" text-anchor="middle">21: 拉入沟通群聊</text>
-    <!-- 22 -->
-    <line x1="375" y1="746" x2="825" y2="746" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
-    <text x="600" y="741" text-anchor="middle">22: 拉入沟通群聊</text>
+    <!-- 20: 小程序 → 中介方 (通知建群) -->
+    <line x1="375" y1="690" x2="825" y2="690" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="600" y="685" text-anchor="middle">20: 通知中介建群</text>
+    <!-- 21: 中介方 → 小程序 (上传群二维码) -->
+    <line x1="825" y1="718" x2="375" y2="718" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="600" y="713" text-anchor="middle">21: 中介上传群二维码</text>
+    <!-- 22: 小程序 → 应聘方+招聘方 fan-out 图片通告 (一条线代表 fan-out, 文案标注双方) -->
+    <line x1="365" y1="746" x2="135" y2="746" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="250" y="741" text-anchor="middle" fill="#4b5563">22: 图片通告 fan-out (至应聘方+招聘方)</text>
   </g>
 
   <!-- Legend -->

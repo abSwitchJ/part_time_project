@@ -175,7 +175,11 @@
   <li><a href="#sec-1">角色与核心术语</a></li>
   <li><a href="#sec-2">MVP 范围声明</a></li>
   <li><a href="#sec-3">关键设计决策(本版闭环要点)</a></li>
-  <li><a href="#sec-4">主流程时序图(Happy Path)</a></li>
+  <li><a href="#sec-4">主流程时序图(Happy Path)
+    <ul style="margin: 2px 0;">
+      <li><a href="#sec-4-5">4.5 一条招募令的三方端到端叙事(基于 simple_version 原型)</a></li>
+    </ul>
+  </a></li>
   <li><a href="#sec-5">招募令状态机
     <ul style="margin: 2px 0;">
       <li><a href="#sec-5-1">招募令(主)状态机</a></li>
@@ -225,6 +229,52 @@
 
 <h3>核心机制:双重确认闭环 ★</h3>
 <p>v3 的核心交付物。一笔订单要成立,需要<strong>招聘方确认名单</strong>(#18)和<strong>应聘方确认接受</strong>(#19a)两步显式确认,任一阶段中断都进入对应的恢复流程(异议重筛 / 自动递补)。详见 §3.1。</p>
+
+<h3 id="sec-1-tier">端架构:一个小程序 · 多种身份</h3>
+
+<div class="callout callout-decision">
+<strong>决策:</strong>四方共用<strong>同一个微信小程序</strong>,登录后按账号身份(应聘方 / 招聘方 / 中介方)分流到不同主界面,而非拆成 C 端小程序 + B 端小程序 + 中介后台。<br>
+<strong>取舍:</strong>主流招聘类产品多走 BOSS 直聘 / 美团商家版那条路——C 端、B 端各自独立 App。这条路的好处是 B 端操作复杂度天花板高(可接 PC 后台),坏处是冷启动期获客成本翻倍、品牌认知分散。MVP 阶段做反向选择有三条理由:① <strong>招聘方多为小商户</strong>(街边奶茶店店长、社区便利店主),不会专门开 PC 后台,微信小程序就是其唯一接触面;② <strong>中介方为平台预入驻方</strong>,操作量级在小程序内可承载,真上规模再迁后台;③ <strong>应聘方=学生</strong>,习惯微信生态、避免再装 App。代价是 B 端操作复杂度被压缩到小程序极限,招聘方批量管理类需求(同时跟踪 N 条招募令)推到 v2 工作台(见 <a href="#sec-2">§2</a> 延期项「多招募令并发管理工作台」)。<br>
+<strong>实现位置:</strong>登录后按 <code>user.role</code> 分流到三种主界面(应聘方 = 职位 / 日程 / 我的;招聘方 = 招聘 / 我的;中介方 = 首页 / 待办 / 我的)——见原型 <code>part_time_job_wechat_mini_program_prototype/full-flow-prototype.html</code> 的 <code>TABS</code> 实现。状态机(<a href="#sec-5">§5</a>)对身份无感,所有角色操作都走同一套招募令生命周期。
+</div>
+
+<div class="diagram-wrap">
+<svg width="720" height="320" viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+  <defs>
+    <marker id="tier-arr" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L9,3 L0,6 Z" fill="#6b7280"/>
+    </marker>
+  </defs>
+  <rect x="280" y="20" width="160" height="40" rx="6" fill="#f3f4f6" stroke="#9ca3af"/>
+  <text x="360" y="45" text-anchor="middle" font-size="13" font-weight="600" fill="#374151">微信用户打开小程序</text>
+  <line x1="360" y1="60" x2="360" y2="86" stroke="#6b7280" stroke-width="1.5" marker-end="url(#tier-arr)"/>
+  <rect x="270" y="92" width="180" height="44" rx="6" fill="#eeedfe" stroke="#7c3aed"/>
+  <text x="360" y="113" text-anchor="middle" font-size="13" font-weight="600" fill="#3c3489">登录 + 身份识别</text>
+  <text x="360" y="129" text-anchor="middle" font-size="11" fill="#6b5fb3">user.role 分流</text>
+  <text x="465" y="118" font-size="11" fill="#7c3aed" font-style="italic">← 同一小程序入口</text>
+  <line x1="360" y1="136" x2="150" y2="192" stroke="#6b7280" stroke-width="1.5" marker-end="url(#tier-arr)"/>
+  <line x1="360" y1="136" x2="360" y2="192" stroke="#6b7280" stroke-width="1.5" marker-end="url(#tier-arr)"/>
+  <line x1="360" y1="136" x2="570" y2="192" stroke="#6b7280" stroke-width="1.5" marker-end="url(#tier-arr)"/>
+  <rect x="60" y="200" width="180" height="100" rx="6" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="150" y="225" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">应聘方</text>
+  <text x="150" y="245" text-anchor="middle" font-size="11" fill="#1e3a8a">C 端 · 求职者(学生)</text>
+  <line x1="80" y1="258" x2="220" y2="258" stroke="#93c5fd" stroke-width="0.8"/>
+  <text x="150" y="278" text-anchor="middle" font-size="12" fill="#1e3a8a">职位 · 日程 · 我的</text>
+  <text x="150" y="294" text-anchor="middle" font-size="10" fill="#6b7280">tabBar 三入口</text>
+  <rect x="270" y="200" width="180" height="100" rx="6" fill="#d1fae5" stroke="#059669"/>
+  <text x="360" y="225" text-anchor="middle" font-size="14" font-weight="700" fill="#065f46">招聘方</text>
+  <text x="360" y="245" text-anchor="middle" font-size="11" fill="#065f46">B 端(轻)· 小商户</text>
+  <line x1="290" y1="258" x2="430" y2="258" stroke="#6ee7b7" stroke-width="0.8"/>
+  <text x="360" y="278" text-anchor="middle" font-size="12" fill="#065f46">招聘 · 我的</text>
+  <text x="360" y="294" text-anchor="middle" font-size="10" fill="#6b7280">tabBar 两入口</text>
+  <rect x="480" y="200" width="180" height="100" rx="6" fill="#fed7aa" stroke="#ea580c"/>
+  <text x="570" y="225" text-anchor="middle" font-size="14" font-weight="700" fill="#7c2d12">中介方</text>
+  <text x="570" y="245" text-anchor="middle" font-size="11" fill="#7c2d12">平台侧 · 预入驻方</text>
+  <line x1="500" y1="258" x2="640" y2="258" stroke="#fdba74" stroke-width="0.8"/>
+  <text x="570" y="278" text-anchor="middle" font-size="12" fill="#7c2d12">首页 · 待办 · 我的</text>
+  <text x="570" y="294" text-anchor="middle" font-size="10" fill="#6b7280">tabBar 三入口</text>
+</svg>
+</div>
 
 <h2 id="sec-2">二、MVP 范围声明</h2>
 
@@ -305,7 +355,8 @@
   <li><strong>T3(24h,待应聘方确认):</strong>防应聘方默认拒绝——视为放弃,触发递补(走 §3.2)。</li>
 </ul>
 <strong>原则:</strong>T1/T3 系统替用户做决策(自动初筛/默认放弃)是因为这两侧的"无响应"事实上等价于"放弃"或"无能力提供";T2 系统<strong>不</strong>替招聘方决策,因为招聘方对名单的判断不可由系统替代。这条不一致是有意的。<br>
-<strong>实现位置:</strong><a href="#sec-7">§7 超时清单</a>。
+<strong>实现位置:</strong><a href="#sec-7">§7 超时清单</a>。<br>
+<strong>另:</strong>T2/T3 倒计时窗口内,中介方可向被等方(招聘方 / 应聘方)发<strong>软提示(催办)</strong>——不替对方决策,但允许加速响应,频控 24h 一次,详见 <a href="#sec-3-7">§3.7</a>。
 </div>
 
 <h3 id="sec-3-5">3.5 AI 辅助筛选:为什么 v1 不做、v2 才做? <span class="tag tag-new">v2 · 本版不做</span></h3>
@@ -316,8 +367,22 @@
 <strong>实现位置:</strong>完整产品设计(介入点 / 输入输出 / 冷启动到模型演进 / 评估指标 / AB / 失败模式)见仓库根目录 <code>AI_MATCHING_SPEC.md</code>;PRD 内对应 <a href="#sec-6-3">§6.3 匹配引擎口径说明</a> 与 §8 v2 延期项。§3.4 的 T1 自动初筛是 v1 无 AI 时的兜底,v2 由本模块接管。
 </div>
 
+<h3 id="sec-3-6">3.6 建群机制:从"平台抽象拉群"到"中介上传二维码 + 平台 fan-out 图片通告"</h3>
+<div class="callout callout-decision">
+<strong>决策:</strong>v2 把 #20-#22 表达为"平台拉三方进群"——一个抽象动作,不说明"谁建、用什么形式、双方怎么收到"。MVP(v3)把这一段拆成三个可观测的离散事件:<strong>#20 平台通知中介建群</strong>(双方 #19a 确认后,在中介方"待办"出现"已成单·待建群"卡片)→ <strong>#21 中介上传微信群二维码</strong>(中介在微信内手工建群后,把群二维码图片上传至小程序)→ <strong>#22 平台以图片通告 fan-out 至应聘方+招聘方</strong>(双方在小程序内收到带图片的系统通告,长按二维码扫码进群)。<br>
+<strong>取舍:</strong>理论上"平台直接建群"语义最干净,#20-#22 一笔带过即可;但 v3 拆开这一段,三条原因:① <strong>微信能力边界</strong>——微信小程序 OpenSDK 不开放"代用户建群"能力,平台无法绕过用户在微信生态内建群,这是工程现实而非产品偏好;② <strong>承接 §3.4 中介职能定位</strong>——中介本就是平台预入驻的执行方(<a href="#sec-1">§1</a> 角色定义),由中介承接"建群+上传二维码"语义自洽,不需要引入新角色或新外部服务;③ <strong>可埋点的离散事件优于不可观测的状态变更</strong>——v2 一句"拉群"无法做埋点(平均建群耗时、上传成功率、双方扫码转化率全部缺失),v3 三个事件分别可埋,直接对应 <code>METRICS.md</code> §3.1 的"拉群后 24h 内退群率"等指标。代价:中介在 #17 提交后多一道"上传二维码"动作,平台需要支持"图片消息"类型(v2 系统消息均为纯文本/状态变更,见 <a href="#sec-4">§4 主流程</a> #11/#12/#15/#19)。<br>
+<strong>实现位置:</strong>主流程 <a href="#sec-4">§4</a> #20-#22 表格 + 时序图;中介方原型新增"已成单·待建群"待办卡 + <code>PlatformGroupSetup</code> 上传二维码屏(见 <code>part_time_job_wechat_mini_program_prototype/full-flow-prototype.html</code>);双方端接收图片通告卡(应聘方 <code>ApplicantDeal</code> + 招聘方 <code>EmployerMine</code>);异常处理见 <a href="#sec-6-2">§6.2</a> "群聊扩容失败" + "用户拒绝入群" 两条;附录 B 第 7 行 v3 修订。
+</div>
+
+<h3 id="sec-3-7">3.7 催办机制:不替对方决策,但允许中介软推进</h3>
+<div class="callout callout-decision">
+<strong>决策:</strong>T2(待招聘方确认)/ T3(待应聘方确认)倒计时窗口内,中介方在待办详情屏可点击"催办",平台向被等方发一条<strong>非状态变更</strong>的提醒消息——独立于 §4 主流程 #1-#22 编号,不挂号、不改状态机。同一招募令 24h 内最多催 1 次(防滥催)。<br>
+<strong>取舍:</strong>① <strong>不与 §3.4「故意不替招聘方默认通过」冲突</strong>——催办是<em>软提示</em>(由人发起、由对方决策),而非系统替对方决策,§3.4 强决策边界完整保留;② <strong>不进 §6.2 异常表</strong>——异常表是兜底通道(系统替人善后),催办是主动加速通道(人推系统),通道语义不同;③ <strong>不挂主流程编号</strong>——挂 #X 会让 #20-#22 之后编号膨胀,而催办本质是非状态变更通告,概念上等同于运营推送,挂号会污染主流程的"状态变更骨架";④ <strong>24h 频控</strong>是为防"无意义反复催办伤害招聘方/应聘方对平台的信任",不是工程兜底。代价:中介有了一个轻动作权限,§3.4 的"强决策不对称"叙事旁边多了"软推进对称"叙事——这两条叙事拼起来才完整:"是否替对方决策" 和 "是否允许中介加速对方" 是两个独立的产品判断。<br>
+<strong>实现位置:</strong>中介方原型新增 <code>PlatformWaitDetail</code> 屏(<code>part_time_job_wechat_mini_program_prototype/full-flow-prototype.html</code>),三态 kind(employer / applicant / dispute):前两态在底部 Primary 按钮"催办对方 →",点击切 Ghost 灰态"✓ 已催办 · 24h 内不可重复";dispute 态走"重新提交筛选 →"路径不显示催办。平台侧推送渠道复用 §4 #19 已有的"异步推送(站内 + 短信 + 公众号)",文案模板由平台维护(MVP 内 1 个模板覆盖 T2/T3 两路)。
+</div>
+
 <h2 id="sec-4">四、主流程时序图(Happy Path)</h2>
-<p>22 条消息 + 1 条 v3 新增(<code>#19a</code>)展示了一笔订单从发布到拉群的完整路径。<strong>★ 红橙色标注的两条(#18 + #19a)是 v3 双重确认闭环</strong>。其他消息和 v2 保持兼容。</p>
+<p>22 条消息 + 1 条 v3 新增(<code>#19a</code>)展示了一笔订单从发布到双方扫码进群的完整路径。<strong>★ 红橙色标注的两条(#18 + #19a)是 v3 双重确认闭环</strong>。其他消息和 v2 保持兼容。</p>
 
 <div class="diagram-wrap">
 <svg width="940" height="830" viewBox="0 0 940 830" xmlns="http://www.w3.org/2000/svg">
@@ -389,7 +454,7 @@
   <g fill="#fed7aa" stroke="#ea580c" stroke-width="0.8">
     <rect x="826" y="429" width="8" height="18"/>
     <rect x="826" y="532" width="8" height="48"/>
-    <rect x="826" y="738" width="8" height="18"/>
+    <rect x="826" y="686" width="8" height="36"/>
   </g>
 
   <!-- Messages -->
@@ -454,15 +519,15 @@
     <!-- 19a ★ NEW v3 (应聘方显式确认接受) -->
     <line x1="135" y1="650" x2="365" y2="650" stroke="#c2410c" stroke-width="1.8" marker-end="url(#arro)"/>
     <text x="250" y="645" text-anchor="middle" fill="#c2410c" font-weight="600">★ 19a: 应聘方确认接受 (T3 24h 应答窗口)</text>
-    <!-- 20 unified label -->
-    <line x1="365" y1="690" x2="135" y2="690" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
-    <text x="250" y="685" text-anchor="middle">20: 拉入沟通群聊</text>
-    <!-- 21 -->
-    <line x1="375" y1="718" x2="605" y2="718" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
-    <text x="490" y="713" text-anchor="middle">21: 拉入沟通群聊</text>
-    <!-- 22 -->
-    <line x1="375" y1="746" x2="825" y2="746" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
-    <text x="600" y="741" text-anchor="middle">22: 拉入沟通群聊</text>
+    <!-- 20: 小程序 → 中介方 (通知建群) -->
+    <line x1="375" y1="690" x2="825" y2="690" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="600" y="685" text-anchor="middle">20: 通知中介建群</text>
+    <!-- 21: 中介方 → 小程序 (上传群二维码) -->
+    <line x1="825" y1="718" x2="375" y2="718" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="600" y="713" text-anchor="middle">21: 中介上传群二维码</text>
+    <!-- 22: 小程序 → 应聘方+招聘方 fan-out 图片通告 (一条线代表 fan-out, 文案标注双方) -->
+    <line x1="365" y1="746" x2="135" y2="746" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+    <text x="250" y="741" text-anchor="middle" fill="#4b5563">22: 图片通告 fan-out (至应聘方+招聘方)</text>
   </g>
 
   <!-- Legend -->
@@ -481,19 +546,114 @@
 
 <h3>关键消息说明</h3>
 <table>
-<thead><tr><th style="width: 8%">编号</th><th style="width: 22%">消息</th><th>含义 / 对应状态迁移</th></tr></thead>
+<thead><tr><th style="width: 7%">编号</th><th style="width: 16%">消息</th><th style="width: 39%">含义 / 对应状态迁移</th><th style="width: 38%">原型屏(见 simple_version)</th></tr></thead>
 <tbody>
-<tr><td>#9</td><td>发布招募令</td><td>触发"草稿 → 审核中"。携带类目、时段、薪酬等基础信息。</td></tr>
-<tr><td>#14</td><td>报名意向兼职</td><td>首位应聘方报名触发"已发布 → 筛选中"。后续报名继续接收,进入剩余报名池。</td></tr>
-<tr><td>#17</td><td>提交筛选结果</td><td>中介方一次性提交有序候选列表(rank 1~N 入选 + rank N+1~M 备选)。触发"筛选中 → 待招聘方确认"。</td></tr>
-<tr><td>★ #18</td><td>通知入选名单(v3)</td><td>双重确认上半段:招聘方对名单做决策(确认 / 退回)。触发"待招聘方确认 → 待应聘方确认"。</td></tr>
-<tr><td>#19</td><td>通知入选</td><td>异步推送(站内 + 短信 + 公众号)告知应聘方被入选。</td></tr>
-<tr><td>★ #19a</td><td>应聘方确认接受(v3)</td><td>双重确认下半段:应聘方显式应答,T3 24h 默认放弃。所有入选应聘方均确认后才进入"已成单"。</td></tr>
-<tr><td>#20–#22</td><td>拉入沟通群聊</td><td>三方/四方进群。群满 500 时自动建子群(见 §6.2)。</td></tr>
+<tr><td>#9</td><td>发布招募令</td><td>触发"草稿 → 审核中"。携带类目、时段、薪酬等基础信息。</td><td>招聘方端 <code>「发布 · POST · 发一条招募令」</code> 屏</td></tr>
+<tr><td>#14</td><td>报名意向兼职</td><td>首位应聘方报名触发"已发布 → 筛选中"。后续报名继续接收,进入剩余报名池。</td><td>应聘方端 <code>「报名 · APPLY · 报名这次机会」</code> 屏</td></tr>
+<tr><td>#17</td><td>提交筛选结果</td><td>中介方一次性提交有序候选列表(rank 1~N 入选 + rank N+1~M 备选)。触发"筛选中 → 待招聘方确认"。</td><td>中介方端 <code>「报名池 · POOL · 排序并提交」</code> 屏(▲▼ 调序 + RANK 标签 + 屏底「提交筛选结果」按钮)</td></tr>
+<tr><td>★ #18</td><td>通知入选名单(v3)</td><td>双重确认上半段:招聘方对名单做决策(确认 / 退回)。触发"待招聘方确认 → 待应聘方确认"。</td><td>招聘方端 <code>「确认入选名单」</code> 屏(从招聘方「我的」主页入口「确认入选名单 · #18 · 中介已提交待你确认」进入;rank 1–2 入选 / rank 3–4 备选 + T2 倒计时 48H)</td></tr>
+<tr><td>#19</td><td>通知入选</td><td>异步推送(站内 + 短信 + 公众号)告知应聘方被入选。</td><td>系统通知;应聘方「我的」主页出现入口 <code>「录用通知 · 确认接受 · #19a · 待你 24h 内确认」</code></td></tr>
+<tr><td>★ #19a <span class="tag tag-new">NEW</span></td><td>应聘方确认接受(v3)</td><td>双重确认下半段:应聘方显式应答,T3 24h 默认放弃。所有入选应聘方均确认后才进入"已成单"。</td><td>应聘方端 <code>「24h 倒计时确认屏」</code>(从主页「录用通知 · 确认接受」入口进入;屏内倒计时 HH:MM:SS + 两按钮 <code>「确认接受」</code> / <code>「放弃这次机会」</code>) <span class="tag tag-new">★</span></td></tr>
+<tr><td>#20</td><td>通知中介建群</td><td>双方 #19a 确认后,平台向中介方推送"待建群"待办。中介在微信内手工建群(微信小程序 OpenSDK 无法代用户建群,见 <a href="#sec-3-6">§3.6</a>)。</td><td>中介方端 <code>「待办 · TODO · 按截止排序」</code> 屏出现「已成单 · 待建群」卡 → 钻取至 <code>「建群 · GROUP · 上传二维码」</code> 屏</td></tr>
+<tr><td>#21</td><td>中介上传群二维码</td><td>中介把建好的群二维码以图片形式上传至小程序,平台接收并准备 fan-out。</td><td>中介方端 <code>「建群 · GROUP · 上传二维码」</code> 屏(上传位 → 点 <code>「发送给应聘方和招聘方」</code> 按钮)</td></tr>
+<tr><td>#22</td><td>图片通告 fan-out</td><td>平台以图片通告形式同时推送至应聘方与招聘方,双方扫码进群。群满 500 自动建子群(见 §6.2)。</td><td>应聘方端 <code>「成单 · DEAL · 从确认到完工」</code> 屏首段「群通告 · 二维码已收到」;招聘方端在「我的」主页接到「入群通知 · 扫码进群」入口</td></tr>
 </tbody>
 </table>
 
 <p class="x-ref">完整状态迁移见 <a href="#sec-5">§5</a>;异常分支见 <a href="#sec-6">§6</a>;消息编号 ↔ 状态迁移的完整映射见 <a href="#appendix-a">附录 A</a>。</p>
+
+<h2 id="sec-4-5">4.5 一条招募令的三方端到端叙事(基于 simple_version 原型)</h2>
+
+<div class="callout callout-decision">
+<strong>本节定位</strong>:不重新定义流程,只把上面 §4 时序图按"角色视角"重新串一遍同一条招募令——分别站在 <strong>应聘方 / 招聘方 / 中介方(平台侧)</strong> 三方各自的位置上,看见的是哪几屏、做的是哪几个动作。所有屏名都是原型 <code>part_time_job_wechat_mini_program_prototype/full-flow-prototype_simple_version.html</code> 里 <strong>屏顶大标题或主页入口名</strong>,打开原型 HTML 即可逐屏对上,不需要看源码。
+</div>
+
+<h3 id="sec-4-5-1">4.5.1 应聘方视角(5 步)</h3>
+
+<ol>
+  <li>
+    <strong>收到匹配推送</strong> — <code>#11</code> — 状态 <code>已发布(PUBLISHED)</code> — <code>「推送 · FEED · 为你推荐兼职」</code> 屏。
+    卡片显示招聘方 / 类别 / 时段 / 报酬 / 规则匹配标识;点任一条进入岗位详情屏后报名。
+  </li>
+  <li>
+    <strong>提交报名意向</strong> — <code>#14</code> — 候选人子状态 <code>已报名(APPLIED)</code> — <code>「报名 · APPLY · 报名这次机会」</code> 屏。
+    提交后落回报名池,等待 <strong>中介方筛选 → 招聘方确认 → 本人确认</strong> 三步;首位报名触发"已发布 → 筛选中"。
+  </li>
+  <li>
+    <strong>24h 显式确认接受(关键)</strong> — <code>★ #19a</code> — <code>待应聘方确认 → 已成单</code>(超时则进入自动递补) —
+    应聘方「我的」主页 → 入口卡 <code>「录用通知 · 确认接受 · #19a · 待你 24h 内确认」</code> → 进入 <code>「24h 倒计时确认屏」</code>。
+    屏底两按钮 <code>「确认接受」</code> / <code>「放弃这次机会」</code> + 倒计时 HH:MM:SS。
+    <em>这是 <a href="#sec-3-1">§3.1</a> 双重确认闭环的应聘方一半</em>——明示决策,不假设默认通过;超时按 <a href="#sec-3-4">§3.4</a> T3 视为放弃,平台按中介 rank 顺序自动递补下一备选(<a href="#sec-3-2">§3.2</a>)。
+  </li>
+  <li>
+    <strong>入群履约</strong> — <code>#22</code> — <code>→ 已成单(FULFILLED)</code> — <code>「成单 · DEAL · 从确认到完工」</code> 屏首段「群通告 · 二维码已收到」+「已成单 · 进入履约」标识。
+  </li>
+  <li>
+    <strong>打卡 / 完工 / 评价</strong> — 关联 <code>T11</code> 7D 窗口 — <code>已成单 → 已关闭(CLOSED)</code> —
+    <code>「到岗 · CHECK-IN · 当天班次打卡」</code> 屏点 <code>「我已完工」</code> 上报 → 招聘方在 <code>「完工 · DONE · 确认完工」</code> 屏验收 → 应聘方回 <code>「成单 · DEAL」</code> 屏发布星级 + 留言评价,整笔招募令闭环。
+  </li>
+</ol>
+
+<h3 id="sec-4-5-2">4.5.2 招聘方视角(3 步)</h3>
+
+<ol>
+  <li>
+    <strong>发布招募令</strong> — <code>#9</code> — <code>草稿 → 审核中</code> — <code>「发布 · POST · 发一条招募令」</code> 屏。
+    填类别 / 时段 / 地点 / 报酬 / 需求人数(另留备选)等字段,提交平台审核(合规 / 资质),通过后对外可见。
+  </li>
+  <li>
+    <strong>48h 确认入选名单(关键)</strong> — <code>★ #18</code> — <code>待招聘方确认 → 待应聘方确认</code> —
+    招聘方「我的」主页 → 入口卡 <code>「确认入选名单 · #18 · 中介已提交待你确认」</code> → 进入 <code>「确认入选名单」</code> 屏。
+    rank 1–2 标"入选" / rank 3–4 标"备选" + T2 倒计时 48H;两种操作:「全部接受 → 进入待应聘方确认」/「异议退回 → 转异议重筛(<a href="#sec-6">alt 3</a>)」。
+    <em><a href="#sec-3-4">§3.4</a> T2 故意不替招聘方做"默认通过"</em>——超时视为退回,不视为通过,转 <code>异议重筛(DISPUTED)</code>。
+  </li>
+  <li>
+    <strong>7d 完工确认</strong> — <code>T11</code> — <code>已成单 → 已关闭</code> — <code>「完工 · DONE · 确认完工」</code> 屏。
+    确认后触发结算与互评(招聘方对入选应聘方逐张打分,可单张独立发布)。
+  </li>
+</ol>
+
+<h3 id="sec-4-5-3">4.5.3 中介方(平台侧)视角(4 步)</h3>
+
+<ol>
+  <li>
+    <strong>监看报名池</strong> — 无独立消息编号 — 状态 <code>筛选中(SCREENING)</code> — <code>「报名池 · POOL · 排序并提交」</code> 屏。
+    展示当前所有报名者头像 / 标签 / 中介评注,▲▼ 调序,RANK 标签实时更新。
+  </li>
+  <li>
+    <strong>提交有序 rank(关键)</strong> — <code>#17</code> — <code>筛选中 → 待招聘方确认</code> — <code>「报名池 · POOL」</code> 屏底 <code>「提交筛选结果」</code> 按钮。
+    <strong>一次性</strong>提交 rank 1~N 入选 + N+1~M 备选——
+    <em>这是 <a href="#sec-3-2">§3.2</a> 自动递补能做到"平台内自动闭环"的源头</em>:任何入选者放弃,平台直接按这个 rank 顺序激活下一备选,不再回中介。
+  </li>
+  <li>
+    <strong>建群 + 派二维码</strong> — <code>#20–#22</code> — <code>→ 已成单(FULFILLED)</code> —
+    双方 #19a 都确认后,<code>「待办 · TODO · 按截止排序」</code> 屏出现「已成单 · 待建群」卡 → 进入 <code>「建群 · GROUP · 上传二维码」</code> 屏,上传后点 <code>「发送给应聘方和招聘方」</code> 触发 fan-out;微信代建群限制见 <a href="#sec-3-6">§3.6</a>。
+  </li>
+  <li>
+    <strong>alt 3 异议重筛</strong> — 关联异常 <code>alt 3</code> — <code>→ 异议重筛(DISPUTED)</code> —
+    <code>「待办 · TODO」</code> 屏「alt 3 · 异议重筛」卡 → 进入 <code>「等待详情」</code> 屏,必须回报名名录重新筛选(不能直接重交上次结果);招聘方异议的候选在 <code>「报名池 · POOL」</code> 屏带红色「招聘方异议」角标。
+  </li>
+</ol>
+
+<h3 id="sec-4-5-4">4.5.4 三方衔接映射表(原型屏 ↔ §4 消息 ↔ §5 状态)</h3>
+
+<table>
+<thead><tr><th>原型屏(屏顶字样)</th><th style="width: 9%">§4 消息</th><th>§5 状态迁移</th><th style="width: 10%">主要角色</th><th>关联设计决策</th></tr></thead>
+<tbody>
+<tr><td><code>「发布 · POST · 发一条招募令」</code></td><td>#9</td><td>草稿 → 审核中</td><td>招聘方</td><td>—</td></tr>
+<tr><td><code>「推送 · FEED · 为你推荐兼职」</code></td><td>#11</td><td>已发布</td><td>应聘方</td><td>—</td></tr>
+<tr><td><code>「报名 · APPLY · 报名这次机会」</code></td><td>#14</td><td>(子)已报名</td><td>应聘方</td><td>—</td></tr>
+<tr><td><code>「报名池 · POOL · 排序并提交」</code></td><td>#17</td><td>筛选中 → 待招聘方确认</td><td>中介方</td><td><strong><a href="#sec-3-2">§3.2 自动递补</a></strong></td></tr>
+<tr><td><code>「确认入选名单」</code></td><td>★ #18</td><td>待招聘方确认 → 待应聘方确认</td><td>招聘方</td><td><strong><a href="#sec-3-1">§3.1 双重确认</a> + <a href="#sec-3-4">§3.4 T2</a></strong></td></tr>
+<tr><td><code>「24h 倒计时确认屏」</code></td><td>★ #19a <span class="tag tag-new">NEW</span></td><td>待应聘方确认 → 已成单</td><td>应聘方</td><td><strong><a href="#sec-3-1">§3.1 双重确认</a> + <a href="#sec-3-4">§3.4 T3</a></strong></td></tr>
+<tr><td><code>「建群 · GROUP · 上传二维码」</code></td><td>#20–#22</td><td>→ 已成单</td><td>中介方</td><td><a href="#sec-3-6">§3.6 建群拆分</a></td></tr>
+<tr><td><code>「成单 · DEAL · 从确认到完工」</code></td><td>#22 + 完工</td><td>已成单</td><td>应聘方</td><td>—</td></tr>
+<tr><td><code>「完工 · DONE · 确认完工」</code></td><td>T11</td><td>已成单 → 已关闭</td><td>招聘方</td><td>—</td></tr>
+<tr><td><code>「等待详情」</code> 屏(alt 3 异议态)</td><td>—</td><td>→ 异议重筛</td><td>中介方</td><td><a href="#sec-3-4">§3.4 T2 不替招聘方决策</a></td></tr>
+</tbody>
+</table>
+
+<p class="x-ref">本节按角色重述,不引入新消息或状态;完整状态机见 <a href="#sec-5">§5</a>,异常 alt 1–4 见 <a href="#sec-6">§6.1</a>。</p>
 
 <h2 id="sec-5">五、招募令状态机</h2>
 <p>时序图擅长表达"消息怎么流",但不擅长表达"业务实体怎么演化"。这一节用状态机图把招募令实体的演化路径一次性铺平——工程师拿去建数据库 <code>status</code> 字段,客服拿去判断"用户问的是哪个阶段的问题"。</p>
@@ -605,7 +765,7 @@
     <!-- 待应聘方确认 → 已成单 ★ NEW v3 -->
     <line x1="240" y1="575" x2="240" y2="623" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
     <text x="248" y="595" font-weight="600" fill="#7c2d12">应聘方确认 ★</text>
-    <text x="248" y="610" fill="#6b7280" font-style="italic" font-size="10">(#19 → 拉群 #20-22)</text>
+    <text x="248" y="610" fill="#6b7280" font-style="italic" font-size="10">(#19 → 扫码进群 #20-22)</text>
 
     <!-- 已成单 → 已关闭 -->
     <line x1="240" y1="665" x2="240" y2="733" stroke="#374151" stroke-width="1.5" marker-end="url(#arr)"/>
@@ -871,7 +1031,7 @@
       <td><span class="tag tag-star">★ PENDING_APPLICANT</span> <span class="tag tag-new">v3 NEW</span><br>待应聘方确认</td>
       <td><strong>本版新增</strong>。已通知入选应聘方,等待应聘方显式确认 (24h 应答窗口,默认放弃)。<br>本质是 N 个候选人各自的 PENDING 状态聚合 (见候选人子状态机)</td>
       <td>招聘方确认名单 (#18 推送)</td>
-      <td>所有候选人均确认 + 拉群完成 → 已成单 (#19→#22) / 任一应聘方放弃/T3超时 → 递补中 / 招聘方取消 → 已取消</td>
+      <td>所有候选人均确认 + 扫码进群完成 → 已成单 (#19→#22) / 任一应聘方放弃/T3超时 → 递补中 / 招聘方取消 → 已取消</td>
     </tr>
     <tr>
       <td><span class="tag tag-active">REPLACING</span><br>递补中</td>
@@ -882,7 +1042,7 @@
     <tr>
       <td><span class="tag tag-active">FULFILLED</span><br>已成单</td>
       <td><span class="tag tag-new">v3 强化</span> <strong>三方锁定、待执行</strong>。所有入选应聘方均已显式确认,沟通群已建</td>
-      <td>所有应聘方确认 + 拉群完成 (#20-22)</td>
+      <td>所有应聘方确认 + 扫码进群完成 (#20-22)</td>
       <td>兼职完成确认 → 已关闭 / 招聘方取消 → 已取消 <em>(履约期违约,触发不同补偿,v2 处理)</em></td>
     </tr>
     <tr>
@@ -1132,7 +1292,7 @@
 </tr>
 <tr>
   <td>群聊扩容失败(群满 500)</td>
-  <td>#20-22 拉群时</td>
+  <td>#22 扫码进群时</td>
   <td>新建子群 + 同步公告通知 + 主群挂置顶</td>
   <td>入选方、招聘方、中介方</td>
   <td><span class="tag tag-p1">P1</span></td>
@@ -1141,7 +1301,7 @@
 </tr>
 <tr>
   <td>用户拒绝入群</td>
-  <td>#20-22 拉群时</td>
+  <td>#22 扫码进群时</td>
   <td>二次入群链接(24h 内有效) + 客服跟进确认意向</td>
   <td>当前用户</td>
   <td><span class="tag tag-p2">P2</span></td>
@@ -1271,7 +1431,7 @@
 <tr><td>★ #18 通知入选名单</td><td>待招聘方确认 → 待应聘方确认</td><td>alt 3 招聘方异议<br>alt 3 含 T2 超时</td><td>T2 招聘方确认超时</td></tr>
 <tr><td>#19 通知入选</td><td>(中间态:候选人 PENDING)</td><td>alt 4 应聘方放弃 / T3 超时</td><td>T3 应聘方应答超时</td></tr>
 <tr><td>★ #19a 应聘方确认接受</td><td>(N 个候选人全 CONFIRMED 后)<br>待应聘方确认 → 已成单</td><td>—</td><td>—</td></tr>
-<tr><td>#20–#22 拉群</td><td>(已成单内动作)</td><td>异常表"群聊扩容失败"<br>"用户拒绝入群"</td><td>—</td></tr>
+<tr><td>#20–#22 建群 / 二维码 / fan-out</td><td>(已成单内动作:平台通知中介建群 → 中介上传二维码 → 平台 fan-out 图片通告至双方,详见 <a href="#sec-3-6">§3.6</a>)</td><td>异常表"群聊扩容失败"<br>"用户拒绝入群"</td><td>—</td></tr>
 <tr><td>(兼职完成确认)</td><td>已成单 → 已关闭</td><td>—</td><td>T11 完工确认超时</td></tr>
 <tr><td>(招聘方任意时点取消)</td><td>多状态 → 已取消</td><td>异常表"招聘方主动取消"</td><td>—</td></tr>
 <tr><td>(截止日到达且无人成单)</td><td>已发布 → 已过期</td><td>异常表"临近截止 24h"</td><td>T5 截止日期</td></tr>
@@ -1279,7 +1439,7 @@
 </table>
 
 <h2 id="appendix-b">附录 B:v3 修订要点(从 v2)</h2>
-<p>本 MVP 即 v3。下列 6 项是与 v2 评审稿相比的关键差异——评审过 v2 的同事可重点关注这些。</p>
+<p>本 MVP 即 v3。下列 7 项是与 v2 评审稿相比的关键差异——评审过 v2 的同事可重点关注这些。</p>
 
 <table>
 <thead><tr><th style="width: 30%">修订项</th><th style="width: 30%">v2 形态</th><th style="width: 40%">v3 形态(本 MVP)</th></tr></thead>
@@ -1313,6 +1473,11 @@
   <td>取消处理范围</td>
   <td>仅"已发布"状态可取消</td>
   <td>已发布/筛选中/待招聘方确认/待应聘方确认/已成单/递补中/驳回待修改 均可取消(MVP 不分级)<br>详见 <a href="#sec-3">§3.3</a></td>
+</tr>
+<tr>
+  <td>建群机制(#20-#22)</td>
+  <td>"平台建群"(抽象动作,未说明谁、用什么形式)</td>
+  <td>#20 平台通知中介建群 → #21 中介上传微信群二维码 → #22 平台以图片通告 fan-out 至应聘方+招聘方,双方扫码进群<br>详见 <a href="#sec-3-6">§3.6</a> 与 <a href="#sec-4">§4</a> #20-#22</td>
 </tr>
 </tbody>
 </table>

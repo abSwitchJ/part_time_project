@@ -1242,6 +1242,7 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
   ];
   function ApplicantBrowse(props) {
     var go = function () { if (props && props.onOpen) props.onOpen(); };
+    var anno = function () { if (props && props.onAnnouncement) props.onAnnouncement(); };
     var cards = FEED.map(function (x, i) {
       return e('div', { key: i, onClick: go, style: { margin: '0 22px 14px', padding: '16px 14px', cursor: 'pointer', ...paper } },
         e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: x.best ? t.stamp : t.muted, rotate: i % 2 ? 3 : -4 }, x.tab)),
@@ -1254,6 +1255,7 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
         e('div', { style: { textAlign: 'right', marginTop: 9, fontFamily: M, fontSize: 14, letterSpacing: 1, textTransform: 'uppercase', color: t.coffee } }, '报名 ›'));
     });
     return e('div', { style: page },
+      e(AnnouncementBar, { onTap: anno }),
       Title('推送 · FEED', '为你', '推荐兼职。', '按你的画像与可用时段筛出的招募令。点任意一条进入详情并报名(下一步 #14)。', 50),
       e(AiBanner, null, 'v2:平台 AI 将按你的画像(技能 tag / 历史成单类别 / 评分 / 准时率)对每条招募令算相关性分,按高/中/低置信度排序并给出推荐理由 —— 见 AI_MATCHING_SPEC.md §介入点。'),
       cards,
@@ -1322,14 +1324,35 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
 
   // ── 屏 3 · 应聘方 确认后成单 / 入群(#19a → #20–22 → 完工)──
   function ApplicantDeal() {
-    var a = React.useState(0); var step = a[0], setStep = a[1];
+    var force = React.useReducer(function (x) { return x + 1; }, 0)[1];
+    var sh = React.useState(false); var showReview = sh[0], setShowReview = sh[1];
+    var rt = React.useState(0); var rating = rt[0], setRating = rt[1];
+    var tx = React.useState(''); var note = tx[0], setNote = tx[1];
+    React.useEffect(function () {
+      var fn = function () { force(); };
+      window.dealStateListeners.push(fn);
+      return function () {
+        var i = window.dealStateListeners.indexOf(fn);
+        if (i >= 0) window.dealStateListeners.splice(i, 1);
+      };
+    }, []);
+    var ds = window.dealState;
+    var step = ds.step;
     var line = [
       { t: '已确认接受', d: '你已在 T3 窗口内确认(#19a),候选状态收敛为 CONFIRMED。' },
-      { t: '平台建沟通群', d: '平台拉应聘方 / 招聘方 / 中介方入群(#20–#22)。' },
-      { t: '已成单', d: '所有入选方确认 + 拉群完成,招募令进入「已成单」。' },
-      { t: '工作完成', d: '线下履约后,等招聘方在 T11 7 天内确认完工。' },
-      { t: '待双向评价', d: '完工确认后进入互评,沉淀为后续匹配的画像数据。' }
+      { t: '群通告 · 二维码已收到', d: '中介上传了微信群二维码,平台以图片通告形式 fan-out 至你与招聘方(#20–#22);长按保存并扫码进群。' },
+      { t: '已成单 · 进入履约', d: '所有入选方确认 + 双方扫码进群完成;由中介方点「✓ 全员入群」触发本状态。' },
+      { t: '我已完工 · 待招聘方验收', d: '你在打卡屏点击「我已完工」上报,等招聘方在 T11 7 天窗口内验收。' },
+      { t: '工作完成', d: '招聘方已确认完工(#23),触发结算与互评。' },
+      { t: '待评价', d: '请在下方点「进行评价」给招聘方打分并留言,评价发布后整笔招募令闭环。' }
     ];
+    var waitHint = {
+      0: '等待平台 fan-out 群通告(#22)。',
+      1: '等待中介方点「✓ 全员入群」触发履约。',
+      2: '履约中 · 请在打卡屏完成到岗与完工动作。',
+      3: '已上报完工 · 等待招聘方在 T11 7 天内验收。',
+      4: '已确认完工 · 进入双向评价。'
+    };
     var nodes = line.map(function (x, i) {
       var on = i <= step;
       return e('div', { key: i, style: { display: 'flex', gap: 12, padding: '0 22px' } },
@@ -1340,14 +1363,45 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
           e('div', { style: { fontFamily: D, fontSize: 18, color: i === step ? t.coffee : t.fg } }, x.t),
           e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, marginTop: 4, lineHeight: 1.5, maxWidth: 250 } }, x.d)));
     });
+    function publish() {
+      window.setDealState({ evaluationPublished: true });
+      setShowReview(false);
+    }
     return e('div', { style: page },
-      Title('成单 · DEAL', '从确认', '到完工。', '#19a 确认接受之后,平台侧自动推进的成单与履约链路。', 48),
+      Title('成单 · DEAL', '从确认', '到完工。', '此页状态不由你决定 · 由中介「全员入群」、你「完工打卡」、招聘方「确认完工」、你「发布评价」四个外部信号派生。', 48),
+      step >= 1 && e('div', { style: { margin: '0 22px 14px', padding: '14px 14px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.coffee, rotate: -3 }, '群通告 · 图片')),
+        e('div', { style: { marginTop: 6, fontFamily: M, fontSize: 12, color: t.muted, letterSpacing: 0.5, textTransform: 'uppercase' } }, '来自平台 · 中介:林之航 · 刚刚'),
+        e('div', { style: { marginTop: 10, background: '#e5e0d4', borderRadius: 4, height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', color: t.fg, fontFamily: M, fontSize: 13, letterSpacing: 1 } },
+          e('div', { style: { fontSize: 40, marginBottom: 8, lineHeight: 1 } }, '▣'),
+          e('div', null, 'QR · 微信群二维码 · 长按保存')),
+        e('div', { style: { marginTop: 10, fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.fg, lineHeight: 1.5 } }, '中介上传了微信群二维码,请长按保存并扫码进群(#22 fan-out)。')),
       e('div', { style: { padding: '4px 0 6px' } }, nodes),
+      step === 5 && !ds.evaluationPublished && showReview && e('div', { style: { margin: '0 22px 14px', padding: '16px 14px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.stamp, rotate: -3 }, '评价 · REVIEW')),
+        e('div', { style: { marginTop: 6, fontFamily: M, fontSize: 12, color: t.muted, letterSpacing: 0.5, textTransform: 'uppercase' } }, '对本次招募令招聘方的反馈 · 必填星级'),
+        e('div', { style: { marginTop: 10, display: 'flex', gap: 6 } },
+          [1, 2, 3, 4, 5].map(function (n) {
+            return e('span', {
+              key: n, onClick: function () { setRating(n); },
+              style: { cursor: 'pointer', fontSize: 28, lineHeight: 1, color: n <= rating ? t.coffee : t.rule, userSelect: 'none' }
+            }, n <= rating ? '★' : '☆');
+          })),
+        e('textarea', {
+          value: note, onChange: function (ev) { setNote(ev.target.value); },
+          placeholder: '可写一句反馈(选填) · 如:门店简训到位 / 排班合理 / 结算准时…',
+          style: { marginTop: 12, width: '100%', minHeight: 70, padding: '8px 10px', boxSizing: 'border-box', fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.fg, background: 'transparent', border: '0.5px solid ' + t.rule, outline: 'none', resize: 'vertical' }
+        }),
+        e('div', { style: { marginTop: 12 } },
+          e('div', { style: { opacity: rating > 0 ? 1 : 0.4, pointerEvents: rating > 0 ? 'auto' : 'none' } }, e(Primary, { onClick: rating > 0 ? publish : null }, '发 布 评 价   →')),
+          e(Ghost, { onClick: function () { setShowReview(false); } }, '取 消'))),
       e('div', { style: { padding: '6px 22px 30px', textAlign: 'center' } },
-        step < line.length - 1
-          ? e(Primary, { onClick: function () { setStep(step + 1); } }, '推 进 一 步   →')
-          : e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted } }, '一笔招募令的应聘方旅程到此闭环。'),
-        e(Reset, { onClick: function () { setStep(0); } })));
+        ds.evaluationPublished
+          ? e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted } }, '评价已发布 · 一笔招募令的应聘方旅程到此闭环。')
+          : step === 5
+            ? (showReview ? null : e(Primary, { onClick: function () { setShowReview(true); } }, '进 行 评 价   →'))
+            : e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, lineHeight: 1.6 } }, waitHint[step]),
+        e(Reset, { onClick: function () { window.resetDealState(); setShowReview(false); setRating(0); setNote(''); } })));
   }
 
   // ── 屏 4 · 招聘方 #9 发布招募令 ──
@@ -1387,6 +1441,21 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
   function EmployerComplete() {
     var a = React.useState('pending'); var st = a[0], setSt = a[1];
     var b = React.useState(601239); var left = b[0], setLeft = b[1];
+    var rv = React.useState({
+      '陈一鸣': { rating: 0, note: '', published: false },
+      '林小麦': { rating: 0, note: '', published: false }
+    });
+    var reviews = rv[0], setReviews = rv[1];
+    function updateReview(name, patch) {
+      var next = {}; next[name] = Object.assign({}, reviews[name], patch);
+      setReviews(Object.assign({}, reviews, next));
+    }
+    function clearReviews() {
+      setReviews({
+        '陈一鸣': { rating: 0, note: '', published: false },
+        '林小麦': { rating: 0, note: '', published: false }
+      });
+    }
     React.useEffect(function () {
       if (st !== 'pending') return;
       var id = setInterval(function () { setLeft(function (x) { return x > 0 ? x - 1 : 0; }); }, 1000);
@@ -1405,15 +1474,57 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
           e('div', { style: { fontFamily: M, fontSize: 24, color: t.coffee, letterSpacing: 1, margin: '2px 0 4px' } }, fmtD(left)),
           e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted } }, '逾期未确认将按 PRD §6.2 异常处理表处理(本原型不展开)')),
         e('div', { style: { padding: '2px 22px 28px' } },
-          e(Primary, { onClick: function () { setSt('done'); } }, '确 认 完 工   →'),
+          e(Primary, { onClick: function () { setSt('done'); window.setDealState({ employerConfirmedDone: true }); } }, '确 认 完 工   →'),
           e(Ghost, { danger: true, onClick: function () { setSt('disputed'); } }, '有异议 · 提交申诉')));
     }
     var ok = st === 'done';
-    return e('div', { style: page }, head, e(StatusCard, {
-      ok: ok, tab: ok ? '已完工 · SETTLED' : '已申诉 · DISPUTED', title: ok ? '已确认完工' : '已提交完工异议',
-      desc: ok ? '进入结算与双向评价;评价数据沉淀为后续匹配的画像输入。' : '转人工客服核实(§6.2),结算暂挂起。本原型不展开后续。',
-      onReset: function () { setSt('pending'); setLeft(601239); }
-    }));
+    var allReviewed = ok && reviews['陈一鸣'].published && reviews['林小麦'].published;
+    return e('div', { style: page }, head,
+      e(StatusCard, {
+        ok: ok, tab: ok ? '已完工 · SETTLED' : '已申诉 · DISPUTED',
+        title: ok ? '已确认完工' : '已提交完工异议',
+        desc: ok ? '进入结算与双向评价;请在下方对本次入选应聘方逐一打分。'
+                 : '转人工客服核实(§6.2),结算暂挂起。本原型不展开后续。',
+        onReset: function () {
+          setSt('pending'); setLeft(601239);
+          window.setDealState({ employerConfirmedDone: false });
+          clearReviews();
+        }
+      }),
+      ok && ['陈一鸣', '林小麦'].map(function (name) {
+        var r = reviews[name];
+        return e('div', { key: name, style: { margin: '0 22px 14px', padding: '16px 14px', ...paper, opacity: r.published ? 0.55 : 1 } },
+          e('div', { style: { position: 'absolute', top: -7, left: 14 } },
+            e(window.VCTab, { color: r.published ? t.coffee : t.stamp, rotate: -3 },
+              r.published ? '评价 · ✓ 已发布' : '评价 · REVIEW')),
+          e('div', { style: { display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 } },
+            e(Avatar, { ini: name.charAt(0) }),
+            e('div', { style: { flex: 1 } },
+              e('div', { style: { fontFamily: D, fontSize: 18 } }, name),
+              e('div', { style: { fontFamily: M, fontSize: 12, color: t.muted, marginTop: 3, letterSpacing: 0.5, textTransform: 'uppercase' } },
+                '应聘方 · 已到岗 · 已完工'))),
+          e('div', { style: { marginTop: 12, display: 'flex', gap: 6 } },
+            [1, 2, 3, 4, 5].map(function (n) {
+              return e('span', {
+                key: n,
+                onClick: r.published ? null : function () { updateReview(name, { rating: n }); },
+                style: { cursor: r.published ? 'default' : 'pointer', fontSize: 28, lineHeight: 1, color: n <= r.rating ? t.coffee : t.rule, userSelect: 'none' }
+              }, n <= r.rating ? '★' : '☆');
+            })),
+          e('textarea', {
+            value: r.note, disabled: r.published,
+            onChange: function (ev) { var v = ev.target.value; updateReview(name, { note: v }); },
+            placeholder: '对 ' + name + ' 的反馈(选填) · 如:到岗准时 / 服务专业 / 协作顺畅…',
+            style: { marginTop: 12, width: '100%', minHeight: 60, padding: '8px 10px', boxSizing: 'border-box', fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.fg, background: 'transparent', border: '0.5px solid ' + t.rule, outline: 'none', resize: 'vertical' }
+          }),
+          e('div', { style: { marginTop: 12, opacity: (r.published || r.rating > 0) ? 1 : 0.4, pointerEvents: (r.published || r.rating > 0) ? 'auto' : 'none' } },
+            e(Primary, { onClick: r.published ? null : function () { updateReview(name, { published: true }); } },
+              r.published ? '✓ 已 发 布' : '发 布 评 价   →')));
+      }),
+      allReviewed && e('div', { style: { margin: '0 22px 28px', textAlign: 'center' } },
+        e('div', { style: { fontFamily: M, fontSize: 12, color: t.coffee, letterSpacing: 1.5, textTransform: 'uppercase' } }, '评价已发布'),
+        e('div', { style: { marginTop: 6, fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.muted, lineHeight: 1.55 } },
+          '对 2 名应聘方的评价已沉淀为画像数据,本笔招募令招聘方侧旅程闭环。')));
   }
 
   // ── 屏 6 · 中介方 报名池 + #17 提交筛选结果(AI 最强落点)──
@@ -1424,14 +1535,18 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
     { name: '赵磊', ini: '赵', tags: '专科 · 评分 4.5', note: '有零售经验,但仅下午可用' }
   ];
   var NEED = 2;
-  function AgentPool() {
+  function AgentPool(props) {
+    var mode = (props && props.mode) || 'first';
     var a = React.useState(CAND.slice()); var ord = a[0], setOrd = a[1];
     var b = React.useState('pending'); var st = b[0], setSt = b[1];
     function move(i, dir) {
       var j = i + dir; if (j < 0 || j >= ord.length) return;
       var arr = ord.slice(); var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; setOrd(arr);
     }
-    var head = Title('报名池 · POOL', '排序并', '提交。', '中介方在 #17 一次性提交有序候选:rank 1~N 入选 + N+1~M 备选,递补按此顺序自动激活。', 48);
+    var headSub = mode === 'dispute'
+      ? 'alt 3 异议重筛:红色边框+角标=招聘方异议候选;不可直接提交上次 rank,请回报名名录重新筛选(参 §6.1 alt 3)。'
+      : '中介方在 #17 一次性提交有序候选:rank 1~N 入选 + N+1~M 备选,递补按此顺序自动激活。';
+    var head = Title('报名池 · POOL', '排序并', '提交。', headSub, 48);
     if (st !== 'pending') {
       return e('div', { style: page }, head, e(StatusCard, {
         ok: true, tab: '已提交 · #17 SENT', title: '筛选结果已提交',
@@ -1441,8 +1556,10 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
     }
     var rows = ord.map(function (c, i) {
       var sel = i < NEED;
-      return e('div', { key: c.name, style: { margin: '0 22px 12px', padding: '16px 14px', ...paper } },
+      var flagged = mode === 'dispute' && (i === 0 || i === 2);
+      return e('div', { key: c.name, style: { margin: '0 22px 12px', padding: '16px 14px', ...paper, border: flagged ? '1.5px solid ' + t.stamp : paper.border } },
         e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: sel ? t.coffee : t.muted, rotate: i % 2 ? 3 : -4 }, 'RANK ' + (i + 1) + ' · ' + (sel ? '入选' : '备选'))),
+        flagged && e('div', { style: { position: 'absolute', top: -7, right: 14 } }, e(window.VCTab, { color: t.stamp, rotate: 2 }, '招聘方异议')),
         e('div', { style: { display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 } },
           e(Avatar, { ini: c.ini }),
           e('div', { style: { flex: 1 } },
@@ -1454,13 +1571,17 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
         e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 15, color: t.fg, marginTop: 10, paddingTop: 10, borderTop: '0.5px solid ' + t.rule, lineHeight: 1.5 } },
           e('span', { style: { fontFamily: M, fontStyle: 'normal', fontSize: 14, letterSpacing: 1, textTransform: 'uppercase', color: t.muted, marginRight: 6 } }, '人工评注'), c.note));
     });
+    var footHint = mode === 'dispute'
+      ? 'alt 3 路径必须回名录重新筛选,不可直接提交上次结果(参 §6.1);完成新筛选 + #17 提交后状态机进入「待招聘方确认」(§5)。'
+      : '提交后递补按上面 rank 顺序在平台内自动闭环(§3.2);或点上方「重新筛选」回报名名录从头浏览(alt 3 异议重筛常用,参 §6.1)。';
     return e('div', { style: page }, head,
       e(AiBanner, null, 'v2:打开报名池时平台 AI 先按相关性把报名排序并标 top-K —— 把 N×3 报名压成 N×1 候选池,你在 AI 排好序的池子上做最终 rank 与背书。本版报名池按报名时间排列,全部由你人工排序。'),
       e('div', { style: { padding: '0 22px 6px', fontFamily: M, fontSize: 14, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted } }, '需求 ' + NEED + ' 人 · 上 ' + NEED + ' 名入选 · 其余备选(▲▼ 调序)'),
       rows,
       e('div', { style: { padding: '8px 22px 30px' } },
-        e(Primary, { onClick: function () { setSt('submitted'); } }, '提 交 筛 选 结 果 #17   →'),
-        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, marginTop: 10, lineHeight: 1.6, textAlign: 'center' } }, '提交后递补无需再回中介方,按上面 rank 顺序在平台内自动闭环(§3.2)。')));
+        mode !== 'dispute' && e(Primary, { onClick: function () { setSt('submitted'); } }, '提 交 筛 选 结 果 #17   →'),
+        e(Ghost, { onClick: function () { if (props && props.onRestart) props.onRestart(); } }, '重新筛选 · 回报名名录 →'),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, marginTop: 10, lineHeight: 1.6, textAlign: 'center' } }, footHint)));
   }
 
   // ===== tabBar 净新屏(MVP 全人工,无 AI;复用本 IIFE helper)=====
@@ -1496,6 +1617,24 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
         e('div', { style: { fontFamily: S, fontSize: 15, color: hi ? t.stamp : t.fg, fontWeight: hi ? 700 : 400 } }, p.label),
         e('div', { style: { fontFamily: M, fontSize: 14, letterSpacing: 0.5, textTransform: 'uppercase', color: hi ? 'rgba(198,58,31,0.75)' : t.muted, marginTop: 3 } }, p.sub)),
       e('div', { style: { fontFamily: D, fontSize: 18, color: hi ? t.stamp : t.coffee } }, '›'));
+  }
+
+  // 微信小程序顶部通告条 —— 全宽 cream paper 米底深咖字,喇叭+文字+× 关闭(原型阶段仅展示入群通知)
+  function AnnouncementBar(props) {
+    var dState = React.useState(false);
+    var dismissed = dState[0], setDismissed = dState[1];
+    if (dismissed) return null;
+    return e('div', { style: { background: '#f0e8db', display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderTop: '0.5px solid ' + t.rule } },
+      e('svg', { width: 20, height: 20, viewBox: '0 0 20 20', fill: 'none', style: { flexShrink: 0 } },
+        e('path', { d: 'M3.5 8.2v3.6h2.7l5.8 3.4v-10.4l-5.8 3.4z', fill: t.coffee }),
+        e('path', { d: 'M14 7.4c1.4 1.4 1.4 3.8 0 5.2', stroke: t.coffee, strokeWidth: 1.2, strokeLinecap: 'round', fill: 'none' }),
+        e('path', { d: 'M15.6 5.6c2.4 2.4 2.4 6.4 0 8.8', stroke: t.coffee, strokeWidth: 1, strokeLinecap: 'round', fill: 'none', opacity: 0.55 })),
+      e('button', { onClick: props.onTap,
+        style: { all: 'unset', cursor: 'pointer', flex: 1, minWidth: 0, fontSize: 14, color: t.coffee, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }, 'ZARA 西单 · 已上传群二维码,请扫码入群'),
+      e('button', { onClick: function () { setDismissed(true); },
+        style: { all: 'unset', cursor: 'pointer', flexShrink: 0, width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+        e('svg', { width: 12, height: 12, viewBox: '0 0 12 12' },
+          e('path', { d: 'M2 2L10 10 M10 2L2 10', stroke: t.coffee, strokeWidth: 1.5, strokeLinecap: 'round' }))));
   }
 
   function ApplicantSchedule(props) {
@@ -1615,6 +1754,7 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
     }
 
     return e('div', { style: page },
+      e(AnnouncementBar, { onTap: function () { if (props && props.onAnnouncement) props.onAnnouncement(); } }),
       Title('日程 · SCHEDULE', '我的', '接单。', '已确认的兼职按月历展开,有班的日子有标点;选日子查看当天班次详情。', 46),
 
       groups.length === 0
@@ -1681,7 +1821,10 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
             e('span', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 15, color: passed ? t.fg : t.muted } }, k));
         })),
       s.btn && e('div', { style: { padding: '4px 22px 30px' } },
-        e(Primary, { onClick: function () { setStatus(s.next); } }, s.btn + '   →')),
+        e(Primary, { onClick: function () {
+          if (status === 'arrived') window.setDealState({ applicantDeclaredDone: true });
+          setStatus(s.next);
+        } }, s.btn + '   →')),
       !s.btn && e('div', { style: { padding: '4px 22px 30px' } },
         e('div', { style: { textAlign: 'center', fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, lineHeight: 1.6 } }, '已完工 · 等待招聘方在 T11 7 天窗口确认结算')));
   }
@@ -1698,6 +1841,7 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
       Stats([{ k: '接单', v: '23' }, { k: '准时率', v: '96%' }, { k: '好评', v: '21' }]),
       e(EntryRow, { label: '录用通知 · 确认接受', sub: '#19a · 待你 24h 内确认', onTap: function () { props.onOpen('confirm'); }, accent: true }),
       e(EntryRow, { label: '我的成单 / 完工进度', sub: '#20–22 · 入群 / 履约 / 互评', onTap: function () { props.onOpen('deal'); }, accent: true }),
+      e(EntryRow, { label: '入群通知 · 扫码进群', sub: 'ZARA 西单 · #22 已上传二维码', onTap: function () { props.onOpen('announcement'); }, accent: true }),
       ListHint('历史订单'),
       O.map(OrderRow));
   }
@@ -1730,7 +1874,9 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
   ];
   function EmployerRecruitList(props) {
     var open = function (d) { if (props && props.onOpen) props.onOpen(d); };
+    var anno = function () { if (props && props.onAnnouncement) props.onAnnouncement(); };
     return e('div', { style: page },
+      e(AnnouncementBar, { onTap: anno }),
       Title('招聘 · POSTS', '我发布的', '招募令。', '本招聘方所有招募令,按状态跟踪到完工结算;点任一条进入详情,可修改后重新提交审核。', 42),
       ListHint('共 ' + RLIST.length + ' 条 · 2 条进行中'),
       RLIST.map(function (d, i) {
@@ -1820,6 +1966,14 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
           e(Ghost, { onClick: function () { setF(saved || init); setMode('view'); } }, '取消修改 · 不保存')));
     }
 
+    if (mode === 'published') {
+      return e('div', { style: page }, head,
+        e(StatusCard, { ok: true, tab: '已发布 · LIVE',
+          title: '改后内容已重新生效',
+          desc: '改后版本已通过平台重审,重新对外可见;审核期间旧版保持不变(参 PRD §5 状态机)。',
+          onReset: function () { setMode('view'); } }));
+    }
+
     // reviewing
     return e('div', { style: page }, head,
       e('div', { style: { margin: '0 22px 22px', padding: '22px 16px', ...paper, textAlign: 'center' } },
@@ -1827,7 +1981,7 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
         e('div', { style: { fontFamily: D, fontSize: 26, color: t.stamp, marginTop: 6 } }, '修改已提交 · 平台审核中'),
         e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, marginTop: 8, lineHeight: 1.6 } }, '平台校验改后内容合规(敏感词)与企业资质;不通过将退回修改后重提。审核期间本招募令对外保持原内容不变(参 PRD §5 状态机)。')),
       e('div', { style: { padding: '0 22px 28px' } },
-        e(Ghost, { onClick: function () { setSaved(Object.assign({}, f)); setMode('view'); } }, '模拟审核通过 · 内容生效')));
+        e(Ghost, { onClick: function () { setSaved(Object.assign({}, f)); setMode('published'); } }, '模拟审核通过 · 内容生效')));
   }
   function EmployerMine(props) {
     var O = [
@@ -1841,21 +1995,28 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
       Stats([{ k: '发布', v: '17' }, { k: '在招', v: '2' }, { k: '完成率', v: '94%' }]),
       e(EntryRow, { label: '确认入选名单', sub: '#18 · 中介已提交待你确认', onTap: function () { props.onOpen('roster'); }, accent: true }),
       e(EntryRow, { label: '完工确认 · 结算', sub: 'T11 · 7 天窗口内确认完工', onTap: function () { props.onOpen('complete'); }, accent: true }),
+      e(EntryRow, { label: '入群通知 · 扫码进群', sub: 'ZARA 西单 · #22 已上传二维码', onTap: function () { props.onOpen('announcement'); }, accent: true }),
       ListHint('招募令订单'),
       O.map(OrderRow));
   }
-  function PlatformTodo() {
+  function PlatformTodo(props) {
     var L = [
-      { stage: 'T1 · 待筛选', u: true, title: '零售导购 · ZARA', left: '剩 2h', due: '今日 18:00', todo: '9 人报名待你筛选并提交有序 rank(#17)' },
-      { stage: 'T2 · 待招聘方确认', u: true, title: '展会引导 · 国会', left: '剩 6h', due: '今日 22:00', todo: '名单已提交,等招聘方 #18 确认;超时转异议重筛' },
-      { stage: 'T3 · 待应聘方确认', u: false, title: '咖啡师助理 · Manner', left: '剩 1 天', due: '6/26 14:00', todo: '入选者确认接受中(#19a),关注递补激活' },
-      { stage: '待完工确认', u: false, title: '问卷地推 · 三里屯', left: '剩 3 天', due: '6/29 12:00', todo: '兼职已完成,等招聘方 T11 完工确认结算' }
+      { stage: 'T1 · 预警 · 待筛', u: true, title: '零售导购 · ZARA', left: '剩 36h', due: '7/01 18:00', todo: '距招聘令截止剩 36h(≤ 48h 安全余量已被吃),需立即提交 #17,否则后续 #18 T2 + #19a T3 走不完', goto: 'applicants', recruitId: 'r1' },
+      { stage: 'T2 · 待招聘方确认', u: true, title: '展会引导 · 国会', left: '剩 6h', due: '今日 22:00', todo: '名单已提交,等招聘方 #18 确认;超时转异议重筛', goto: 'waitdetail', kind: 'employer', recruitId: 'r2' },
+      { stage: 'T3 · 待应聘方确认', u: false, title: '咖啡师助理 · Manner', left: '剩 1 天', due: '6/26 14:00', todo: '入选者确认接受中(#19a),关注递补激活', goto: 'waitdetail', kind: 'applicant', recruitId: 'r3' },
+      { stage: '已成单 · 待建群', u: true, title: '问卷地推 · 三里屯', left: '可立即', due: '今日可办', todo: '双方已 #19a 确认,请创建微信群并上传二维码(→ #20-22 fan-out 至双方)', goto: 'groupsetup' },
+      { stage: '#22 · 待入群', u: true, title: 'ZARA 西单 · 待双方扫码', left: '剩 12h', due: '今日 24:00', todo: '#22 二维码已发出 · 待招聘方 + 应聘方扫码入群,可分别催办', goto: 'groupattend', recruitId: 'r1' },
+      { stage: 'alt 3 · 异议重筛', u: true, title: '快闪店店员 · 蕉下', left: '剩 1 天', due: '6/27 12:00', todo: '招聘方对名单异议,需重新提交 #17 修订 rank', goto: 'waitdetail', kind: 'dispute', recruitId: 'r4' }
     ];
     return e('div', { style: page },
-      Title('待办 · TODO', '按截止', '排序。', '平台侧执行队列:订单按截止时间升序,先处理最紧急。', 44),
-      ListHint('4 项待办 · 2 项 6h 内到期'),
+      Title('待办 · TODO', '按截止', '排序。', '平台侧执行队列:订单按截止时间升序,先处理最紧急;中介视角只显示 #17 之后或已吃掉 48h 安全余量的招募令。每张卡均可点击钻取详情。', 44),
+      ListHint('6 项待办 · 全部可钻取 · 含 1 项可立即处理 · 2 项预警'),
       L.map(function (d, i) {
-        return e('div', { key: i, style: { margin: '0 22px 12px', padding: '14px 14px', ...paper } },
+        return e('div', {
+            key: i,
+            onClick: function () { if (props && props.onOpen) props.onOpen(d.goto, d.kind, d.title, d.recruitId); },
+            style: { margin: '0 22px 12px', padding: '14px 14px', cursor: 'pointer', ...paper }
+          },
           e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: d.u ? t.stamp : t.coffee, rotate: -3 }, d.stage)),
           e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: 6 } },
             e('div', { style: { fontFamily: D, fontSize: 18 } }, d.title),
@@ -1863,6 +2024,150 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
           e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 15, color: t.fg, marginTop: 7, lineHeight: 1.5 } }, d.todo),
           e('div', { style: { fontFamily: M, fontSize: 14, letterSpacing: 0.5, textTransform: 'uppercase', color: t.muted, marginTop: 6 } }, '截止 ' + d.due));
       }));
+  }
+  function PlatformGroupSetup() {
+    var s = React.useState('empty');
+    var st = s[0], setSt = s[1];
+    return e('div', { style: page },
+      Title('建群 · GROUP', '上传二维码', '·完成 #20-22。', '双方已 #19a 确认,中介上传微信群二维码,平台以图片通告 fan-out 至应聘方与招聘方。', 44),
+      e('div', { style: { margin: '0 22px 12px', padding: '14px 14px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.coffee, rotate: -3 }, '招募令')),
+        e('div', { style: { marginTop: 6, fontFamily: D, fontSize: 18 } }, '问卷地推 · 三里屯'),
+        e('div', { style: { marginTop: 7, fontFamily: S, fontStyle: 'italic', fontSize: 15, color: t.fg, lineHeight: 1.5 } }, '应聘方 2/2 已 CONFIRMED · 招聘方已 #18 确认 · 待中介建群')),
+      e('div', { style: { margin: '0 22px 16px', padding: '14px 14px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: st === 'sent' ? t.coffee : t.stamp, rotate: -3 }, '#21 · 上传')),
+        e('div', { style: { marginTop: 6, fontFamily: M, fontSize: 13, color: t.muted, letterSpacing: 0.5, textTransform: 'uppercase' } }, '微信群二维码 · 图片消息(平台新增能力)'),
+        st === 'empty' ? e('div', { onClick: function () { setSt('uploaded'); }, style: { cursor: 'pointer', marginTop: 12, border: '1px dashed ' + t.coffee, borderRadius: 4, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', color: t.coffee, fontFamily: M, fontSize: 14, letterSpacing: 1 } }, '↑ 上传微信群二维码 · 占位 · 静态原型') :
+          e('div', { style: { marginTop: 12, background: '#e5e0d4', borderRadius: 4, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', color: t.fg, fontFamily: M, fontSize: 14, letterSpacing: 1 } },
+            e('div', { style: { fontSize: 48, marginBottom: 8, lineHeight: 1 } }, '▣'),
+            e('div', null, 'QR · 模拟上传成功 · 240×240')),
+        st === 'sent' && e('div', { style: { marginTop: 12, padding: '10px 14px', background: '#dbeafe', color: '#1e40af', fontFamily: S, fontStyle: 'italic', fontSize: 14, borderRadius: 4 } }, '✓ 已 fan-out · 双方将在小程序内收到图片通告(#22)')),
+      st !== 'empty' && e('div', { style: { margin: '0 22px 12px' } },
+        st === 'uploaded' && e(Primary, { onClick: function () { setSt('sent'); } }, '发送给应聘方和招聘方 · #20-22 →'),
+        e(Ghost, { onClick: function () { setSt('empty'); } }, '重传二维码')));
+  }
+  function PlatformWaitDetail(props) {
+    var k = props.kind || 'employer';
+    var title = props.title || '招募令';
+    var s = React.useState('idle');
+    var st = s[0], setSt = s[1];
+    var cfg = {
+      employer: { tab: '#18 · 等待中', tabColor: t.coffee, cur: '招聘方', countdown: 'T2 · 剩 6h · 招聘方未确认名单', hint: '中介已 #17 提交 rank,等招聘方 #18 决策(确认 / 退回);超时按 §3.4 视为退回触发 alt 3。', ctaIdle: '催办招聘方 · 一键软提示 →', step: 1 },
+      applicant: { tab: '#19a · 等待中', tabColor: t.coffee, cur: '应聘方(2 人入选)', countdown: 'T3 · 剩 1 天 · 入选应聘方未确认接受', hint: '招聘方已 #18 确认,等入选应聘方 #19a 显式接受;超时按 §3.2 自动递补下一备选。', ctaIdle: '催办应聘方 · 一键软提示 →', step: 2 },
+      dispute: { tab: 'alt 3 · 已退回', tabColor: t.stamp, cur: '中介(需重新筛选)', countdown: '回到「筛选中」状态;参 §6.1 alt 3', hint: '招聘方对 #18 名单提出异议,招募令回退,等中介结合异议重新提交 #17。', ctaIdle: '重新提交筛选 → 报名池', step: 1 }
+    };
+    var c = cfg[k];
+    var line = [
+      { t: '#17 已提交筛选', d: '中介方已向平台提交有序 rank 候选列表' },
+      { t: '#18 招聘方确认', d: '招聘方对名单做决策(确认 / 退回);T2 48h 窗口' },
+      { t: '#19a 应聘方确认', d: '入选应聘方显式应答接受;T3 24h 窗口' },
+      { t: '已成单 · 待建群', d: '所有候选确认 + #20-22 fan-out 完成' },
+      { t: '完工 / 互评', d: 'T11 7 天窗口内招聘方确认完工' }
+    ];
+    var nodes = line.map(function (x, i) {
+      var on = i <= c.step;
+      var isCur = i === c.step;
+      var isDispute = k === 'dispute' && i === 1;
+      return e('div', { key: i, style: { display: 'flex', gap: 12, padding: '0 22px' } },
+        e('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } },
+          e('div', { style: { width: 14, height: 14, borderRadius: '50%', border: '1.5px solid ' + (on ? (isDispute ? t.stamp : t.coffee) : t.rule), background: isDispute ? t.stamp : (isCur ? t.coffee : 'transparent'), marginTop: 4 } }),
+          i < line.length - 1 ? e('div', { style: { width: 1.5, flex: 1, minHeight: 28, background: i < c.step ? t.coffee : t.rule } }) : null),
+        e('div', { style: { paddingBottom: 18, opacity: on ? 1 : 0.45 } },
+          e('div', { style: { fontFamily: D, fontSize: 17, color: isDispute ? t.stamp : (isCur ? t.coffee : t.fg) } }, x.t + (isDispute ? ' · 已退回' : '')),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.muted, marginTop: 3, lineHeight: 1.5, maxWidth: 250 } }, x.d)));
+    });
+    return e('div', { style: page },
+      Title('等待 · WAIT', '钻取', '详情。', '#17 提交后的招募令进度:看当前在等谁、剩多少时间;允许中介发软提示加速对方响应(参 §3.7)。', 44),
+      e('div', { style: { margin: '0 22px 14px', padding: '14px 14px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: c.tabColor, rotate: -3 }, c.tab)),
+        e('div', { style: { marginTop: 6, fontFamily: D, fontSize: 18 } }, title),
+        e('div', { style: { marginTop: 6, fontFamily: M, fontSize: 13, color: c.tabColor, letterSpacing: 0.5, textTransform: 'uppercase' } }, '当前在等 · ' + c.cur),
+        e('div', { style: { marginTop: 4, fontFamily: M, fontSize: 13, color: t.muted } }, c.countdown),
+        e('div', { style: { marginTop: 8, fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.fg, lineHeight: 1.5 } }, c.hint)),
+      k === 'dispute' && e('div', { style: { margin: '0 22px 14px', padding: '14px 14px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.stamp, rotate: -3 }, '退回原因')),
+        e('div', { style: { marginTop: 6, fontFamily: M, fontSize: 13, color: t.muted, letterSpacing: 0.5, textTransform: 'uppercase' } }, '招聘方 · 异议 2 条'),
+        e('div', { style: { marginTop: 8, fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.fg, lineHeight: 1.7 } },
+          '· 候选 #2(rank 1):简历资质不符 · 上次合作差评 4.2',
+          e('br'),
+          '· 候选 #5(rank 3):时段冲突 · 当日有其它已接订单')),
+      e('div', { style: { padding: '4px 0 6px' } }, nodes),
+      e('div', { style: { padding: '6px 22px 30px' } },
+        k === 'dispute'
+          ? e(Primary, { onClick: function () { if (props.onSubmit) props.onSubmit('pool', props.recruitId); } }, c.ctaIdle)
+          : (st === 'idle'
+              ? e(Primary, { onClick: function () { setSt('sent'); } }, c.ctaIdle)
+              : e(Ghost, { onClick: null }, '✓ 已催办 · 24h 内不可重复')),
+        k !== 'dispute' && e('div', { style: { marginTop: 10, fontFamily: S, fontStyle: 'italic', fontSize: 12, color: t.muted, lineHeight: 1.5, textAlign: 'center' } }, '催办 = 平台向被等方发软提示(参 PRD §3.7);不替对方决策(参 §3.4)。')));
+  }
+  // 中介方 · 待入群跟进屏(承接 #22 二维码已发出 · 双方扫码入群进度可分别跟踪 + 催办)
+  function PlatformGroupAttend(props) {
+    var EMP = { ini: 'Z', name: 'ZARA 西单大悦城店', tag: '连锁零售 · 企业资质已核' };
+    var APP = [
+      { ini: '陈', name: '陈一鸣', tag: '#19a 已确认 · 在校生 · 北京' },
+      { ini: '林', name: '林小麦', tag: '#19a 已确认 · 在校生 · 北京' }
+    ];
+    var s = React.useState({
+      employer: { joined: false, urged: false },
+      applicants: [{ joined: false, urged: false }, { joined: false, urged: false }]
+    });
+    var st = s[0], setSt = s[1];
+    var tg = React.useState(false); var trig = tg[0], setTrig = tg[1];
+    function toggleEmpJoin() { setSt(Object.assign({}, st, { employer: Object.assign({}, st.employer, { joined: !st.employer.joined }) })); }
+    function urgeEmp() { setSt(Object.assign({}, st, { employer: Object.assign({}, st.employer, { urged: true }) })); }
+    function toggleAppJoin(i) {
+      var arr = st.applicants.slice();
+      arr[i] = Object.assign({}, arr[i], { joined: !arr[i].joined });
+      setSt(Object.assign({}, st, { applicants: arr }));
+    }
+    function urgeApp(i) {
+      var arr = st.applicants.slice();
+      arr[i] = Object.assign({}, arr[i], { urged: true });
+      setSt(Object.assign({}, st, { applicants: arr }));
+    }
+    function memberCard(person, joined, urged, onToggle, onUrge, roleLabel, key) {
+      return e('div', {
+          key: key,
+          style: { margin: '0 22px 14px', padding: '16px 14px', ...paper, opacity: joined ? 0.55 : 1 }
+        },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } },
+          e(window.VCTab, { color: joined ? t.coffee : t.stamp, rotate: -3 }, joined ? roleLabel + ' · 已入群 ✓' : roleLabel)),
+        e('div', { style: { display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 } },
+          e(Avatar, { ini: person.ini }),
+          e('div', { style: { flex: 1 } },
+            e('div', { style: { fontFamily: D, fontSize: 18 } }, person.name),
+            e('div', { style: { fontFamily: M, fontSize: 12, color: t.muted, marginTop: 3, letterSpacing: 0.5, textTransform: 'uppercase' } }, person.tag))),
+        e('div', { style: { marginTop: 12, paddingTop: 10, borderTop: '0.5px solid ' + t.rule, display: 'flex', alignItems: 'center', justifyContent: 'space-between' } },
+          e('div', { style: { fontFamily: M, fontSize: 13, letterSpacing: 1, textTransform: 'uppercase', color: t.muted } }, '入群状态'),
+          e('button', { onClick: onToggle,
+            style: { all: 'unset', cursor: 'pointer', background: joined ? t.coffee : t.stamp, padding: '4px 12px', fontFamily: D, fontSize: 15, color: '#f5ecd9' } },
+            joined ? '✓ 已入群' : '○ 待入群')),
+        !joined && e('div', { style: { marginTop: 10 } },
+          urged
+            ? e(Ghost, { onClick: null }, '✓ 已催办 · 24h 内不可重复')
+            : e(Ghost, { onClick: onUrge }, '催 办 ' + roleLabel.split(' · ')[0] + '   →'))
+      );
+    }
+    var allJoined = st.employer.joined && st.applicants.every(function (a) { return a.joined; });
+    return e('div', { style: page },
+      Title('待入群 · GROUP', '入群', '跟进。', '#22 二维码已发出 · 跟进招聘方与应聘方扫码进群进度,可分别催办;双方都入群后启动履约阶段。', 44),
+      e('div', { style: { margin: '0 22px 14px', padding: '14px 14px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.coffee, rotate: -3 }, '招募令')),
+        e('div', { style: { marginTop: 6, fontFamily: D, fontSize: 18 } }, 'ZARA 西单大悦城店 · 周末品牌快闪'),
+        e('div', { style: { marginTop: 7, fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.fg, lineHeight: 1.5 } }, '6/21 周六 10:00–18:00 · 需求 2 人 · #22 二维码已发出 · 待全员扫码入群')),
+      ListHint('入群进度 · 招聘方'),
+      memberCard(EMP, st.employer.joined, st.employer.urged, toggleEmpJoin, urgeEmp, '招聘方 · EMPLOYER', 'emp'),
+      ListHint('入群进度 · 应聘方 · 共 ' + APP.length + ' 人入选'),
+      APP.map(function (p, i) {
+        return memberCard(p, st.applicants[i].joined, st.applicants[i].urged,
+          function () { toggleAppJoin(i); }, function () { urgeApp(i); }, '应聘方 · APPLICANT', 'app-' + i);
+      }),
+      e('div', { style: { margin: '0 22px 14px', padding: '12px 14px', fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.muted, lineHeight: 1.55, textAlign: 'center' } },
+        '双方全部入群后,进入履约阶段(#20-22 fan-out 通告生效 · 到岗/打卡/结算)。'),
+      allJoined && e('div', { style: { padding: '4px 22px 30px', opacity: trig ? 0.5 : 1, pointerEvents: trig ? 'none' : 'auto' } },
+        e(Primary, {
+          onClick: trig ? null : function () { setTrig(true); window.setDealState({ groupAllJoined: true }); }
+        }, trig ? '✓ 已触发履约 · 应聘方页同步' : '✓ 全员入群 · 进入履约')));
   }
   function PlatformMine() {
     var O = [
@@ -1878,13 +2183,58 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
       O.map(OrderRow));
   }
 
+  // 入群通知详情页 —— 顶部 AnnouncementBar / 我的页「入群通知」EntryRow 共用此屏;承接原 EmployerMine QR 大卡内容
+  function AnnouncementDetail(props) {
+    return e('div', { style: page },
+      Title('入群通知 · GROUP', '中介方', '广播。', '中介已上传 ZARA 西单兼职导购的微信群二维码,长按保存或扫码进群(#22 fan-out)。', 46),
+      e('div', { style: { margin: '0 22px 18px', padding: '18px 16px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.coffee, rotate: -3 }, '群通告 · 图片')),
+        e('div', { style: { marginTop: 8, fontFamily: M, fontSize: 12, color: t.muted, letterSpacing: 0.5, textTransform: 'uppercase' } }, '来自平台 · 中介:林之航 · 刚刚'),
+        e('div', { style: { marginTop: 14, background: '#e5e0d4', borderRadius: 4, height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', color: t.fg, fontFamily: M, fontSize: 13, letterSpacing: 1 } },
+          e('div', { style: { fontSize: 44, marginBottom: 10, lineHeight: 1 } }, '▣'),
+          e('div', null, 'QR · 微信群二维码 · 长按保存')),
+        e('div', { style: { marginTop: 12, fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.fg, lineHeight: 1.65 } }, 'ZARA 西单大悦城店 · 周末品牌快闪:中介已上传群二维码,请长按保存扫码进群。'),
+        e('div', { style: { marginTop: 10, paddingTop: 10, borderTop: '0.5px solid ' + t.rule, fontFamily: M, fontSize: 12, letterSpacing: 0.5, color: t.muted, lineHeight: 1.55 } }, '进群后中介方将在群内同步岗前简训、到岗导引与互评提醒(#22 fan-out)。')),
+      e('div', { style: { padding: '4px 22px 30px' } },
+        e('div', { style: { marginBottom: 12 } },
+          e(Ghost, { onClick: props && props.onJump }, '查 看 招 募 令   →')),
+        e(Primary, { onClick: props && props.onAck }, '我 已 知 悉   ✓')));
+  }
+
+  // ── 跨角色状态桥:应聘方"我的成单/完工进度"状态由中介/招聘/应聘方动作派生 ──
+  window.dealState = window.dealState || {
+    step: 1,
+    groupAllJoined: false,
+    applicantDeclaredDone: false,
+    employerConfirmedDone: false,
+    evaluationPublished: false
+  };
+  window.dealStateListeners = window.dealStateListeners || [];
+  window.setDealState = function (patch) {
+    Object.assign(window.dealState, patch);
+    var s = window.dealState;
+    s.step = s.evaluationPublished ? 5
+           : s.employerConfirmedDone ? 5
+           : s.applicantDeclaredDone ? 3
+           : s.groupAllJoined ? 2
+           : 1;
+    window.dealStateListeners.forEach(function (fn) { try { fn(); } catch (_) {} });
+  };
+  window.resetDealState = function () {
+    window.dealState.groupAllJoined = false;
+    window.dealState.applicantDeclaredDone = false;
+    window.dealState.employerConfirmedDone = false;
+    window.dealState.evaluationPublished = false;
+    window.setDealState({});
+  };
+
   Object.assign(window, {
     ApplicantBrowse: ApplicantBrowse, ApplicantApply: ApplicantApply, ApplicantDeal: ApplicantDeal,
     EmployerPublish: EmployerPublish, EmployerComplete: EmployerComplete, AgentPool: AgentPool,
     ApplicantSchedule: ApplicantSchedule, ApplicantCheckIn: ApplicantCheckIn, ApplicantMine: ApplicantMine,
     EmployerRecruitList: EmployerRecruitList, EmployerRecruitDetail: EmployerRecruitDetail, EmployerMine: EmployerMine,
-    PlatformTodo: PlatformTodo, PlatformMine: PlatformMine,
-    ApplicantJobDetail: ApplicantJobDetail
+    PlatformTodo: PlatformTodo, PlatformGroupSetup: PlatformGroupSetup, PlatformWaitDetail: PlatformWaitDetail, PlatformGroupAttend: PlatformGroupAttend, PlatformMine: PlatformMine,
+    ApplicantJobDetail: ApplicantJobDetail, AnnouncementDetail: AnnouncementDetail
   });
 })();
 </script>
@@ -3107,7 +3457,7 @@ Object.assign(window, {
     var v = top.view, screen;
 
     if (v === 'browse') {
-      screen = e(window.ApplicantBrowse, { onOpen: function () { push({ view: 'jobdetail' }); } });
+      screen = e(window.ApplicantBrowse, { onOpen: function () { push({ view: 'jobdetail' }); }, onAnnouncement: function () { push({ view: 'announcement' }); } });
     } else if (v === 'jobdetail') {
       screen = e(window.ApplicantJobDetail, { onApply: function () { push({ view: 'apply' }); } });
     } else if (v === 'apply') {
@@ -3135,28 +3485,37 @@ Object.assign(window, {
     } else if (v === 'detail') {
       screen = e(window.VCDetail, { dark: false, dense: false, modelId: top.modelId, onBack: pop });
     } else if (v === 'schedule') {
-      screen = e(window.ApplicantSchedule, { onOpen: function (k, job) { push({ view: k, job: job }); } });             // tab · 应聘方 日程
+      screen = e(window.ApplicantSchedule, { onOpen: function (k, job) { push({ view: k, job: job }); }, onAnnouncement: function () { push({ view: 'announcement' }); } });             // tab · 应聘方 日程
     } else if (v === 'checkin') {
       screen = e(window.ApplicantCheckIn, { job: top.job || {} });             // 到岗 / 打卡
     } else if (v === 'cmine') {
       screen = e(window.ApplicantMine, { onOpen: function (k) { push({ view: k }); } });   // tab · 应聘方 我的
     } else if (v === 'erecruit') {
-      screen = e(window.EmployerRecruitList, { onOpen: function (rec) { push({ view: 'recruitdetail', rec: rec }); } });   // tab · 招聘方 招聘
+      screen = e(window.EmployerRecruitList, { onOpen: function (rec) { push({ view: 'recruitdetail', rec: rec }); }, onAnnouncement: function () { push({ view: 'announcement' }); } });   // tab · 招聘方 招聘
     } else if (v === 'recruitdetail') {
       screen = e(window.EmployerRecruitDetail, { rec: top.rec || {} });   // 钻取 · 招募令详情 / 修改重审
     } else if (v === 'emine') {
       screen = e(window.EmployerMine, { onOpen: function (k) { push({ view: k }); } });    // tab · 招聘方 我的
     } else if (v === 'todo') {
-      screen = e(window.PlatformTodo, null);                  // tab · 平台 待办
+      screen = e(window.PlatformTodo, { onOpen: function (view, kind, title, recruitId) { push({ view: view, kind: kind, title: title, recruitId: recruitId }); } });  // tab · 平台 待办 (5 卡全可点 · 透传 recruitId)
+    } else if (v === 'groupsetup') {
+      screen = e(window.PlatformGroupSetup, null);            // 钻取 · 中介上传群二维码 (#20-22)
+    } else if (v === 'groupattend') {
+      screen = e(window.PlatformGroupAttend, { recruitId: top.recruitId });   // 钻取 · 中介待入群跟进(#22 二维码已发出 · 双方扫码进度)
+    } else if (v === 'waitdetail') {
+      screen = e(window.PlatformWaitDetail, { kind: top.kind, title: top.title, recruitId: top.recruitId, onSubmit: function (k, recruitId) { push({ view: k, recruitId: recruitId || top.recruitId, mode: top.kind === 'dispute' ? 'dispute' : undefined }); } });   // 钻取 · 等待详情屏 (T2/T3/alt 3 三态 + 催办 · alt 3 跳 pool 时透传 recruitId + mode='dispute')
     } else if (v === 'pmine') {
       screen = e(window.PlatformMine, null);                  // tab · 平台 我的
-    } else { // pool · #17 报名池
-      screen = e(window.AgentPool, null);
+    } else if (v === 'announcement') {
+      var jumpView = props.role === 'employer' ? 'recruitdetail' : 'jobdetail';
+      screen = e(window.AnnouncementDetail, { onAck: pop, onJump: function () { push({ view: jumpView }); } });   // 钻取 · 入群通知详情(顶部 AnnouncementBar / 我的页「入群通知」EntryRow 共用;Ghost 按 role 分流跳 ZARA 招募令)
+    } else { // pool · #17 报名池(底部"重新筛选"→ applicants 报名名录回流;支持 alt 3 异议重筛 mode)
+      screen = e(window.AgentPool, { mode: top.mode, onRestart: function () { push({ view: 'applicants', recruitId: top.recruitId || 'r1' }); } });
     }
 
-    var backTo = { confirm: 'cmine', deal: 'cmine', roster: 'emine', complete: 'emine', publish: 'erecruit' };
+    var backTo = { confirm: 'cmine', deal: 'cmine', roster: 'emine', complete: 'emine', publish: 'erecruit', groupsetup: 'todo', groupattend: 'todo', waitdetail: 'todo' };
     var noTab = backTo.hasOwnProperty(v);
-    var hideTab = noTab || v === 'jobdetail' || v === 'apply' || v === 'applicants' || v === 'detail' || v === 'pool' || v === 'checkin' || v === 'recruitdetail';   // 职位详情/报名表单/报名者列表/模特档案/报名池#17/招募令详情:钻取子页,去 tabBar(返回仍走 pop)
+    var hideTab = noTab || v === 'jobdetail' || v === 'apply' || v === 'applicants' || v === 'detail' || v === 'pool' || v === 'checkin' || v === 'recruitdetail' || v === 'announcement';   // 职位详情/报名表单/报名者列表/模特档案/报名池#17/招募令详情/建群/通告详情:钻取子页,去 tabBar(返回仍走 pop)
     return e(Phone, {
       label: props.label, sub: props.sub,
       onBack: noTab ? function () { setStack([{ view: backTo[v] }]); } : (stack.length > 1 ? pop : null),
