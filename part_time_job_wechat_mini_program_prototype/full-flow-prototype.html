@@ -1081,6 +1081,81 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
 </script>
 
 <script>
+// ===== 屏 0 · 进入 · 选择身份(cream 风格 · 落地 PRD §1「一个小程序 · 多种身份」)=====
+(function () {
+  var e = React.createElement;
+  var t = window.vcTheme(false);
+  var D = window.VC_DISPLAY, S = window.VC_SERIF, M = window.VC_MONO, SS = window.VC_SANS;
+
+  var ROLES = [
+    { key: 'applicant', eyebrow: 'C-SIDE · 应聘方', name: '应聘方', desc: '找兼职、报名意向、确认接受录用', tabs: '职位 · 日程 · 我的' },
+    { key: 'employer', eyebrow: 'B-SIDE · 招聘方', name: '招聘方', desc: '发布招募令、确认入选名单', tabs: '招聘 · 我的' },
+    { key: 'platform', eyebrow: 'PLATFORM · 中介方', name: '中介方', desc: '筛选报名者、提交 rank、平台侧执行', tabs: '首页 · 待办 · 我的' }
+  ];
+
+  function EntrySelect(props) {
+    var a = React.useState(null); var sel = a[0], setSel = a[1];
+    var selRole = null;
+    ROLES.forEach(function (r) { if (r.key === sel) selRole = r; });
+
+    var header = e('div', { style: { padding: '20px 22px 4px' } },
+      e(window.VCTab, { color: t.coffee, rotate: -3 }, '微信兼职 · ENTRY'),
+      e('div', { style: { fontFamily: D, fontSize: 46, lineHeight: 1.02, letterSpacing: -1, marginTop: 14 } },
+        '选择你的', e('br', null),
+        e('span', { style: { fontStyle: 'italic', fontFamily: S, fontWeight: 400, color: t.coffee } }, '身份。')),
+      e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, lineHeight: 1.55, marginTop: 12, color: t.muted, maxWidth: 300 } },
+        '一个小程序 · 多种身份(PRD §1)—— 微信授权后选定身份,之后将按此分流到对应主界面。'));
+
+    var card = function (r) {
+      var on = sel === r.key;
+      return e('button', {
+        key: r.key,
+        onClick: function () { setSel(r.key); },
+        style: {
+          all: 'unset', cursor: 'pointer', display: 'block', boxSizing: 'border-box',
+          width: '100%', marginBottom: 12, padding: '15px 16px', position: 'relative',
+          background: on ? 'rgba(122,74,40,0.10)' : t.card,
+          border: on ? '1.5px solid ' + t.coffee : '0.5px solid ' + t.rule,
+          boxShadow: on ? '0 12px 24px -16px rgba(80,50,20,0.45)' : '0 1px 0 rgba(255,255,255,0.6)'
+        }
+      },
+        e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1.5, textTransform: 'uppercase', color: on ? t.coffee : t.muted } }, r.eyebrow),
+        e('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 5 } },
+          e('div', { style: { fontFamily: D, fontSize: 27, color: t.fg } }, r.name),
+          e('div', { style: { width: 20, height: 20, borderRadius: '50%', boxSizing: 'border-box', border: '1.5px solid ' + (on ? t.coffee : t.rule), background: on ? t.coffee : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+            on ? e('svg', { width: 11, height: 11, viewBox: '0 0 11 11' },
+              e('path', { d: 'M1.5 5.5l2.5 2.5 5.5-6', stroke: '#f5ecd9', strokeWidth: 1.8, fill: 'none', strokeLinecap: 'round', strokeLinejoin: 'round' })) : null)),
+        e('div', { style: { fontFamily: SS, fontSize: 13, lineHeight: 1.5, color: t.muted, marginTop: 6 } }, r.desc),
+        e('div', { style: { fontFamily: M, fontSize: 10, letterSpacing: 0.5, color: on ? t.coffee : t.muted, marginTop: 9 } }, '主界面 · ' + r.tabs));
+    };
+
+    var btn = e('button', {
+      onClick: function () { if (sel) props.onPick(sel); },
+      disabled: !sel,
+      style: {
+        all: 'unset', display: 'block', textAlign: 'center', boxSizing: 'border-box',
+        width: '100%', padding: '15px 0',
+        cursor: sel ? 'pointer' : 'default',
+        background: sel ? t.coffee : 'transparent',
+        color: sel ? '#f5ecd9' : t.muted,
+        border: sel ? '0.5px solid ' + t.coffee : '0.5px solid ' + t.rule,
+        fontFamily: D, fontStyle: 'italic', fontSize: 19,
+        boxShadow: sel ? '0 6px 16px -8px rgba(120,60,20,0.4)' : 'none'
+      }
+    }, sel ? ('进入「' + selRole.name + '」端   →') : '请先选择身份');
+
+    return e('div', { style: { background: t.bg, color: t.fg, minHeight: '100%', fontFamily: SS, backgroundImage: 'radial-gradient(circle at 20% 10%, rgba(122,74,40,0.10), transparent 50%)', paddingBottom: 40 } },
+      header,
+      e('div', { style: { padding: '18px 22px 0' } }, ROLES.map(card)),
+      e('div', { style: { padding: '4px 22px 0' } }, btn),
+      e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12.5, color: t.muted, textAlign: 'center', marginTop: 14, padding: '0 26px', lineHeight: 1.65 } },
+        '身份分流见 PRD §1「端架构:一个小程序 · 多种身份」;进入后点设备左上 ‹ 可返回本屏重选。'));
+  }
+  Object.assign(window, { EntrySelect: EntrySelect });
+})();
+</script>
+
+<script>
 // ===== 屏 2 · #18 招聘方确认名单(cream 风格)=====
 (function () {
   var e = React.createElement;
@@ -3455,8 +3530,15 @@ Object.assign(window, {
     var pop = function () { if (stack.length > 1) setStack(stack.slice(0, -1)); };
     var push = function (s) { setStack(stack.concat([s])); };
     var v = top.view, screen;
+    var rs = React.useState(props.role); var role = rs[0], setRole = rs[1];
+    var isEntry = !props.role;   // 入口手机:App() 的「进入」Section 不传 role,role 在选身份后才落定
 
-    if (v === 'browse') {
+    if (v === 'entry') {
+      screen = e(window.EntrySelect, { onPick: function (r) {
+        var HOME = { applicant: 'browse', employer: 'erecruit', platform: 'list' };
+        setRole(r); setStack([{ view: HOME[r] }]);
+      } });
+    } else if (v === 'browse') {
       screen = e(window.ApplicantBrowse, { onOpen: function () { push({ view: 'jobdetail' }); }, onAnnouncement: function () { push({ view: 'announcement' }); } });
     } else if (v === 'jobdetail') {
       screen = e(window.ApplicantJobDetail, { onApply: function () { push({ view: 'apply' }); } });
@@ -3507,7 +3589,7 @@ Object.assign(window, {
     } else if (v === 'pmine') {
       screen = e(window.PlatformMine, null);                  // tab · 平台 我的
     } else if (v === 'announcement') {
-      var jumpView = props.role === 'employer' ? 'recruitdetail' : 'jobdetail';
+      var jumpView = role === 'employer' ? 'recruitdetail' : 'jobdetail';
       screen = e(window.AnnouncementDetail, { onAck: pop, onJump: function () { push({ view: jumpView }); } });   // 钻取 · 入群通知详情(顶部 AnnouncementBar / 我的页「入群通知」EntryRow 共用;Ghost 按 role 分流跳 ZARA 招募令)
     } else { // pool · #17 报名池(底部"重新筛选"→ applicants 报名名录回流;支持 alt 3 异议重筛 mode)
       screen = e(window.AgentPool, { mode: top.mode, onRestart: function () { push({ view: 'applicants', recruitId: top.recruitId || 'r1' }); } });
@@ -3518,8 +3600,8 @@ Object.assign(window, {
     var hideTab = noTab || v === 'jobdetail' || v === 'apply' || v === 'applicants' || v === 'detail' || v === 'pool' || v === 'checkin' || v === 'recruitdetail' || v === 'announcement';   // 职位详情/报名表单/报名者列表/模特档案/报名池#17/招募令详情/建群/通告详情:钻取子页,去 tabBar(返回仍走 pop)
     return e(Phone, {
       label: props.label, sub: props.sub,
-      onBack: noTab ? function () { setStack([{ view: backTo[v] }]); } : (stack.length > 1 ? pop : null),
-      tabBar: (props.role && !hideTab) ? e(TabBar, { role: props.role, activeView: v, onNav: function (k) { setStack([{ view: k }]); } }) : null,
+      onBack: noTab ? function () { setStack([{ view: backTo[v] }]); } : (stack.length > 1 ? pop : (isEntry && role ? function () { setRole(props.role); setStack([{ view: 'entry' }]); } : null)),
+      tabBar: (role && !hideTab) ? e(TabBar, { role: role, activeView: v, onNav: function (k) { setStack([{ view: k }]); } }) : null,
       onAdd: v === 'erecruit' ? function () { push({ view: 'publish' }); } : null
     },
       e('div', { style: { minHeight: '100%' } }, screen));
@@ -3557,6 +3639,13 @@ Object.assign(window, {
   }
   function App() {
     return e(React.Fragment, null,
+      e(Section, {
+        eyebrow: 'Prologue · 00', title: '进入 · 选择身份',
+        sub: '一个小程序 · 多种身份(PRD §1)—— 选身份后分流到对应主界面',
+        steps: [
+          { label: '进入 · 选择身份', sub: '本屏:选择身份;点角色卡选中,「进入」跳到该身份主界面,设备左上 ‹ 返回回本屏重选', initial: [{ view: 'entry' }] }
+        ]
+      }),
       e(Section, {
         role: 'applicant', eyebrow: 'Journey 01 · C-Side', title: '应聘方 · C 端旅程', sub: '#11→#14 合一屏可交互钻取;#19a、成单/完工 各自独立单步',
         steps: [

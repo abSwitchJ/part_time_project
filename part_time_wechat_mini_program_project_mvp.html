@@ -235,7 +235,7 @@
 <div class="callout callout-decision">
 <strong>决策:</strong>四方共用<strong>同一个微信小程序</strong>,登录后按账号身份(应聘方 / 招聘方 / 中介方)分流到不同主界面,而非拆成 C 端小程序 + B 端小程序 + 中介后台。<br>
 <strong>取舍:</strong>主流招聘类产品多走 BOSS 直聘 / 美团商家版那条路——C 端、B 端各自独立 App。这条路的好处是 B 端操作复杂度天花板高(可接 PC 后台),坏处是冷启动期获客成本翻倍、品牌认知分散。MVP 阶段做反向选择有三条理由:① <strong>招聘方多为小商户</strong>(街边奶茶店店长、社区便利店主),不会专门开 PC 后台,微信小程序就是其唯一接触面;② <strong>中介方为平台预入驻方</strong>,操作量级在小程序内可承载,真上规模再迁后台;③ <strong>应聘方=学生</strong>,习惯微信生态、避免再装 App。代价是 B 端操作复杂度被压缩到小程序极限,招聘方批量管理类需求(同时跟踪 N 条招募令)推到 v2 工作台(见 <a href="#sec-2">§2</a> 延期项「多招募令并发管理工作台」)。<br>
-<strong>实现位置:</strong>登录后按 <code>user.role</code> 分流到三种主界面(应聘方 = 职位 / 日程 / 我的;招聘方 = 招聘 / 我的;中介方 = 首页 / 待办 / 我的)——见原型 <code>part_time_job_wechat_mini_program_prototype/full-flow-prototype.html</code> 的 <code>TABS</code> 实现。状态机(<a href="#sec-5">§5</a>)对身份无感,所有角色操作都走同一套招募令生命周期。
+<strong>实现位置:</strong>登录后按 <code>user.role</code> 分流到三种主界面(应聘方 = 职位 / 日程 / 我的;招聘方 = 招聘 / 我的;中介方 = 首页 / 待办 / 我的)——见原型 <code>part_time_job_wechat_mini_program_prototype/full-flow-prototype.html</code> 的 <code>TABS</code> 实现;身份的首次选定见该原型顶部「进入 · 选择身份」屏(三张角色卡:应聘方 / 招聘方 / 中介方,选定后即按上述 <code>user.role</code> 分流到对应主界面)。状态机(<a href="#sec-5">§5</a>)对身份无感,所有角色操作都走同一套招募令生命周期。
 </div>
 
 <div class="diagram-wrap">
