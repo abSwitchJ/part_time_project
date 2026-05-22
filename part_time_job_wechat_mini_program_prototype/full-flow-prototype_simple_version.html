@@ -1282,12 +1282,14 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
   function Avatar(p) { return e('div', { style: { width: 38, height: 38, borderRadius: '50%', background: t.coffee, color: '#f5ecd9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: D, fontStyle: 'italic', fontSize: 16, flexShrink: 0 } }, p.ini); }
 
   // AI v2 落点 —— 醒目、明确「本版不做」(贯彻 memory feedback_ai_is_future_vision)
+  // p.doc 可选:不传时指向 AI_MATCHING_SPEC.md(原文案,零回归);传入时换文末引用文档
   function AiBanner(p) {
+    var doc = (p && p.doc) || 'AI_MATCHING_SPEC.md';
     return e('div', { style: { margin: '0 22px 16px', padding: '13px 14px 12px', border: '1px dashed ' + t.coffee, background: 'rgba(122,74,40,0.06)', position: 'relative' } },
       e('div', { style: { position: 'absolute', top: -8, left: 12 } }, e(window.VCTab, { color: t.stamp, rotate: -3 }, 'v2 · 本版不做')),
       e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: t.coffee, marginTop: 5, marginBottom: 6 } }, '▷ AI 辅助 · 未来愿景'),
       e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12.5, lineHeight: 1.55, color: t.fg } }, p.children),
-      e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, color: t.muted, marginTop: 8 } }, 'MVP(v3)不实现 AI · 仍全人工 · 见 AI_MATCHING_SPEC.md'));
+      e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, color: t.muted, marginTop: 8 } }, 'MVP(v3)不实现 AI · 仍全人工 · 见 ' + doc));
   }
 
   function Title(tab, l1, l2, sub, big) {
@@ -1310,16 +1312,18 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
   }
 
   // ── 屏 1 · 应聘方 #11 收到匹配推送 / 招募令列表 ──
+  // 每条 FEED 项补全 detail 所需字段(供参数化的 ApplicantJobDetail 读取);needsPhotoCheck 标记礼仪模特/形象类
   var FEED = [
-    { tab: '最佳匹配', best: true, title: '周末品牌快闪 · 兼职导购', org: 'ZARA 西单大悦城店', cat: '零售导购 · 6/21 10–18', pay: '¥240 / 天', rule: '规则匹配:类别 ✓ · 时段 ✓ · 地点 3km 内' },
-    { tab: '可报名', title: '新品发布会 · 现场引导', org: '李宁 三里屯旗舰店', cat: '活动执行 · 6/22 13–20', pay: '¥260 / 天', rule: '规则匹配:类别 ✓ · 时段 ✓' },
-    { tab: '可报名', title: '周中库存盘点 · 临时工', org: '优衣库 朝阳大悦城', cat: '仓储理货 · 6/19 09–17', pay: '¥200 / 天', rule: '规则匹配:类别 ✓ · 时段 △ 部分重叠' }
+    { tab: '最佳匹配', best: true, title: '周末品牌快闪 · 兼职导购', org: 'ZARA 西单大悦城店', stamp: 'ZARA · 西单', cat: '零售导购 · 6/21 10–18', catFull: '零售导购 · 6/21 周六 10–18', pay: '¥240 / 天', payFull: '¥240 / 天', place: '西单大悦城 1F · 距你 2.4km', need: '2 人(另留备选)', rule: '规则匹配:类别 ✓ · 时段 ✓ · 地点 3km 内', tags: ['零售经验优先', '形象气质佳', '可全天', '普通话流利'], desc: '协助门店周末快闪活动:引导顾客、整理样衣、配合店员完成连带销售。无需经验,岗前有 30 分钟简训;着装由门店提供。当日按时到岗、完工经招聘方确认后 7 日内结算。' },
+    { tab: '形象类 · 实时核验照', needsPhotoCheck: true, title: '汽车展台 · 礼仪模特', org: '蔚来 国贸车展', stamp: '蔚来 · 国贸', cat: '礼仪模特 · 6/24 09–17', catFull: '礼仪模特 · 6/24 周二 09–17', pay: '¥480 / 天', payFull: '¥480 / 天', place: '国贸展览馆 A 馆 · 距你 5.1km', need: '4 人(另留备选)', rule: '规则匹配:类别 ✓ · 时段 ✓ · 形象类需实时核验照', tags: ['身高 168+', '形象气质佳', '有展会经验优先', '可全天'], desc: '汽车品牌展台礼仪接待:站位引导、新车讲解配合、协助拍照。形象类岗位,报名需在小程序内实时拍摄核验照,连同模卡照交中介/平台人工核验后进报名池。礼服由主办方提供;当日按时到岗、完工确认后 7 日内结算。' },
+    { tab: '可报名', title: '新品发布会 · 现场引导', org: '李宁 三里屯旗舰店', stamp: '李宁 · 三里屯', cat: '活动执行 · 6/22 13–20', catFull: '活动执行 · 6/22 周日 13–20', pay: '¥260 / 天', payFull: '¥260 / 天', place: '三里屯太古里 · 距你 3.6km', need: '3 人(另留备选)', rule: '规则匹配:类别 ✓ · 时段 ✓', tags: ['活动执行经验优先', '沟通能力佳', '可全天', '普通话流利'], desc: '新品发布会现场:观众引导、物料分发、签到协助。无需经验,岗前有简短培训;着装要求深色正装。当日按时到岗、完工经招聘方确认后 7 日内结算。' },
+    { tab: '可报名', title: '周中库存盘点 · 临时工', org: '优衣库 朝阳大悦城', stamp: '优衣库 · 朝阳', cat: '仓储理货 · 6/19 09–17', catFull: '仓储理货 · 6/19 周四 09–17', pay: '¥200 / 天', payFull: '¥200 / 天', place: '朝阳大悦城 B1 · 距你 6.8km', need: '5 人(另留备选)', rule: '规则匹配:类别 ✓ · 时段 △ 部分重叠', tags: ['能吃苦耐劳', '细心负责', '可全天'], desc: '门店周中库存盘点:商品清点、上架理货、数据录入配合。无需经验;劳保用品由门店提供。当日按时到岗、完工经招聘方确认后 7 日内结算。' }
   ];
   function ApplicantBrowse(props) {
-    var go = function () { if (props && props.onOpen) props.onOpen(); };
+    var go = function (job) { if (props && props.onOpen) props.onOpen(job); };
     var anno = function () { if (props && props.onAnnouncement) props.onAnnouncement(); };
     var cards = FEED.map(function (x, i) {
-      return e('div', { key: i, onClick: go, style: { margin: '0 22px 14px', padding: '16px 14px', cursor: 'pointer', ...paper } },
+      return e('div', { key: i, onClick: function () { go(x); }, style: { margin: '0 22px 14px', padding: '16px 14px', cursor: 'pointer', ...paper } },
         e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: x.best ? t.stamp : t.muted, rotate: i % 2 ? 3 : -4 }, x.tab)),
         e('div', { style: { fontFamily: D, fontSize: 21, marginTop: 4 } }, x.title),
         e(Field, { k: '招聘方', v: x.org }),
@@ -1368,21 +1372,27 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
   }
 
   // ── 屏 1.5 · 应聘方 职位详情(职位列表 → 此页 → #14 报名)──
+  // 参数化:从 props.job 取字段,无 job 时回退 FEED[0](ZARA)保证旧路径零回归
   function ApplicantJobDetail(props) {
-    var go = function () { if (props && props.onApply) props.onApply(); };
-    var tags = ['零售经验优先', '形象气质佳', '可全天', '普通话流利'];
+    var job = (props && props.job) || FEED[0];
+    var go = function () { if (props && props.onApply) props.onApply(job); };
+    var tags = job.tags || [];
     return e('div', { style: page },
       Title('详情 · DETAIL', '岗位', '详情。', '查看完整岗位信息,确认匹配后再报名。', 50),
       e('div', { style: { margin: '0 22px 16px', padding: '18px 16px', ...paper } },
-        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { rotate: -4 }, 'ZARA · 西单')),
-        e('div', { style: { fontFamily: D, fontSize: 23, marginBottom: 4, marginTop: 4 } }, '周末品牌快闪 · 兼职导购'),
-        e(Field, { k: '招聘方', v: 'ZARA 西单大悦城店' }),
-        e(Field, { k: '类别 / 时段', v: '零售导购 · 6/21 周六 10–18' }),
-        e(Field, { k: '地点', v: '西单大悦城 1F · 距你 2.4km' }),
-        e(Field, { k: '需求人数', v: '2 人(另留备选)' }),
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { rotate: -4 }, job.stamp)),
+        e('div', { style: { fontFamily: D, fontSize: 23, marginBottom: 4, marginTop: 4 } }, job.title),
+        e(Field, { k: '招聘方', v: job.org }),
+        e(Field, { k: '类别 / 时段', v: job.catFull || job.cat }),
+        e(Field, { k: '地点', v: job.place }),
+        e(Field, { k: '需求人数', v: job.need }),
+        job.needsPhotoCheck ? e(Field, { k: '报名要求', v: '需实时核验照', accent: true }) : null,
         e('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: 12 } },
           e('span', { style: { fontFamily: M, fontSize: 14, letterSpacing: 1, textTransform: 'uppercase', color: t.muted } }, '报酬'),
-          e('span', { style: { fontFamily: D, fontSize: 24, color: t.stamp } }, '¥240 / 天'))),
+          e('span', { style: { fontFamily: D, fontSize: 24, color: t.stamp } }, job.payFull || job.pay))),
+      job.needsPhotoCheck ? e('div', { style: { margin: '0 22px 14px', padding: '12px 14px', border: '0.5px solid ' + t.stamp, background: 'rgba(160,60,40,0.05)' } },
+        e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: t.stamp, marginBottom: 5 } }, '◉ 形象类岗位 · 报名须知'),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, lineHeight: 1.6, color: t.fg } }, '礼仪模特 / 形象类岗位:报名前需在小程序内实时拍摄一张核验照,与你的模卡照一起交中介 / 平台人工核验。核验照有效期 15 天,有效期内可复用。')) : null,
       e('div', { style: { padding: '0 22px 10px' } },
         e('div', { style: { fontFamily: M, fontSize: 14, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted, marginBottom: 9 } }, '岗位要求'),
         e('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 7 } },
@@ -1391,10 +1401,109 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
           }))),
       e('div', { style: { padding: '14px 22px 4px' } },
         e('div', { style: { fontFamily: M, fontSize: 14, letterSpacing: 1.5, textTransform: 'uppercase', color: t.muted, marginBottom: 8 } }, '岗位描述'),
-        e('div', { style: { fontFamily: S, fontSize: 15, lineHeight: 1.75, color: t.fg } }, '协助门店周末快闪活动:引导顾客、整理样衣、配合店员完成连带销售。无需经验,岗前有 30 分钟简训;着装由门店提供。当日按时到岗、完工经招聘方确认后 7 日内结算。')),
+        e('div', { style: { fontFamily: S, fontSize: 15, lineHeight: 1.75, color: t.fg } }, job.desc)),
       e('div', { style: { padding: '18px 22px 30px' } },
-        e(Primary, { onClick: go }, '报 名 这 次 机 会   →'),
-        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, marginTop: 10, lineHeight: 1.6, textAlign: 'center' } }, '报名后进入报名池,需经中介筛选(#17)、招聘方确认(#18)、你本人确认(#19a)。')));
+        e(Primary, { onClick: go }, job.needsPhotoCheck ? '实 时 拍 照 核 验   →' : '报 名 这 次 机 会   →'),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 14, color: t.muted, marginTop: 10, lineHeight: 1.6, textAlign: 'center' } }, job.needsPhotoCheck ? '形象类岗位:先实时拍核验照,再进报名池;后续经中介筛选(#17)、招聘方确认(#18)、你本人确认(#19a)。' : '报名后进入报名池,需经中介筛选(#17)、招聘方确认(#18)、你本人确认(#19a)。')));
+  }
+
+  // ── 屏 1.6 · 应聘方 实时拍照核验(礼仪模特 / 形象类报名专属;jobdetail → 此页 → 进报名池)──
+  // MVP 真实功能:实时拍照采集 + 人工核验。AI 自动相似度/真实性核验为 v2(AiBanner 标记)。
+  function ApplicantPhotoCheck(props) {
+    var job = (props && props.job) || FEED[1];
+    // valid:核验照状态 —— 'expired' 过期/首次须重拍(默认) · 'fresh' 有效期内可直接报名
+    // 招聘方勾选「要求本次实时拍摄」时强制重拍,此处用 forced 表达
+    var forced = !!job.forceRecheck;
+    var vd = React.useState(forced ? 'expired' : 'expired'); var valid = vd[0], setValid = vd[1];
+    var sh = React.useState(valid === 'fresh'); var shot = sh[0], setShot = sh[1];
+    var su = React.useState(false); var submitted = su[0], setSubmitted = su[1];
+    var reset = function () { setValid('expired'); setShot(false); setSubmitted(false); };
+
+    // 模卡区 —— 模卡照占位 + 岗位形象要求
+    var photoBox = function (label, filled, accent) {
+      return e('div', { style: { flex: 1, textAlign: 'center' } },
+        e('div', { style: { aspectRatio: '3 / 4', border: '0.5px solid ' + (accent ? t.stamp : t.rule), background: filled ? 'rgba(122,74,40,0.10)' : t.card, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 4 } },
+          e('div', { style: { fontFamily: D, fontSize: 30, color: accent ? t.stamp : t.muted } }, filled ? '▣' : '▢'),
+          e('div', { style: { fontFamily: M, fontSize: 8.5, letterSpacing: 0.5, color: t.muted } }, filled ? '已采集' : '待采集')),
+        e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: accent ? t.stamp : t.muted, marginTop: 6 } }, label));
+    };
+
+    var kids = [e('div', { key: 'h' }, Title('核验 · VERIFY', '实时拍照', '核验。', '礼仪模特 / 形象类岗位:用小程序实时拍一张核验照,与模卡照一起交人工核验。', 46))];
+
+    // 模卡区
+    kids.push(e('div', { key: 'mk', style: { margin: '0 22px 14px', padding: '16px 14px', ...paper } },
+      e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { rotate: -4 }, job.stamp)),
+      e('div', { style: { fontFamily: D, fontSize: 20, marginTop: 4, marginBottom: 2 } }, job.title),
+      e(Field, { k: '招聘方', v: job.org }),
+      e(Field, { k: '形象要求', v: (job.tags || []).slice(0, 2).join(' · ') })));
+
+    if (!submitted) {
+      // 15 天有效期两态切换器(原型 mock:让两态都可见、可讲)
+      kids.push(e('div', { key: 'sw', style: { margin: '0 22px 14px' } },
+        e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: t.muted, marginBottom: 7 } }, '你的核验照状态(原型:点击切换两态)'),
+        e('div', { style: { display: 'flex', gap: 8 } },
+          [['expired', '过期 / 首次 · 须重拍'], ['fresh', '有效期内 · 可复用']].map(function (o) {
+            var on = valid === o[0];
+            return e('div', { key: o[0], onClick: forced ? null : function () { setValid(o[0]); setShot(o[0] === 'fresh'); },
+              style: { flex: 1, textAlign: 'center', padding: '9px 4px', cursor: forced ? 'default' : 'pointer', border: '0.5px solid ' + (on ? t.coffee : t.rule), background: on ? 'rgba(122,74,40,0.08)' : t.card, fontFamily: M, fontSize: 10.5, letterSpacing: 0.5, color: on ? t.coffee : t.muted } }, o[1]);
+          })),
+        forced ? e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12, color: t.stamp, marginTop: 7, lineHeight: 1.5 } }, '◉ 招聘方已勾选「要求本次实时拍摄」—— 本单无视 15 天有效期,强制重拍。') : null));
+
+      var canReuse = valid === 'fresh';
+      if (canReuse) {
+        // 有效期内态:核验照可直接复用
+        kids.push(e('div', { key: 'reuse', style: { margin: '0 22px 14px', padding: '14px 14px', border: '0.5px solid ' + t.coffee, background: 'rgba(122,74,40,0.06)' } },
+          e('div', { style: { fontFamily: M, fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: t.coffee, marginBottom: 6 } }, '✓ 核验照在有效期内'),
+          e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, lineHeight: 1.6, color: t.fg } }, '你已有一张 9 天前拍摄的核验照,在 15 天有效期内 —— 本次报名可直接复用,无需重拍。')));
+      } else {
+        // 须重拍态:相机取景框 mock + 拍摄按钮
+        kids.push(e('div', { key: 'cam', style: { margin: '0 22px 14px' } },
+          e('div', { style: { aspectRatio: '3 / 4', border: '1px dashed ' + t.coffee, background: shot ? 'rgba(122,74,40,0.10)' : t.card, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, position: 'relative' } },
+            e('div', { style: { position: 'absolute', top: 8, left: 8 } }, e(window.VCTab, { color: shot ? t.coffee : t.stamp, rotate: -3 }, shot ? '已拍摄' : '相机取景')),
+            e('div', { style: { fontFamily: D, fontSize: 44, color: shot ? t.coffee : t.muted } }, shot ? '☑' : '◎'),
+            e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.muted, textAlign: 'center', maxWidth: 200, lineHeight: 1.5 } }, shot ? '实时核验照已采集 —— 带拍摄时间与设备水印' : '把脸放进取景框 —— 仅可实时拍摄,禁止从相册上传')),
+          e('div', { style: { marginTop: 12 } },
+            shot
+              ? e(Ghost, { onClick: function () { setShot(false); } }, '重 拍 一 张')
+              : e(Primary, { onClick: function () { setShot(true); } }, '拍 摄 实 时 核 验 照   ◎'))));
+
+        // 拍后并排:实时照 ↔ 模卡照
+        if (shot) {
+          kids.push(e('div', { key: 'cmp', style: { margin: '0 22px 14px', padding: '14px 14px', ...paper } },
+            e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.coffee, rotate: -3 }, '并排比对')),
+            e('div', { style: { display: 'flex', gap: 14, marginTop: 6 } },
+              photoBox('实时核验照', true, true),
+              e('div', { style: { display: 'flex', alignItems: 'center', fontFamily: D, fontSize: 20, color: t.muted } }, '↔'),
+              photoBox('模卡照', true, false)),
+            e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 12, color: t.muted, marginTop: 10, lineHeight: 1.55 } }, '提交后,两张照片一起进入中介 / 平台的人工核验队列,由人肉眼比对。')));
+        }
+      }
+
+      // AI v2 标记 —— 泛化的 AiBanner,指向 AI_PHOTO_VERIFICATION_SPEC.md
+      kids.push(e('div', { key: 'ai' }, e(AiBanner, { doc: 'AI_PHOTO_VERIFICATION_SPEC.md' },
+        'v2:平台 AI 将自动比对实时核验照与模卡照,给出人脸相似度 + 真实性分数与「自动放行 / 转人工」建议 —— AI 绝不自动拒绝,高置信真实者放行、其余转人工。MVP(本版)仍由中介 / 平台人工核验。')));
+
+      // 提交
+      var ready = canReuse || shot;
+      kids.push(e('div', { key: 'sb', style: { padding: '4px 22px 30px' } },
+        e(Primary, { onClick: ready ? function () { setSubmitted(true); } : function () {} }, canReuse ? '用 此 核 验 照 报 名   →' : '提 交 核 验 照 · 报 名   →'),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: ready ? t.muted : t.stamp, marginTop: 10, lineHeight: 1.6, textAlign: 'center' } },
+          ready ? '提交后进入报名池 · 核验照有效期 15 天,期间报名其他形象类岗位可复用。' : '请先实时拍摄核验照,再提交报名。')));
+    } else {
+      // 提交后自包含展示:已加入报名池 · 待人工核验(复用 steps 块形态,不路由回 ApplicantApply)
+      var steps = ['实时核验照已采集 · 进入人工核验队列', '中介 / 平台人工比对核验照 ↔ 模卡照', '核验通过 → 你已加入报名池', '中介方筛选并排序(#17)→ 招聘方确认(#18)→ 你确认(#19a)'];
+      kids.push(e('div', { key: 'done', style: { margin: '0 22px 24px', padding: '20px 16px', ...paper } },
+        e('div', { style: { position: 'absolute', top: -7, left: 14 } }, e(window.VCTab, { color: t.coffee, rotate: -3 }, '已报名 · 待核验')),
+        e('div', { style: { fontFamily: D, fontSize: 24, color: t.coffee, marginTop: 6, marginBottom: 4 } }, '已加入报名池 · 待人工核验'),
+        e('div', { style: { fontFamily: S, fontStyle: 'italic', fontSize: 13, color: t.muted, marginBottom: 10, lineHeight: 1.6 } }, '核验照已采集 · 有效期 15 天。'),
+        steps.map(function (s, i) {
+          return e('div', { key: i, style: { display: 'flex', alignItems: 'baseline', gap: 10, padding: '7px 0', borderBottom: i < 3 ? '0.5px solid ' + t.rule : 'none' } },
+            e('span', { style: { fontFamily: M, fontSize: 14, color: i === 0 ? t.stamp : t.muted } }, i === 0 ? '◉' : '○'),
+            e('span', { style: { fontFamily: S, fontSize: 15, color: i === 0 ? t.fg : t.muted } }, s));
+        }),
+        e('div', { style: { textAlign: 'center' } }, e(Reset, { onClick: reset }))));
+    }
+    return e('div', { style: page }, kids);
   }
 
   // ── 屏 3 · 应聘方 确认后成单 / 入群(#19a → #20–22 → 完工)──
@@ -2309,7 +2418,7 @@ Object.assign(window, { vcTheme: vcTheme, VCTab: VCTab, VCImg: VCImg, VC_DISPLAY
     ApplicantSchedule: ApplicantSchedule, ApplicantCheckIn: ApplicantCheckIn, ApplicantMine: ApplicantMine,
     EmployerRecruitList: EmployerRecruitList, EmployerRecruitDetail: EmployerRecruitDetail, EmployerMine: EmployerMine,
     PlatformTodo: PlatformTodo, PlatformGroupSetup: PlatformGroupSetup, PlatformWaitDetail: PlatformWaitDetail, PlatformGroupAttend: PlatformGroupAttend, PlatformMine: PlatformMine,
-    ApplicantJobDetail: ApplicantJobDetail, AnnouncementDetail: AnnouncementDetail
+    ApplicantJobDetail: ApplicantJobDetail, ApplicantPhotoCheck: ApplicantPhotoCheck, AnnouncementDetail: AnnouncementDetail
   });
 })();
 </script>
@@ -3539,9 +3648,12 @@ Object.assign(window, {
         setRole(r); setStack([{ view: HOME[r] }]);
       } });
     } else if (v === 'browse') {
-      screen = e(window.ApplicantBrowse, { onOpen: function () { push({ view: 'jobdetail' }); }, onAnnouncement: function () { push({ view: 'announcement' }); } });
+      screen = e(window.ApplicantBrowse, { onOpen: function (job) { push({ view: 'jobdetail', job: job }); }, onAnnouncement: function () { push({ view: 'announcement' }); } });
     } else if (v === 'jobdetail') {
-      screen = e(window.ApplicantJobDetail, { onApply: function () { push({ view: 'apply' }); } });
+      // onApply 判断 needsPhotoCheck:礼仪模特/形象类走实时拍照核验屏,其余走原 apply(ZARA 路径零回归)
+      screen = e(window.ApplicantJobDetail, { job: top.job, onApply: function (job) { push({ view: (job && job.needsPhotoCheck) ? 'photocheck' : 'apply', job: job }); } });
+    } else if (v === 'photocheck') {
+      screen = e(window.ApplicantPhotoCheck, { job: top.job });   // 钻取 · 礼仪模特实时拍照核验(提交后自包含,不路由回 apply)
     } else if (v === 'apply') {
       screen = e(window.ApplicantApply, null);
     } else if (v === 'confirm') {
@@ -3597,7 +3709,7 @@ Object.assign(window, {
 
     var backTo = { confirm: 'cmine', deal: 'cmine', roster: 'emine', complete: 'emine', publish: 'erecruit', groupsetup: 'todo', groupattend: 'todo', waitdetail: 'todo' };
     var noTab = backTo.hasOwnProperty(v);
-    var hideTab = noTab || v === 'jobdetail' || v === 'apply' || v === 'applicants' || v === 'detail' || v === 'pool' || v === 'checkin' || v === 'recruitdetail' || v === 'announcement';   // 职位详情/报名表单/报名者列表/模特档案/报名池#17/招募令详情/建群/通告详情:钻取子页,去 tabBar(返回仍走 pop)
+    var hideTab = noTab || v === 'jobdetail' || v === 'photocheck' || v === 'apply' || v === 'applicants' || v === 'detail' || v === 'pool' || v === 'checkin' || v === 'recruitdetail' || v === 'announcement';   // 职位详情/实时拍照核验/报名表单/报名者列表/模特档案/报名池#17/招募令详情/建群/通告详情:钻取子页,去 tabBar(返回仍走 pop)
     return e(Phone, {
       label: props.label, sub: props.sub,
       onBack: noTab ? function () { setStack([{ view: backTo[v] }]); } : (stack.length > 1 ? pop : (isEntry && role ? function () { setRole(props.role); setStack([{ view: 'entry' }]); } : null)),
